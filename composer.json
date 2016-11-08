@@ -1,0 +1,27 @@
+{
+    "name": "emartech/php-suite-api",
+    "description": "Simple client library for emarsys suite API",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "3.8.*",
+        "monolog/monolog": "1.10.*",
+        "emartech/escher": "~0.1",
+        "php": "~7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "5.2.*",
+        "emartech/php-test-helpers": "*"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "git@github.com:emartech/php-test-helpers.git"
+        }
+    ],
+    "authors": [
+        {
+            "name": "fqqdk",
+            "email": "fqqdk1@gmail.com"
+        }
+    ]
+}
