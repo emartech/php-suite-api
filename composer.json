@@ -10,7 +10,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": "5.2.*",
-        "emartech/php-test-helpers": "*"
+        "emartech/php-test-helpers": "dev-master"
     },
     "repositories": [
         {
