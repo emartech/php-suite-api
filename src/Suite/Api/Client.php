@@ -2,10 +2,10 @@
 
 namespace Suite\Api;
 
-use Guzzle\Http\ClientInterface;
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\Exception\RequestException;
-use Guzzle\Http\Message\RequestInterface;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\RequestException;
+use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
 
 class Client
@@ -29,6 +29,11 @@ class Client
      */
     private $client;
 
+    /**
+     * @var RequestFactory
+     */
+    private $requestFactory;
+
 	/**
 	 * @var ResponseProcessor
 	 */
@@ -42,34 +47,35 @@ class Client
 
     public static function create(LoggerInterface $logger, EscherProvider $escherProvider, ResponseProcessor $responseProcessor, $protocol = self::HTTPS)
     {
-        return new self($logger, $escherProvider, new \Guzzle\Http\Client(), $responseProcessor, $protocol);
+        return new self($logger, $escherProvider, new \GuzzleHttp\Client(), new RequestFactory(), $responseProcessor, $protocol);
     }
 
-    public function __construct(LoggerInterface $logger, EscherProvider $escherProvider, ClientInterface $client, ResponseProcessor $responseProcessor, $protocol = self::HTTPS)
+    public function __construct(LoggerInterface $logger, EscherProvider $escherProvider, ClientInterface $client, RequestFactory $requestFactory, ResponseProcessor $responseProcessor, $protocol = self::HTTPS)
     {
         $this->logger = $logger;
         $this->escherProvider = $escherProvider;
         $this->client = $client;
         $this->responseProcessor = $responseProcessor;
         $this->protocol = $protocol;
+        $this->requestFactory = $requestFactory;
     }
 
     public function get($url)
     {
-        $url = "$this->protocol://$url";
         $method = 'GET';
+        $url = "$this->protocol://$url";
         $requestBody = '';
         $headers = $this->getHeaders($url, $method, $requestBody);
-        return $this->executeRequest($this->client->get($url, $headers));
+        return $this->executeRequest($this->createRequest($method, $url, $headers, $requestBody));
     }
 
     public function post($url, $data)
     {
-        $url = "$this->protocol://$url";
         $method = 'POST';
+        $url = "$this->protocol://$url";
         $requestBody = $this->getBody($data);
         $headers = $this->getHeaders($url, $method, $requestBody);
-        return $this->executeRequest($this->client->post($url, $headers, $requestBody));
+        return $this->executeRequest($this->createRequest($method, $url, $headers, $requestBody));
     }
 
     /**
@@ -80,9 +86,9 @@ class Client
     private function executeRequest(RequestInterface $request = null)
     {
         try {
-            $this->logger->info('Executing request:' . (string)$request);
-            $response = $request->send();
-            $this->logger->info('Success:' . $response->getBody(true));
+            $this->logger->info('Executing request:' . $this->serializeRequestForLogging($request));
+            $response = $this->client->send($request);
+            $this->logger->info('Success:' . $response->getBody());
             return $this->responseProcessor->processResponse($request, $response);
         } catch (BadResponseException $ex) {
             $this->logger->error($ex->getMessage());
@@ -119,5 +125,22 @@ class Client
     protected function getBody($data)
     {
         return json_encode($data);
+    }
+
+    /**
+     * @param $method
+     * @param $url
+     * @param $headers
+     * @param $requestBody
+     * @return RequestInterface
+     */
+    private function createRequest($method, $url, $headers, $requestBody)
+    {
+        return $this->requestFactory->createRequest($method, $url, $headers, $requestBody);
+    }
+
+    private function serializeRequestForLogging(RequestInterface $request)
+    {
+        return "{$request->getMethod()} {$request->getUri()}";
     }
 }

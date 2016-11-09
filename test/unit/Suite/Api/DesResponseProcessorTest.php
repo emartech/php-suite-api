@@ -3,8 +3,8 @@
 namespace Suite\Api;
 
 use Emartech\TestHelper\BaseTestCase;
-use Guzzle\Http\Message\Response;
-use Guzzle\Http\Message\Request;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 
 class DesResponseProcessorTest extends BaseTestCase
 {

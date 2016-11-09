@@ -3,8 +3,8 @@
 namespace Suite\Api;
 
 
-use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Http\Message\Response;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 class SuiteResponseProcessor implements ResponseProcessor
@@ -19,13 +19,19 @@ class SuiteResponseProcessor implements ResponseProcessor
         $this->logger = $logger;
     }
 
-    public function processResponse(RequestInterface $request, Response $response): array
+    /**
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @return array
+     * @throws Error
+     */
+    public function processResponse(RequestInterface $request, ResponseInterface $response): array
     {
-        $responseBody = $response->getBody(true);
+        $responseBody = $response->getBody();
         $result = json_decode($responseBody, true);
 
         if (!$result) {
-            $this->logger->error('Bad API response for ' . $request->getUrl());
+            $this->logger->error('Bad API response for ' . $request->getUri());
             $this->logger->debug("API response was: {$responseBody}");
             throw new Error(self::API_RESPONSE_FORMAT_WAS_WRONG);
         }
@@ -35,7 +41,7 @@ class SuiteResponseProcessor implements ResponseProcessor
         if (!$result['success']) {
             $replyText = isset($result['replyText']) ? $result['replyText'] : self::UNKNOWN_ERROR;
             $replyCode = isset($result['replyCode']) ? $result['replyCode'] : 0;
-            $this->logger->error("Unsuccessful API response for {$request->getUrl()}. replyText: '{$replyText}', replyCode: {$replyCode}");
+            $this->logger->error("Unsuccessful API response for {$request->getUri()}. replyText: '{$replyText}', replyCode: {$replyCode}");
             $this->logger->debug("API response was: {$responseBody}");
             throw new Error($replyText, $replyCode);
         }
