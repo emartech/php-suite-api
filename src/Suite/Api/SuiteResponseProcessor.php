@@ -9,6 +9,9 @@ use Psr\Log\LoggerInterface;
 
 class SuiteResponseProcessor implements ResponseProcessor
 {
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
     public function __construct(LoggerInterface $logger)

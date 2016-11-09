@@ -1,0 +1,14 @@
+<?php
+
+call_user_func(function () {
+    // start serving suite API stub
+    exec('php -S localhost:7984 '.__DIR__.'/acceptance/api-stub.php >/dev/null 2>&1 & echo $!', $output);
+    $pid = (int) $output[0];
+    echo "Starting API stub" . PHP_EOL;
+
+    // Kill api stub
+    register_shutdown_function(function() use ($pid) {
+        echo "Stopping API stub" . PHP_EOL;
+        exec('kill ' . $pid);
+    });
+});

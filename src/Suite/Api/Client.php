@@ -13,7 +13,6 @@ class Client
     const HTTP  = 'http';
     const HTTPS = 'https';
     const COULD_NOT_EXECUTE_API_REQUEST = 'Could not execute API request.';
-    const UNKNOWN_ERROR = 'Unknown error';
 
     /**
      * @var \Psr\Log\LoggerInterface
@@ -26,19 +25,33 @@ class Client
     private $escherProvider;
 
     /**
+     * @var ClientInterface
+     */
+    private $client;
+
+	/**
+	 * @var ResponseProcessor
+	 */
+    private $responseProcessor;
+
+    /**
      * @var string (http|https)
      */
     private $protocol = self::HTTPS;
 
-    private $client;
-    private $responseProcessor;
 
-    public function __construct(LoggerInterface $logger, EscherProvider $escherProvider, ClientInterface $client, ResponseProcessor $responseProcessor)
+    public static function create(LoggerInterface $logger, EscherProvider $escherProvider, ResponseProcessor $responseProcessor, $protocol = self::HTTPS)
+    {
+        return new self($logger, $escherProvider, new \Guzzle\Http\Client(), $responseProcessor, $protocol);
+    }
+
+    public function __construct(LoggerInterface $logger, EscherProvider $escherProvider, ClientInterface $client, ResponseProcessor $responseProcessor, $protocol = self::HTTPS)
     {
         $this->logger = $logger;
         $this->escherProvider = $escherProvider;
         $this->client = $client;
         $this->responseProcessor = $responseProcessor;
+        $this->protocol = $protocol;
     }
 
     public function get($url)

@@ -30,6 +30,8 @@
         }
     ],
     "scripts": {
-        "test": "phpunit test"
+      "test": "phpunit -c test/phpunit.xml",
+      "unit": "phpunit -c test/phpunit.xml --testsuite unit",
+      "acceptance": "phpunit -c test/phpunit.xml  --testsuite acceptance"
     }
 }
