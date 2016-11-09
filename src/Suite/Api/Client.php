@@ -6,7 +6,6 @@ use Guzzle\Http\ClientInterface;
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\Exception\RequestException;
 use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Http\Message\Response;
 use Psr\Log\LoggerInterface;
 
 class Client
@@ -14,7 +13,6 @@ class Client
     const HTTP  = 'http';
     const HTTPS = 'https';
     const COULD_NOT_EXECUTE_API_REQUEST = 'Could not execute API request.';
-    const API_RESPONSE_FORMAT_WAS_WRONG = 'API response format was wrong';
     const UNKNOWN_ERROR = 'Unknown error';
 
     /**
@@ -33,12 +31,14 @@ class Client
     private $protocol = self::HTTPS;
 
     private $client;
+    private $responseProcessor;
 
-    public function __construct(LoggerInterface $logger, EscherProvider $escherProvider, ClientInterface $client)
+    public function __construct(LoggerInterface $logger, EscherProvider $escherProvider, ClientInterface $client, ResponseProcessor $responseProcessor)
     {
         $this->logger = $logger;
         $this->escherProvider = $escherProvider;
         $this->client = $client;
+        $this->responseProcessor = $responseProcessor;
     }
 
     public function get($url)
@@ -70,10 +70,10 @@ class Client
             $this->logger->info('Executing request:' . (string)$request);
             $response = $request->send();
             $this->logger->info('Success:' . $response->getBody(true));
-            return $this->processResponse($request, $response);
+            return $this->responseProcessor->processResponse($request, $response);
         } catch (BadResponseException $ex) {
             $this->logger->error($ex->getMessage());
-            return $this->processResponse($request, $ex->getResponse());
+            return $this->responseProcessor->processResponse($request, $ex->getResponse());
         } catch (RequestException $ex) {
             $this->logger->error($ex->getMessage());
             throw new Error(self::COULD_NOT_EXECUTE_API_REQUEST);
@@ -106,35 +106,5 @@ class Client
     protected function getBody($data)
     {
         return json_encode($data);
-    }
-
-    /**
-     * @param RequestInterface $request
-     * @param $response
-     * @return mixed
-     * @throws Error
-     */
-    private function processResponse(RequestInterface $request, Response $response)
-    {
-        $responseBody = $response->getBody(true);
-        $result = json_decode($responseBody, true);
-
-        if (!$result) {
-            $this->logger->error('Bad API response for ' . $request->getUrl());
-            $this->logger->debug("API response was: {$responseBody}");
-            throw new Error(self::API_RESPONSE_FORMAT_WAS_WRONG);
-        }
-
-        $result['success'] = isset($result['replyCode']) && $result['replyCode'] === 0;
-
-        if (!$result['success']) {
-            $replyText = isset($result['replyText']) ? $result['replyText'] : self::UNKNOWN_ERROR;
-            $replyCode = isset($result['replyCode']) ? $result['replyCode'] : 0;
-            $this->logger->error("Unsuccessful API response for {$request->getUrl()}. replyText: '{$replyText}', replyCode: {$replyCode}");
-            $this->logger->debug("API response was: {$responseBody}");
-            throw new Error($replyText, $replyCode);
-        }
-
-        return $result;
     }
 }

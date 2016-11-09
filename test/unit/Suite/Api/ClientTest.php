@@ -62,7 +62,7 @@ class ClientTest extends BaseTestCase
         $this->escherProvider = $this->mock(EscherProvider::class);
         $this->escher = $this->mock(Escher::class);
         $this->guzzleClient = $this->mock(GuzzleClient::class);
-        $this->apiClient = new Client($this->dummyLogger, $this->escherProvider, $this->guzzleClient);
+        $this->apiClient = new Client($this->dummyLogger, $this->escherProvider, $this->guzzleClient, new SuiteResponseProcessor($this->dummyLogger));
     }
 
     protected function tearDown()
@@ -169,7 +169,7 @@ class ClientTest extends BaseTestCase
      */
     public function httpsIsUsedInRequestUrl()
     {
-        $apiWrapper = new Client($this->dummyLogger, $this->escherProvider, $this->guzzleClient);
+        $apiWrapper = new Client($this->dummyLogger, $this->escherProvider, $this->guzzleClient, new SuiteResponseProcessor($this->dummyLogger));
         $this->expectSuccessfulGet('https://url');
         $apiWrapper->get('url');
     }
