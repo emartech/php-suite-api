@@ -2,6 +2,11 @@
     "name": "emartech/php-suite-api",
     "description": "Simple client library for emarsys suite API",
     "type": "library",
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
     "require": {
         "guzzlehttp/guzzle": "3.8.*",
         "monolog/monolog": "1.10.*",
@@ -23,5 +28,8 @@
             "name": "fqqdk",
             "email": "fqqdk1@gmail.com"
         }
-    ]
+    ],
+    "scripts": {
+        "test": "phpunit test"
+    }
 }
