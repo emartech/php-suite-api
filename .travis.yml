@@ -1,6 +1,13 @@
 language: php
+
 php:
   - 7.0
 
 install: composer install
+
 script: composer test
+
+notifications:
+  hipchat:
+    rooms:
+      secure: "AHylmRjdsOwFxba+op2yZovOy/xmrI7MUvClUYZ5GoJFWMrHmESXY81ym/BXil9WT2Q3TKoD5QBEzscxlaeyAmTDYjNo/4CCy38cPOr9TZCoN9F/c6MEeZYuq6tVkbamx/Y2DHtMYeUVvGJD0B+TW5myxL2siy3dcfzqrCTnJE6sIRbuMIkWldPaMHE0+SBgeLwbDZ1hf7x5Q0DgRFofhywztonjMJdiDpzppZk3LmMSplRCyyKHgDuvHjWr8MEhaqxgKEC1tWHUjMCOJEVvnUyMg9yZJM6+4H+nwnJSPFM14GLSFdV4/FIbOsrHhdHQYef4GIBn179ke0p53VLVQWEo0TlzMY6B3QND7ycvQgsjHYG945jV+FumfbyhxQgeP7p5IRDEE3ACbU6hZ5F8i9tDTsQChC/9wlDfQ2O75nat3QFqiMxLZimxh2xJp/y04CiepxnbE5vFglN9dtAu3XlRdA8x+uzg3rZ5jFrc5tTdsUl0cp+fjiVcP/5+Z6LGxMVPOi1qEJzAd56N+Mo2O+JQSurZ9guuUkI3rl85bGYhenGqFVw1W2/9ltJDvM5wkpnqSsFR4Z6HwWiAM8XLR8WRZQFqsGgdj6Y2PBsFKchmsQ/ksIp5mryq0ZdpqXKqKgf0lsBtQGsaLvSzCEkt14bM3lx4mheVY/ILGs5U2GE="
