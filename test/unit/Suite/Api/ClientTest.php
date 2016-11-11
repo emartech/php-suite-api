@@ -6,18 +6,16 @@ use Emartech\TestHelper\BaseTestCase;
 
 use Escher;
 
-use Guzzle\Http\Client as GuzzleClient;
-use Guzzle\Http\ClientInterface;
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\Exception\RequestException;
-use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Http\Message\Response;
-
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\RequestException;
 use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_Constraint_IsEqual;
 use PHPUnit_Framework_MockObject_Builder_InvocationMocker;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_MockObject_Stub;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class ClientTest extends BaseTestCase
 {
@@ -45,6 +43,21 @@ class ClientTest extends BaseTestCase
     private $guzzleClient;
 
     /**
+     * @var RequestFactory|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $requestFactory;
+
+    /**
+     * @var RequestInterface|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $request;
+
+    /**
+     * @var ResponseInterface|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $response;
+
+    /**
      * @var Client
      */
     protected $apiClient;
@@ -58,11 +71,16 @@ class ClientTest extends BaseTestCase
     protected function setUp()
     {
         parent::setUp();
+
         $this->oldApiProxyHost = getenv("API_PROXY_HOST");
         $this->escherProvider = $this->mock(EscherProvider::class);
         $this->escher = $this->mock(Escher::class);
         $this->guzzleClient = $this->mock(GuzzleClient::class);
-        $this->apiClient = new Client($this->dummyLogger, $this->escherProvider, $this->guzzleClient, new SuiteResponseProcessor($this->dummyLogger));
+        $this->requestFactory = $this->mock(RequestFactory::class);
+        $this->request = $this->mock(RequestInterface::class);
+        $this->response = $this->mock(ResponseInterface::class);
+
+        $this->apiClient = new Client($this->dummyLogger, $this->escherProvider, $this->guzzleClient, $this->requestFactory, new SuiteResponseProcessor($this->dummyLogger));
     }
 
     protected function tearDown()
@@ -106,9 +124,9 @@ class ClientTest extends BaseTestCase
      */
     public function responseOfSuccessfulRequestShouldContainAdditionalDataReceivedFromApi()
     {
-        $this->expectSuccessfulGet('https://url')->will($this->apiSuccess(array('data' => 'DATA')));
+        $this->expectSuccessfulGet('https://url')->will($this->apiSuccess(['data' => 'DATA']));
         $response = $this->apiClient->get('url');
-        $this->assertThat($response, $this->structure(array('data' => 'DATA')));
+        $this->assertThat($response, $this->structure(['data' => 'DATA']));
     }
 
     /**
@@ -116,8 +134,8 @@ class ClientTest extends BaseTestCase
      */
     public function responseOfSuccessfulPostRequestShouldIndicateSuccessAndContainApiResponseCodeAndText()
     {
-        $this->expectSuccessfulPost('https://url', array())->will($this->apiSuccess());
-        $response = $this->apiClient->post('url', array());
+        $this->expectSuccessfulPost('https://url', [])->will($this->apiSuccess());
+        $response = $this->apiClient->post('url', []);
         $this->assertSuccessful($response);
         $this->assertResponseContains($response, self::API_SUCCESS_CODE, self::API_SUCCESS_TEXT);
     }
@@ -160,7 +178,7 @@ class ClientTest extends BaseTestCase
      */
     public function requestShouldContainAuthorizationHeaders()
     {
-        $this->expectSuccessfulGet('https://url', $this->expectedHeaders());
+        $this->expectSuccessfulGet('https://url', $this->expectedHeaders())->will($this->apiSuccess());
         $this->apiClient->get('url');
     }
 
@@ -169,8 +187,8 @@ class ClientTest extends BaseTestCase
      */
     public function httpsIsUsedInRequestUrl()
     {
-        $apiWrapper = new Client($this->dummyLogger, $this->escherProvider, $this->guzzleClient, new SuiteResponseProcessor($this->dummyLogger));
-        $this->expectSuccessfulGet('https://url');
+        $apiWrapper = new Client($this->dummyLogger, $this->escherProvider, $this->guzzleClient, $this->requestFactory, new SuiteResponseProcessor($this->dummyLogger));
+        $this->expectSuccessfulGet('https://url')->will($this->apiSuccess());
         $apiWrapper->get('url');
     }
 
@@ -179,7 +197,7 @@ class ClientTest extends BaseTestCase
      */
     protected function assertSuccessful($response)
     {
-        $this->assertThat($response, $this->structure(array('success' => $this->isTrue())));
+        $this->assertThat($response, $this->structure(['success' => $this->isTrue()]));
     }
 
     /**
@@ -187,7 +205,7 @@ class ClientTest extends BaseTestCase
      */
     protected function assertUnsuccessful($response)
     {
-        $this->assertThat($response, $this->structure(array('success' => $this->isFalse())));
+        $this->assertThat($response, $this->structure(['success' => $this->isFalse()]));
     }
 
     /**
@@ -197,10 +215,10 @@ class ClientTest extends BaseTestCase
      */
     protected function assertResponseContains($response, $code, $text)
     {
-        $this->assertThat($response, $this->structure(array(
+        $this->assertThat($response, $this->structure([
             'replyCode' => $code,
             'replyText' => $text,
-        )));
+        ]));
     }
 
     /**
@@ -208,9 +226,7 @@ class ClientTest extends BaseTestCase
      */
     protected function apiHeaders()
     {
-        return $this->structure(array(
-            'Content-Type' => 'application/json',
-        ));
+        return $this->structure(['Content-Type' => 'application/json']);
     }
 
     /**
@@ -220,10 +236,8 @@ class ClientTest extends BaseTestCase
      */
     protected function expectSuccessfulPost($apiUrl, $expectedParams)
     {
-        $response = $this->mock(Response::class);
-        $this->expectSuccessfulRequest('post', $response)->with($apiUrl, $this->apiHeaders(), json_encode($expectedParams));
-        $response->expects($this->at(0))->method('getBody')->with(true);
-        return $response->expects($this->at(1))->method('getBody')->with(true);
+        $this->expectSuccessfulRequest('POST', $apiUrl, $this->apiHeaders(), json_encode($expectedParams));
+        return $this->response->expects($this->any())->method('getBody');
     }
 
     /**
@@ -231,61 +245,122 @@ class ClientTest extends BaseTestCase
      * @param $expectedHeaders
      * @return \PHPUnit_Framework_MockObject_Builder_InvocationMocker
      */
-    protected function expectSuccessfulGet($apiUrl, $expectedHeaders = null)
+    private function expectSuccessfulGet($apiUrl, $expectedHeaders = null)
     {
-        $response = $this->mock(Response::class);
-        $this->expectSuccessfulRequest('get', $response)->with($apiUrl, $expectedHeaders ?: $this->apiHeaders());
-        return $response->expects($this->any())->method('getBody')->with(true)->will($this->apiSuccess());
+        $this->expectSuccessfulRequest('GET', $apiUrl, $expectedHeaders ?: $this->apiHeaders());
+        return $this->response->expects($this->any())->method('getBody');
     }
 
     /**
      * @param $apiUrl
      * @return \PHPUnit_Framework_MockObject_Builder_InvocationMocker
      */
-    protected function expectGetYieldingBadResponse($apiUrl)
+    private function expectGetYieldingBadResponse($apiUrl)
     {
-        $response = $this->mock(Response::class);
-        $this->expectBadResponse('get', $response)->with($apiUrl, $this->apiHeaders());
-        return $response->expects($this->once())->method('getBody')->with(true);
+        $this->expectRequest('GET', $apiUrl, $this->apiHeaders())
+            ->will($this->throwException(new BadResponseException('Bad response', $this->request, $this->response)));
+
+        return $this->response->expects($this->any())->method('getBody');
     }
 
     /**
      * @param $apiUrl
      * @return PHPUnit_Framework_MockObject_Builder_InvocationMocker
      */
-    protected function expectGetYieldingRequestException($apiUrl)
+    private function expectGetYieldingRequestException($apiUrl)
     {
-        return $this->expectRequest('get', $this->throwException(new RequestException()))->with($apiUrl, $this->apiHeaders());
+        return $this->expectRequest('GET', $apiUrl, $this->apiHeaders())
+            ->will($this->throwException(new RequestException('Request exception', $this->request)));
+    }
+
+    /**
+     * @param PHPUnit_Framework_Constraint|mixed $method
+     * @param PHPUnit_Framework_Constraint|mixed|null $uri
+     * @param PHPUnit_Framework_Constraint|mixed|null $headers
+     * @param PHPUnit_Framework_Constraint|mixed|null $body
+     */
+    private function expectSuccessfulRequest($method, $uri = null, $headers = null, $body = null)
+    {
+        $this->expectRequest($method, $uri, $headers, $body)->will($this->returnValue($this->response));
+    }
+
+    /**
+     * @param PHPUnit_Framework_Constraint|mixed $method
+     * @param PHPUnit_Framework_Constraint|mixed $uri
+     * @param PHPUnit_Framework_Constraint|mixed $headers
+     * @param PHPUnit_Framework_Constraint|mixed $body
+     * @return PHPUnit_Framework_MockObject_Builder_InvocationMocker
+     */
+    private function expectRequest(string $method, $uri, $headers, $body = null)
+    {
+        $this->expectEscherSigning($method);
+        $this->request->expects($this->any())->method('getMethod')->will($this->returnValue($method));
+        $this->request->expects($this->any())->method('getUri')->will($this->returnValue('mocked URI'));
+        $this->requestFactory->expects($this->once())->method('createRequest')
+            ->with(
+                $method,
+                null === $uri ? $this->anything() : $uri,
+                null === $headers ? $this->anything() : $headers,
+                null === $body ? $this->anything() : $body
+            )->will($this->returnValue($this->request));
+        return $this->guzzleClient->expects($this->once())->method('send')->with($this->request);
+    }
+
+    private function apiSuccess($additionalData = [])
+    {
+        return $this->returnValue(json_encode([
+                'replyCode' => self::API_SUCCESS_CODE,
+                'replyText' => self::API_SUCCESS_TEXT
+            ] + $additionalData));
+    }
+
+    private function apiFailure()
+    {
+        return $this->returnValue(json_encode([
+            'replyCode' => self::API_FAILURE_CODE,
+            'replyText' => self::API_FAILURE_TEXT
+        ]));
+    }
+
+    private function expectedHeaders()
+    {
+        return $this->structure($this->allHeaders());
+    }
+
+    private function contentTypeHeader()
+    {
+        return ['Content-Type' => 'application/json'];
+    }
+
+    /**
+     * @return array
+     */
+    private function allHeaders()
+    {
+        return $this->contentTypeHeader() + $this->authHeaders();
+    }
+
+    /**
+     * @return array
+     */
+    private function authHeaders()
+    {
+        return ['X-Dummy-Auth' => 'SIGNATURE'];
     }
 
     /**
      * @param $method
-     * @param $response
-     * @return PHPUnit_Framework_MockObject_Builder_InvocationMocker
+     * @return PHPUnit_Framework_Constraint_IsEqual
      */
-    protected function expectSuccessfulRequest($method, $response)
+    private function equalToIgnoringCase($method)
     {
-        return $this->expectRequest($method, $this->returnValue($response));
+        return $this->equalTo($method, 0, 10, false, true);
     }
 
     /**
      * @param $method
-     * @param $response
-     * @return PHPUnit_Framework_MockObject_Builder_InvocationMocker
      */
-    protected function expectBadResponse($method, $response)
-    {
-        $ex = new BadResponseException();
-        $ex->setResponse($response);
-        return $this->expectRequest($method, $this->throwException($ex));
-    }
-
-    /**
-     * @param $method
-     * @param PHPUnit_Framework_MockObject_Stub $result
-     * @return PHPUnit_Framework_MockObject_Builder_InvocationMocker
-     */
-    protected function expectRequest($method, $result)
+    private function expectEscherSigning($method)
     {
         $this->escherProvider->expects($this->once())->method('createEscher')->will($this->returnValue($this->escher));
         $this->escherProvider->expects($this->any())->method('getEscherKey')->will($this->returnValue(self::ESCHER_KEY));
@@ -301,59 +376,6 @@ class ClientTest extends BaseTestCase
                 $this->contentTypeHeader()
             )
             ->will($this->returnValue($this->allHeaders()));
-        $request = $this->mock(RequestInterface::class);
-        $request->expects($this->once())->method('send')->will($result);
-        return $this->guzzleClient->expects($this->once())->method($method)->will($this->returnValue($request));
     }
 
-    protected function apiSuccess($additionalData = array())
-    {
-        return $this->returnValue(json_encode(array(
-                'replyCode' => self::API_SUCCESS_CODE,
-                'replyText' => self::API_SUCCESS_TEXT
-            ) + $additionalData));
-    }
-
-    protected function apiFailure()
-    {
-        return $this->returnValue(json_encode(array(
-            'replyCode' => self::API_FAILURE_CODE,
-            'replyText' => self::API_FAILURE_TEXT
-        )));
-    }
-
-    private function expectedHeaders()
-    {
-        return $this->structure($this->allHeaders());
-    }
-
-    private function contentTypeHeader()
-    {
-        return array('Content-Type' => 'application/json');
-    }
-
-    /**
-     * @return array
-     */
-    protected function allHeaders()
-    {
-        return $this->contentTypeHeader() + $this->authHeaders();
-    }
-
-    /**
-     * @return array
-     */
-    protected function authHeaders()
-    {
-        return array('X-Dummy-Auth' => 'SIGNATURE');
-    }
-
-    /**
-     * @param $method
-     * @return PHPUnit_Framework_Constraint_IsEqual
-     */
-    protected function equalToIgnoringCase($method)
-    {
-        return $this->equalTo($method, 0, 10, false, true);
-    }
 }
