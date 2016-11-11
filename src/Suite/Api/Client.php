@@ -5,6 +5,7 @@ namespace Suite\Api;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\TransferStats;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
 
@@ -86,9 +87,13 @@ class Client
     private function executeRequest(RequestInterface $request = null)
     {
         try {
-            $this->logger->info('Executing request:' . $this->serializeRequestForLogging($request));
-            $response = $this->client->send($request);
-            $this->logger->info('Success:' . $response->getBody());
+            $this->logger->info('Executing request: ' . $this->serializeRequestForLogging($request));
+            $response = $this->client->send($request, [
+                'on_stats' => function (TransferStats $stats) {
+                    $this->logger->info("Request transfer time: ". $stats->getTransferTime());
+                }
+            ]);
+            $this->logger->info('Request successful.');
             return $this->responseProcessor->processResponse($request, $response);
         } catch (BadResponseException $ex) {
             $this->logger->error($ex->getMessage());
