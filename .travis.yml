@@ -3,4 +3,4 @@ php:
   - 7.0
 
 install: composer install
-script: phpunit -c test/phpunit.xml test/
+script: composer test
