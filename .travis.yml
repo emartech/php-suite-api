@@ -2,4 +2,4 @@ language: php
 php:
   - 7.0
 
-script: vendor/bin/phpunit -c test/phpunit.xml test/
+script: phpunit -c test/phpunit.xml test/
