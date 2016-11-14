@@ -26,6 +26,7 @@ class ClientTest extends BaseTestCase
 
     const ESCHER_KEY = 'escher_key';
     const ESCHER_SECRET = 'escher_secret';
+    const URL = 'https://url';
 
     /**
      * @var EscherProvider|PHPUnit_Framework_MockObject_MockObject
@@ -104,8 +105,8 @@ class ClientTest extends BaseTestCase
      */
     public function responseOfSuccessfulGetRequestShouldIndicateSuccess()
     {
-        $this->expectSuccessfulGet('https://url')->will($this->apiSuccess());
-        $response = $this->apiClient->get('url');
+        $this->expectSuccessfulGet(self::URL)->will($this->apiSuccess());
+        $response = $this->apiClient->get(self::URL);
         $this->assertSuccessful($response);
     }
 
@@ -114,8 +115,8 @@ class ClientTest extends BaseTestCase
      */
     public function responseOfSuccessfulGetRequestShouldContainApiResponseCodeAndText()
     {
-        $this->expectSuccessfulGet('https://url')->will($this->apiSuccess());
-        $response = $this->apiClient->get('url');
+        $this->expectSuccessfulGet(self::URL)->will($this->apiSuccess());
+        $response = $this->apiClient->get(self::URL);
         $this->assertResponseContains($response, self::API_SUCCESS_CODE, self::API_SUCCESS_TEXT);
     }
 
@@ -124,8 +125,8 @@ class ClientTest extends BaseTestCase
      */
     public function responseOfSuccessfulRequestShouldContainAdditionalDataReceivedFromApi()
     {
-        $this->expectSuccessfulGet('https://url')->will($this->apiSuccess(['data' => 'DATA']));
-        $response = $this->apiClient->get('url');
+        $this->expectSuccessfulGet(self::URL)->will($this->apiSuccess(['data' => 'DATA']));
+        $response = $this->apiClient->get(self::URL);
         $this->assertThat($response, $this->structure(['data' => 'DATA']));
     }
 
@@ -134,8 +135,8 @@ class ClientTest extends BaseTestCase
      */
     public function responseOfSuccessfulPostRequestShouldIndicateSuccessAndContainApiResponseCodeAndText()
     {
-        $this->expectSuccessfulPost('https://url', [])->will($this->apiSuccess());
-        $response = $this->apiClient->post('url', []);
+        $this->expectSuccessfulPost(self::URL, [])->will($this->apiSuccess());
+        $response = $this->apiClient->post(self::URL, []);
         $this->assertSuccessful($response);
         $this->assertResponseContains($response, self::API_SUCCESS_CODE, self::API_SUCCESS_TEXT);
     }
@@ -147,8 +148,8 @@ class ClientTest extends BaseTestCase
      */
     public function responseOfBadApiRequestShouldIndicateFailureAndContainErrorMessage()
     {
-        $this->expectGetYieldingBadResponse('https://url')->will($this->apiFailure());
-        $this->apiClient->get('url');
+        $this->expectGetYieldingBadResponse(self::URL)->will($this->apiFailure());
+        $this->apiClient->get(self::URL);
     }
 
     /**
@@ -158,8 +159,8 @@ class ClientTest extends BaseTestCase
      */
     public function responseOfUnsuccessfulApiRequestShouldIndicateFailureAndContainErrorMessage()
     {
-        $this->expectGetYieldingRequestException('https://url');
-        $this->apiClient->get('url');
+        $this->expectGetYieldingRequestException(self::URL);
+        $this->apiClient->get(self::URL);
     }
 
     /**
@@ -169,8 +170,8 @@ class ClientTest extends BaseTestCase
      */
     public function responseContainingInvalidFormatShouldIndicateFailureAndContainErrorMessage()
     {
-        $this->expectSuccessfulGet('https://url')->will($this->returnValue('NOT A JSON STRING'));
-        $this->apiClient->get('url');
+        $this->expectSuccessfulGet(self::URL)->will($this->returnValue('NOT A JSON STRING'));
+        $this->apiClient->get(self::URL);
     }
 
     /**
@@ -178,8 +179,8 @@ class ClientTest extends BaseTestCase
      */
     public function requestShouldContainAuthorizationHeaders()
     {
-        $this->expectSuccessfulGet('https://url', $this->expectedHeaders())->will($this->apiSuccess());
-        $this->apiClient->get('url');
+        $this->expectSuccessfulGet(self::URL, $this->expectedHeaders())->will($this->apiSuccess());
+        $this->apiClient->get(self::URL);
     }
 
     /**
@@ -188,8 +189,8 @@ class ClientTest extends BaseTestCase
     public function httpsIsUsedInRequestUrl()
     {
         $apiWrapper = new Client($this->dummyLogger, $this->escherProvider, $this->guzzleClient, $this->requestFactory, new SuiteResponseProcessor($this->dummyLogger));
-        $this->expectSuccessfulGet('https://url')->will($this->apiSuccess());
-        $apiWrapper->get('url');
+        $this->expectSuccessfulGet(self::URL)->will($this->apiSuccess());
+        $apiWrapper->get(self::URL);
     }
 
     /**

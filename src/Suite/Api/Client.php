@@ -40,31 +40,24 @@ class Client
 	 */
     private $responseProcessor;
 
-    /**
-     * @var string (http|https)
-     */
-    private $protocol = self::HTTPS;
 
-
-    public static function create(LoggerInterface $logger, EscherProvider $escherProvider, ResponseProcessor $responseProcessor, $protocol = self::HTTPS)
+    public static function create(LoggerInterface $logger, EscherProvider $escherProvider, ResponseProcessor $responseProcessor)
     {
-        return new self($logger, $escherProvider, new \GuzzleHttp\Client(), new RequestFactory(), $responseProcessor, $protocol);
+        return new self($logger, $escherProvider, new \GuzzleHttp\Client(), new RequestFactory(), $responseProcessor);
     }
 
-    public function __construct(LoggerInterface $logger, EscherProvider $escherProvider, ClientInterface $client, RequestFactory $requestFactory, ResponseProcessor $responseProcessor, $protocol = self::HTTPS)
+    public function __construct(LoggerInterface $logger, EscherProvider $escherProvider, ClientInterface $client, RequestFactory $requestFactory, ResponseProcessor $responseProcessor)
     {
         $this->logger = $logger;
         $this->escherProvider = $escherProvider;
         $this->client = $client;
         $this->responseProcessor = $responseProcessor;
-        $this->protocol = $protocol;
         $this->requestFactory = $requestFactory;
     }
 
     public function get($url)
     {
         $method = 'GET';
-        $url = "$this->protocol://$url";
         $requestBody = '';
         $headers = $this->getHeaders($url, $method, $requestBody);
         return $this->executeRequest($this->createRequest($method, $url, $headers, $requestBody));
@@ -73,7 +66,6 @@ class Client
     public function post($url, $data)
     {
         $method = 'POST';
-        $url = "$this->protocol://$url";
         $requestBody = $this->getBody($data);
         $headers = $this->getHeaders($url, $method, $requestBody);
         return $this->executeRequest($this->createRequest($method, $url, $headers, $requestBody));

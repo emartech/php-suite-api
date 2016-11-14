@@ -17,9 +17,9 @@ class AcceptanceTest extends BaseTestCase
     public function sendingRequestWorks()
     {
         $escherProvider = new EscherProvider('foo/bar/baz', 'key', 'secret', []);
-        $client = Client::create($this->dummyLogger, $escherProvider, new SuiteResponseProcessor($this->dummyLogger), Client::HTTP);
+        $client = Client::create($this->dummyLogger, $escherProvider, new SuiteResponseProcessor($this->dummyLogger));
 
-        $this->assertThat($client->get('localhost:7984/'), $this->isSuccessFulApiResponse());
+        $this->assertThat($client->get('http://localhost:7984/'), $this->isSuccessFulApiResponse());
     }
 
     /**
