@@ -86,7 +86,6 @@ class Client
                 }
             ]);
             $this->logger->info('Request successful.');
-            $this->logger->info('Request body: ' . $response->getBody());
             return $this->responseProcessor->processResponse($request, $response);
         } catch (BadResponseException $ex) {
             $this->logger->error($ex->getMessage());
