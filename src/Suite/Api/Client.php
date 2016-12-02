@@ -138,6 +138,6 @@ class Client
 
     private function serializeRequestForLogging(RequestInterface $request)
     {
-        return "{$request->getMethod()} {$request->getUri()}";
+        return "{$request->getMethod()} {$request->getUri()} {$request->getBody()}";
     }
 }
