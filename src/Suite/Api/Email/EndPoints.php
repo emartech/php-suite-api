@@ -11,8 +11,13 @@ class EndPoints
         $this->apiBaseUrl = $apiBaseUrl;
     }
 
+    public function emailCampaign(int $customerId, int $campaignId): string
+    {
+        return "{$this->apiBaseUrl}/{$customerId}/email/{$campaignId}";
+    }
+
     public function emailPreview(int $customerId, int $campaignId): string
     {
-        return "{$this->apiBaseUrl}/{$customerId}/email/{$campaignId}/preview";
+        return $this->emailCampaign($customerId, $campaignId)."/preview";
     }
 }
