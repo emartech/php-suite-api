@@ -13,7 +13,7 @@ use Suite\Api\Error;
 use Suite\Api\EscherProvider;
 use Suite\Api\SuiteResponseProcessor;
 
-class AcceptanceTest extends BaseTestCase
+class ClientTest extends BaseTestCase
 {
     /**
      * @var LoggerInterface
