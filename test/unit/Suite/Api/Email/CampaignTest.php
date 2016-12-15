@@ -47,10 +47,10 @@ class CampaignTest extends BaseTestCase
     /**
      * @test
      */
-    public function get_Perfect_Perfect()
+    public function getById_Perfect_Perfect()
     {
         $this->expectApiCallForCampaign($this->campaignId);
-        $responseData = $this->emailCampaign->get($this->customerId, $this->campaignId);
+        $responseData = $this->emailCampaign->getById($this->customerId, $this->campaignId);
         $this->assertEquals(array('id' => $this->campaignId), $responseData);
     }
 
@@ -58,12 +58,41 @@ class CampaignTest extends BaseTestCase
     /**
      * @test
      */
-    public function get_ApiFailure_ExceptionThrown()
+    public function getById_ApiFailure_ExceptionThrown()
     {
         $this->expectApiFailure();
 
         try {
-            $this->emailCampaign->get($this->customerId, $this->campaignId);
+            $this->emailCampaign->getById($this->customerId, $this->campaignId);
+        } catch (RequestFailed $e) {
+            return;
+        }
+
+        $this->fail('No exception was thrown.');
+    }
+
+
+    /**
+     * @test
+     */
+    public function getList_Perfect_Perfect()
+    {
+        $expectedResponseData = [0 => ['id' => $this->campaignId]];
+        $this->expectApiCallWithFilter(['event' => 10], $expectedResponseData);
+        $responseData = $this->emailCampaign->getList($this->customerId, ['event' => 10]);
+        $this->assertEquals($expectedResponseData, $responseData);
+    }
+
+
+    /**
+     * @test
+     */
+    public function getList_ApiFailure_ExceptionThrown()
+    {
+        $this->expectApiFailure();
+
+        try {
+            $this->emailCampaign->getList($this->customerId, []);
         } catch (RequestFailed $e) {
             return;
         }
@@ -77,6 +106,14 @@ class CampaignTest extends BaseTestCase
         $this->apiClient->expects($this->once())->method('get')
             ->with($this->endPoints->emailCampaign($this->customerId, $this->campaignId))
             ->will($this->apiSuccess(array('id' => $id)));
+    }
+
+
+    private function expectApiCallWithFilter($expectedFilter, $expectedResponseData)
+    {
+        $this->apiClient->expects($this->once())->method('get')
+            ->with($this->endPoints->emailCampaignList($this->customerId, $expectedFilter))
+            ->will($this->apiSuccess($expectedResponseData));
     }
 
 

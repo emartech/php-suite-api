@@ -22,7 +22,7 @@ class Campaign
     }
 
 
-    public function get(int $customerId, int $campaignId)
+    public function getById(int $customerId, int $campaignId)
     {
         try
         {
@@ -32,6 +32,20 @@ class Campaign
         catch (\Exception $ex)
         {
             throw new RequestFailed('Could not get details for email: ' . $ex->getMessage(), $ex->getCode(), $ex);
+        }
+    }
+
+
+    public function getList(int $customerId, array $filter)
+    {
+        try
+        {
+            $response = $this->apiClient->get($this->endPoints->emailCampaignList($customerId, $filter));
+            return $response['data'];
+        }
+        catch (\Exception $ex)
+        {
+            throw new RequestFailed('Could not get details for email list: ' . $ex->getMessage(), $ex->getCode(), $ex);
         }
     }
 }
