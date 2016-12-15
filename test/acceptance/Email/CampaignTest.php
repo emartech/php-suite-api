@@ -2,7 +2,6 @@
 
 namespace Suite\Api\Acceptance\Email;
 
-use Suite\Api\Factory;
 use Suite\Api\Test\Helper\AcceptanceBaseTestCase;
 
 class CampaignTest extends AcceptanceBaseTestCase
@@ -12,9 +11,17 @@ class CampaignTest extends AcceptanceBaseTestCase
      */
     public function emailCampaignEndPoint()
     {
-        $campaignId = 654312;
-        $customerId = 123456;
-        $response = $this->factory->createCampaign()->getById($customerId, $campaignId);
-        $this->assertThat($response, $this->structure(['id' => $campaignId, 'customer_id' => $customerId]));
+        $this->assertThat($this->factory->createCampaign()->getById(1, 1), $this->structure(['id' => 1]));
+    }
+
+    /**
+     * @test
+     */
+    public function emailCampaignListEndPoint()
+    {
+        $list = $this->factory->createCampaign()->getList(1);
+        $this->assertCount(2, $list);
+        $this->assertThat($list[0], $this->structure(['id' => 2]));
+        $this->assertThat($list[1], $this->structure(['id' => 3]));
     }
 }

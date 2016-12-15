@@ -19,9 +19,10 @@ class ApiStub
         $app->error(self::handleError());
 
         $app->get('/', self::clientTestEndPoint());
-        $app->get('/{customerId}/email/{campaignId}', function(int $customerId, int $campaignId) {
-            return self::success(['id' => $campaignId, 'customer_id' => $customerId]);
-        });
+
+        foreach (include __DIR__.'/stubs.php' as $route => $data) {
+            $app->get($route, function () use ($data) { return self::success($data); });
+        }
 
         return $app;
     }
@@ -55,13 +56,13 @@ class ApiStub
         };
     }
 
-    private static function success($data = '')
+    private static function success($data = '""')
     {
-        return json_encode(['replyCode' => 0, 'replyText' => 'OK', 'data' => $data]);
+        return '{"replyCode":0, "replyText" : "OK", "data" : '.$data.'}';
     }
 
-    private static function error($message, $data = '')
+    private static function error($message, $data = '""')
     {
-        return json_encode(['replyCode' => 1, 'replyText' => $message, 'data' => $data]);
+        return '{"replyCode":1, "replyText" : "'.$message.'", "data" : '.$data.'}';
     }
 }
