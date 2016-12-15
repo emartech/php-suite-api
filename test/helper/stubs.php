@@ -87,7 +87,7 @@
           "source": "profile"
         }
     ]',
-    '/{customerId}/administrator' => '[
+    '/{customerId}/administrator/' => '[
         {
             "id": "1",
             "username": "admin",

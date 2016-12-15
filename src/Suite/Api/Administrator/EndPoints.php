@@ -13,6 +13,6 @@ class EndPoints
 
     public function administratorList(int $customerId): string
     {
-        return "{$this->apiBaseUrl}/{$customerId}/administrator";
+        return "{$this->apiBaseUrl}/{$customerId}/administrator/";
     }
 }
