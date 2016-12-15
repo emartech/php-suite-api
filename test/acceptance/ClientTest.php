@@ -2,58 +2,41 @@
 
 namespace Suite\Api\Acceptance;
 
-use Emartech\TestHelper\BaseTestCase;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use PHPUnit_Framework_Constraint;
 
-use Psr\Log\LoggerInterface;
 use Suite\Api\Client;
 use Suite\Api\Error;
 use Suite\Api\EscherProvider;
 use Suite\Api\SuiteResponseProcessor;
+use Suite\Api\Test\Helper\AcceptanceBaseTestCase;
 
-class ClientTest extends BaseTestCase
+class ClientTest extends AcceptanceBaseTestCase
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $spyLogger;
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->spyLogger = new Logger('spy', [new StreamHandler(fopen('/tmp/php-suite-api.log', 'a'))]);
-    }
-
     /**
      * @test
      */
     public function sendingRequestWorks()
     {
-        $client = $this->createClient(new EscherProvider('foo/bar/baz', 'key', 'secret', []));
+        $client = $this->createClient($this->escherProvider);
 
-        $this->assertThat($client->get('http://localhost:7984/'), $this->isSuccessfulApiResponse());
+        $this->assertThat($client->get("{$this->apiBaseUrl}/"), $this->isSuccessfulApiResponse());
     }
     /**
      * @test
      */
     public function authenticationWorks()
     {
-        $client = $this->createClient(new EscherProvider('foo/bar/invalid_credential', 'key', 'secret', []));
+        $client = $this->createClient($this->badEscherProvider());
 
         try {
-            $client->get('http://localhost:7984/');
+            $client->get("{$this->apiBaseUrl}/");
             $this->fail('An exception was expected');
         } catch (Error $exception) {
             $this->assertEquals('Authentication error.', $exception->getMessage());
         }
     }
 
-    /**
-     * @return PHPUnit_Framework_Constraint
-     */
-    private function isSuccessfulApiResponse()
+    private function isSuccessfulApiResponse() : PHPUnit_Framework_Constraint
     {
         return $this->structure([
             'replyCode' => 0,
@@ -66,8 +49,16 @@ class ClientTest extends BaseTestCase
      * @param $escherProvider
      * @return Client
      */
-    private function createClient($escherProvider):Client
+    private function createClient($escherProvider) : Client
     {
         return Client::create($this->spyLogger, $escherProvider, new SuiteResponseProcessor($this->spyLogger));
+    }
+
+    /**
+     * @return EscherProvider
+     */
+    private function badEscherProvider():EscherProvider
+    {
+        return new EscherProvider('foo/bar/invalid_credential', 'key', 'secret', []);
     }
 }

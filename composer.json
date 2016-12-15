@@ -7,6 +7,11 @@
             "": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Suite\\Api\\Test\\Helper\\": "test/helper/"
+        }
+    },
     "require": {
         "guzzlehttp/guzzle": "~6.0",
         "monolog/monolog": "1.10.*",
