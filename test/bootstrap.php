@@ -2,7 +2,7 @@
 
 call_user_func(function () {
     // start serving suite API stub
-    exec('php -S localhost:7984 '.__DIR__.'/acceptance/api-stub.php >/tmp/php-suite-api.log 2>&1 & echo $!', $output);
+    exec('php -S localhost:7984 '.__DIR__.'/helper/api-stub.php >/tmp/php-suite-api.log 2>&1 & echo $!', $output);
     $pid = (int) $output[0];
     echo "Starting API stub" . PHP_EOL;
 
