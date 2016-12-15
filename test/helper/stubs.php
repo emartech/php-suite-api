@@ -87,4 +87,46 @@
           "source": "profile"
         }
     ]',
+    '/{customerId}/administrator' => '[
+        {
+            "id": "1",
+            "username": "admin",
+            "email": "",
+            "first_name": "",
+            "last_name": "",
+            "interface_language": "en",
+            "default_upages_lang": "en",
+            "access_level": "0",
+            "position": "",
+            "title": "0",
+            "tz": "",
+            "mobile_phone": "",
+            "may_delete": "n",
+            "last_invitation_action_date": "",
+            "pwd_update_interval": "90",
+            "two_fa_auth_enabled": 0,
+            "mobile_phone_verified": 0,
+            "distance_unit": "km"
+        },
+        {
+            "id": "2",
+            "username": "admin2",
+            "email": "",
+            "first_name": "",
+            "last_name": "",
+            "interface_language": "en",
+            "default_upages_lang": "en",
+            "access_level": "0",
+            "position": "",
+            "title": "0",
+            "tz": "",
+            "mobile_phone": "",
+            "may_delete": "n",
+            "last_invitation_action_date": "",
+            "pwd_update_interval": "90",
+            "two_fa_auth_enabled": 0,
+            "mobile_phone_verified": 0,
+            "distance_unit": "km"
+        }
+    ]',
 ];

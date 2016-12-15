@@ -3,6 +3,8 @@
 namespace Suite\Api;
 
 use Psr\Log\LoggerInterface;
+use Suite\Api\Administrator\Administrator;
+use Suite\Api\Administrator\EndPoints as AdminEndPoints;
 use Suite\Api\Email\Campaign;
 use Suite\Api\Email\EndPoints as CampaignEndPoints;
 use Suite\Api\Email\Preview;
@@ -40,5 +42,10 @@ class Factory
     public function createPreview()
     {
         return new Preview($this->apiClient, new CampaignEndPoints($this->apiBaseUrl));
+    }
+
+    public function createAdministrator()
+    {
+        return new Administrator($this->apiClient, new AdminEndPoints($this->apiBaseUrl));
     }
 }
