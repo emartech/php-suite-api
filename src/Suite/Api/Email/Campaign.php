@@ -36,7 +36,7 @@ class Campaign
     }
 
 
-    public function getList(int $customerId, array $filter)
+    public function getList(int $customerId, array $filter = [])
     {
         try
         {

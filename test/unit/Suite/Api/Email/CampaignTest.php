@@ -75,11 +75,23 @@ class CampaignTest extends BaseTestCase
     /**
      * @test
      */
-    public function getList_Perfect_Perfect()
+    public function getList_Filter_Perfect()
     {
         $expectedResponseData = [0 => ['id' => $this->campaignId]];
         $this->expectApiCallWithFilter(['event' => 10], $expectedResponseData);
         $responseData = $this->emailCampaign->getList($this->customerId, ['event' => 10]);
+        $this->assertEquals($expectedResponseData, $responseData);
+    }
+
+
+    /**
+     * @test
+     */
+    public function getList_NoFilter_Perfect()
+    {
+        $expectedResponseData = [0 => ['id' => $this->campaignId]];
+        $this->expectApiCallWithoutFilter($expectedResponseData);
+        $responseData = $this->emailCampaign->getList($this->customerId);
         $this->assertEquals($expectedResponseData, $responseData);
     }
 
@@ -113,6 +125,14 @@ class CampaignTest extends BaseTestCase
     {
         $this->apiClient->expects($this->once())->method('get')
             ->with($this->endPoints->emailCampaignList($this->customerId, $expectedFilter))
+            ->will($this->apiSuccess($expectedResponseData));
+    }
+
+
+    private function expectApiCallWithoutFilter($expectedResponseData)
+    {
+        $this->apiClient->expects($this->once())->method('get')
+            ->with($this->endPoints->emailCampaignList($this->customerId))
             ->will($this->apiSuccess($expectedResponseData));
     }
 
