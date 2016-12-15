@@ -7,6 +7,7 @@ use Exception;
 
 use Silex\Application;
 use Suite\Api\EscherProvider;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiStub
@@ -23,6 +24,11 @@ class ApiStub
         foreach (include __DIR__.'/stubs.php' as $route => $data) {
             $app->get($route, function () use ($data) { return self::success($data); });
         }
+
+        $app->post('/{customerId}/email/{campaignId}/preview/', function (Request $request) {
+            $params = json_decode($request->getContent(), true);
+            return new Response(self::success('"'.$params['version'].' version"'));
+        });
 
         return $app;
     }

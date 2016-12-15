@@ -5,6 +5,7 @@ namespace Suite\Api;
 use Psr\Log\LoggerInterface;
 use Suite\Api\Email\Campaign;
 use Suite\Api\Email\EndPoints as CampaignEndPoints;
+use Suite\Api\Email\Preview;
 
 class Factory
 {
@@ -34,5 +35,10 @@ class Factory
     public function createCampaign()
     {
         return new Campaign($this->apiClient, new CampaignEndPoints($this->apiBaseUrl));
+    }
+
+    public function createPreview()
+    {
+        return new Preview($this->apiClient, new CampaignEndPoints($this->apiBaseUrl));
     }
 }

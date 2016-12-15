@@ -1,5 +1,5 @@
 <?php return [
-    '/{customerId}/email/{campaignId}' => '{
+    '/{customerId}/email/{campaignId}/' => '{
         "id": "1",
         "language": "en",
         "name": "20160407_1502_Copy of Test mail 1",
@@ -35,7 +35,7 @@
         "source": "userlist"
     }',
 
-    '/{customerId}/email' => '[
+    '/{customerId}/email/' => '[
         {
           "id": "2",
           "administrator": "3",
