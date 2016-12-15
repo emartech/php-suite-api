@@ -113,6 +113,21 @@ class ClientTest extends BaseTestCase
     /**
      * @test
      */
+    public function assembleParametersAsGetQueryParameters()
+    {
+        $parameters = array(
+            'first' => 1,
+            'second' => "sec",
+            'third' => "th i rd"
+        );
+        $this->expectSuccessfulGet(self::URL . '?first=1&second=sec&third=th+i+rd')->will($this->apiSuccess());
+        $response = $this->apiClient->get(self::URL, $parameters);
+        $this->assertSuccessful($response);
+    }
+
+    /**
+     * @test
+     */
     public function responseOfSuccessfulGetRequestShouldContainApiResponseCodeAndText()
     {
         $this->expectSuccessfulGet(self::URL)->will($this->apiSuccess());

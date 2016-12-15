@@ -2,7 +2,6 @@
 
 namespace Suite\Api\Email;
 
-use Psr\Log\LoggerInterface;
 use Suite\Api\Client;
 use Suite\Api\RequestFailed;
 
@@ -40,7 +39,7 @@ class Campaign
     {
         try
         {
-            $response = $this->apiClient->get($this->endPoints->emailCampaignList($customerId, $filter));
+            $response = $this->apiClient->get($this->endPoints->emailCampaignList($customerId), $filter);
             return $response['data'];
         }
         catch (\Exception $ex)

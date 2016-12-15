@@ -55,15 +55,16 @@ class Client
         $this->requestFactory = $requestFactory;
     }
 
-    public function get($url)
+    public function get(string $url, array $parameters = array())
     {
         $method = 'GET';
         $requestBody = '';
-        $headers = $this->getHeaders($url, $method, $requestBody);
-        return $this->executeRequest($this->createRequest($method, $url, $headers, $requestBody));
+        $fullUrl = $this->buildUrlWithParameters($url, $parameters);
+        $headers = $this->getHeaders($fullUrl, $method, $requestBody);
+        return $this->executeRequest($this->createRequest($method, $fullUrl, $headers, $requestBody));
     }
 
-    public function post($url, $data)
+    public function post(string $url, $data)
     {
         $method = 'POST';
         $requestBody = $this->getBody($data);
@@ -136,8 +137,29 @@ class Client
         return $this->requestFactory->createRequest($method, $url, $headers, $requestBody);
     }
 
+    /**
+     * @param RequestInterface $request
+     * @return string
+     */
     private function serializeRequestForLogging(RequestInterface $request)
     {
         return "{$request->getMethod()} {$request->getUri()} {$request->getBody()}";
+    }
+
+    /**
+     * @param string $url
+     * @param array $data
+     * @return string
+     */
+    private function buildUrlWithParameters(string $url, array $data): string
+    {
+        if (!empty($data))
+        {
+            return $url . '?' . http_build_query($data);
+        }
+        else
+        {
+            return $url;
+        }
     }
 }

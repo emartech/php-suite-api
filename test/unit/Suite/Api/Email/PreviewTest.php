@@ -4,8 +4,6 @@ namespace Suite\Api;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use Emartech\TestHelper\BaseTestCase;
-use Suite\Api\Client;
-use Suite\Api\RequestFailed;
 use Suite\Api\Email\EndPoints;
 use Suite\Api\Email\Preview;
 
@@ -16,7 +14,7 @@ class PreviewTest extends BaseTestCase
     const API_SUCCESS_TEXT = 'OK';
     const API_SUCCESS_CODE = 0;
 
-    /** @var ServicesEndPoints */
+    /** @var EndPoints */
     private $endPoints;
 
     /** @var Client|PHPUnit_Framework_MockObject_MockObject */
