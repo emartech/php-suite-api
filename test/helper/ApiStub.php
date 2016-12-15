@@ -8,7 +8,19 @@ class ApiStub
     public static function setUp()
     {
         $app = new \Silex\Application();
-        $app->before(function () {
+        $app->before(self::authenticateWithEscher());
+
+        $app->get('/', self::clientTestEndPoint());
+
+        return $app;
+    }
+
+    /**
+     * @return Closure
+     */
+    private static function authenticateWithEscher():Closure
+    {
+        return function () {
             try {
                 $escherProvider = new \Suite\Api\EscherProvider('foo/bar/baz', 'irrelevant', 'irrelevant', ['key' => 'secret']);
                 $escherProvider->createEscher()->authenticate($escherProvider->getKeyDB());
@@ -18,11 +30,16 @@ class ApiStub
             } catch (\Exception $exception) {
                 return new Response(json_encode(['replyCode' => 1, 'replyText' => (string)$exception, 'data' => '']), 500);
             }
-        });
+        };
+    }
 
-        $app->get('/', function(Request $request) {
+    /**
+     * @return Closure
+     */
+    private static function clientTestEndPoint():Closure
+    {
+        return function (Request $request) {
             return json_encode(['replyCode' => 0, 'replyText' => 'OK', 'data' => '']);
-        });
-        return $app;
+        };
     }
 }
