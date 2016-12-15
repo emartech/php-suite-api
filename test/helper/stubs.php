@@ -129,4 +129,23 @@
             "distance_unit": "km"
         }
     ]',
+
+    '/{customerId}/event/' => '[
+        {
+            "id": "1",
+            "name": "event egy",
+            "usages": {
+                "program_ids": [],
+                "email_ids": ["3"]
+            }
+        },
+        {
+            "id": "2",
+            "name": "event ketto",
+            "usages": {
+                "program_ids": ["4"],
+                "email_ids": []
+            }
+        }
+    ]',
 ];
