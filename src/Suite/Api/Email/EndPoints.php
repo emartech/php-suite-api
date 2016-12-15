@@ -13,17 +13,17 @@ class EndPoints
 
     private function getCampaignBaseUrl(int $customerId): string
     {
-        return "{$this->apiBaseUrl}/{$customerId}/email";
+        return "{$this->apiBaseUrl}/{$customerId}/email/";
     }
 
     public function emailCampaign(int $customerId, int $campaignId): string
     {
-        return $this->getCampaignBaseUrl($customerId)."/{$campaignId}";
+        return $this->getCampaignBaseUrl($customerId)."{$campaignId}";
     }
 
     public function emailPreview(int $customerId, int $campaignId): string
     {
-        return $this->emailCampaign($customerId, $campaignId)."/preview";
+        return $this->emailCampaign($customerId, $campaignId)."preview";
     }
 
     public function emailCampaignList(int $customerId): string
