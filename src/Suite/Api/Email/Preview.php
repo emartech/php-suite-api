@@ -8,10 +8,14 @@ use Suite\Api\RequestFailed;
 
 class Preview
 {
-    /* @var Client */
+    const VERSION_HTML = 'html';
+    const VERSION_TEXT = 'text';
+    const VERSION_MOBILE = 'mobile';
+
+    /** @var Client */
     private $apiClient;
 
-    /* @var EndPoints */
+    /** @var EndPoints */
     private $endPoints;
 
 
@@ -22,7 +26,7 @@ class Preview
     }
 
 
-    private function get(int $customerId, int $campaignId, string $version)
+    public function get(int $customerId, int $campaignId, string $version)
     {
         try
         {
@@ -38,18 +42,18 @@ class Preview
 
     public function getHtml(int $customerId, int $campaignId)
     {
-        return $this->get($customerId, $campaignId, 'html');
+        return $this->get($customerId, $campaignId, self::VERSION_HTML);
     }
 
 
     public function getText(int $customerId, int $campaignId)
     {
-        return $this->get($customerId, $campaignId, 'text');
+        return $this->get($customerId, $campaignId, self::VERSION_TEXT);
     }
 
     public function getMobile(int $customerId, int $campaignId)
     {
-        return $this->get($customerId, $campaignId, 'mobile');
+        return $this->get($customerId, $campaignId, self::VERSION_MOBILE);
     }
 }
 
