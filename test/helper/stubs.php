@@ -130,7 +130,7 @@
         }
     ]',
 
-    '/{customerId}/event/' => '[
+    '/{customerId}/event' => '[
         {
             "id": "1",
             "name": "event egy",
