@@ -19,7 +19,7 @@ class ExternalEventTest extends BaseTestCase
         $clientMock = $this->mock(Client::class);
         $service = new ExternalEvent($clientMock, new EndPoints('base_url'));
 
-        $clientMock->expects($this->once())->method('get')->with('base_url/123456/event/')
+        $clientMock->expects($this->once())->method('get')->with('base_url/123456/event')
             ->will($this->throwException(new Error('error_message', self::ERROR_CODE)));
 
         try {

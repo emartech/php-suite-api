@@ -16,6 +16,6 @@ class EndPoints
 
     public function getList(int $customerId)
     {
-        return "{$this->apiBaseUrl}/{$customerId}/event/";
+        return "{$this->apiBaseUrl}/{$customerId}/event";
     }
 }
