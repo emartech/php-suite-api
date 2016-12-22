@@ -77,7 +77,7 @@ class AdministratorTest extends BaseTestCase
     private function expectApiFailure()
     {
         $this->apiClient->expects($this->once())->method('get')
-            ->will($this->throwException(new \Exception()));
+            ->will($this->throwException(new Error()));
     }
 
 

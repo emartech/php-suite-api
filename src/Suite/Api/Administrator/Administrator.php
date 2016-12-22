@@ -5,6 +5,7 @@ namespace Suite\Api\Administrator;
 
 use Suite\Api\Client;
 use Suite\Api\RequestFailed;
+use Suite\Api\Error;
 
 class Administrator
 {
@@ -28,7 +29,7 @@ class Administrator
             $response = $this->apiClient->get($this->endPoints->administratorList($customerId));
             return $response['data'];
         }
-        catch (\Exception $ex)
+        catch (Error $ex)
         {
             throw new RequestFailed('Could not get list of administrators: ' . $ex->getMessage(), $ex->getCode(), $ex);
         }
