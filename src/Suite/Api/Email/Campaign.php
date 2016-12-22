@@ -4,6 +4,7 @@ namespace Suite\Api\Email;
 
 use Suite\Api\Client;
 use Suite\Api\RequestFailed;
+use Suite\Api\Error;
 
 class Campaign
 {
@@ -28,7 +29,7 @@ class Campaign
             $response = $this->apiClient->get($this->endPoints->emailCampaign($customerId, $campaignId));
             return $response['data'];
         }
-        catch (\Exception $ex)
+        catch (Error $ex)
         {
             throw new RequestFailed('Could not get details for email: ' . $ex->getMessage(), $ex->getCode(), $ex);
         }
@@ -42,7 +43,7 @@ class Campaign
             $response = $this->apiClient->get($this->endPoints->emailCampaignList($customerId), $filter);
             return $response['data'];
         }
-        catch (\Exception $ex)
+        catch (Error $ex)
         {
             throw new RequestFailed('Could not get details for email list: ' . $ex->getMessage(), $ex->getCode(), $ex);
         }
