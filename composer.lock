@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "emartech/escher",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/emartech/escher-php.git",
-                "reference": "e08c7053d8891afa476ae01895abdb7872fad791"
+                "reference": "f73c3c5b9ef7eea995d746d7d765786528c79c64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/emartech/escher-php/zipball/e08c7053d8891afa476ae01895abdb7872fad791",
-                "reference": "e08c7053d8891afa476ae01895abdb7872fad791",
+                "url": "https://api.github.com/repos/emartech/escher-php/zipball/f73c3c5b9ef7eea995d746d7d765786528c79c64",
+                "reference": "f73c3c5b9ef7eea995d746d7d765786528c79c64",
                 "shasum": ""
             },
             "require": {
@@ -70,7 +70,7 @@
                 "sha",
                 "signature"
             ],
-            "time": "2017-01-03 13:32:38"
+            "time": "2017-01-03 14:03:15"
         },
         {
             "name": "guzzlehttp/guzzle",
