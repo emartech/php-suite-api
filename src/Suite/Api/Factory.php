@@ -2,6 +2,7 @@
 
 namespace Suite\Api;
 
+use Escher\Provider as EscherProvider;
 use Psr\Log\LoggerInterface;
 use Suite\Api\Administrator\Administrator;
 use Suite\Api\Administrator\EndPoints as AdminEndPoints;

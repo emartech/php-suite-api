@@ -2,11 +2,11 @@
 
 namespace Suite\Api\Test\Helper;
 
+use Escher\Provider as EscherProvider;
 use Emartech\TestHelper\BaseTestCase;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
-use Suite\Api\EscherProvider;
 use Suite\Api\Factory;
 
 class AcceptanceBaseTestCase extends BaseTestCase

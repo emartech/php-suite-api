@@ -4,34 +4,34 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2cec53d1b0796f9573f7f5bcfb21e5d5",
-    "content-hash": "3142457137db47fd0bc671d1ceb62253",
+    "hash": "efc6685f8ea41a77148ba55654aa5033",
+    "content-hash": "f36426e6ef7072f1aff273415b4f0dc4",
     "packages": [
         {
             "name": "emartech/escher",
-            "version": "0.2.13",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/emartech/escher-php.git",
-                "reference": "8017fa125c61b9acf884522bcce8c4320d1806e0"
+                "reference": "e08c7053d8891afa476ae01895abdb7872fad791"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/emartech/escher-php/zipball/8017fa125c61b9acf884522bcce8c4320d1806e0",
-                "reference": "8017fa125c61b9acf884522bcce8c4320d1806e0",
+                "url": "https://api.github.com/repos/emartech/escher-php/zipball/e08c7053d8891afa476ae01895abdb7872fad791",
+                "reference": "e08c7053d8891afa476ae01895abdb7872fad791",
                 "shasum": ""
             },
             "require": {
-                "php": "~5.2 || ~7.0"
+                "php": ">5.3"
             },
             "require-dev": {
                 "phpunit/phpunit": "3.7.*"
             },
             "type": "library",
             "autoload": {
-                "files": [
-                    "src/Escher.php"
-                ]
+                "psr-4": {
+                    "": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -70,7 +70,7 @@
                 "sha",
                 "signature"
             ],
-            "time": "2016-09-13 15:06:45"
+            "time": "2017-01-03 13:32:38"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -136,28 +136,28 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "1.3.0",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "2693c101803ca78b27972d84081d027fca790a1e"
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/2693c101803ca78b27972d84081d027fca790a1e",
-                "reference": "2693c101803ca78b27972d84081d027fca790a1e",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "^4.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.4-dev"
                 }
             },
             "autoload": {
@@ -183,7 +183,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-11-18 17:47:58"
+            "time": "2016-12-20 10:07:11"
         },
         {
             "name": "guzzlehttp/psr7",

@@ -4,7 +4,8 @@ namespace Suite\Api;
 
 use Emartech\TestHelper\BaseTestCase;
 
-use Escher;
+use Escher\Escher;
+use Escher\Provider as EscherProvider;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;

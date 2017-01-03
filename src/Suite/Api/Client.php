@@ -2,6 +2,7 @@
 
 namespace Suite\Api;
 
+use Escher\Provider as EscherProvider;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\RequestException;
@@ -21,7 +22,7 @@ class Client
     private $logger;
 
     /**
-     * @var EscherProvider
+     * @var Escher\Provider
      */
     private $escherProvider;
 

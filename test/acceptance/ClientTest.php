@@ -4,9 +4,9 @@ namespace Suite\Api\Acceptance;
 
 use PHPUnit_Framework_Constraint;
 
+use Escher\Provider as EscherProvider;
 use Suite\Api\Client;
 use Suite\Api\Error;
-use Suite\Api\EscherProvider;
 use Suite\Api\SuiteResponseProcessor;
 use Suite\Api\Test\Helper\AcceptanceBaseTestCase;
 

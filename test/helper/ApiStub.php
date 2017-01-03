@@ -2,11 +2,11 @@
 
 namespace Suite\Api\Test\Helper;
 
-use EscherException;
+use Escher\Exception as EscherException;
+use Escher\Provider as EscherProvider;
 use Exception;
 
 use Silex\Application;
-use Suite\Api\EscherProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
