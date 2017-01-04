@@ -30,4 +30,9 @@ class EndPoints
     {
         return $this->emailCampaign($customerId, $campaignId)."preview/";
     }
+
+    public function emailLaunch(int $customerId, int $campaignId): string
+    {
+        return $this->emailCampaign($customerId, $campaignId)."launch/";
+    }
 }

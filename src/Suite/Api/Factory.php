@@ -8,6 +8,7 @@ use Suite\Api\Administrator\Administrator;
 use Suite\Api\Administrator\EndPoints as AdminEndPoints;
 use Suite\Api\Email\Campaign;
 use Suite\Api\Email\EndPoints as CampaignEndPoints;
+use Suite\Api\Email\Launch;
 use Suite\Api\Email\Preview;
 use Suite\Api\ExternalEvent\EndPoints as ExternalEventEndPoints;
 use Suite\Api\ExternalEvent\ExternalEvent;
@@ -56,4 +57,10 @@ class Factory
     {
         return new ExternalEvent($this->apiClient, new ExternalEventEndPoints($this->apiBaseUrl));
     }
+
+    public function createLaunch()
+    {
+        return new Launch($this->apiClient, new CampaignEndPoints($this->apiBaseUrl));
+    }
+
 }

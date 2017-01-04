@@ -30,6 +30,11 @@ class ApiStub
             return new Response(self::success('"'.$params['version'].' version"'));
         });
 
+        $app->post('/{customerId}/email/{campaignId}/launch/', function (Request $request) {
+            $params = json_decode($request->getContent(), true);
+            return new Response(self::success("null"));
+        });
+
         return $app;
     }
 
