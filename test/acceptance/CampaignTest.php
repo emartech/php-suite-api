@@ -48,4 +48,13 @@ class CampaignTest extends AcceptanceBaseTestCase
     {
         $this->assertEquals('mobile version', $this->factory->createPreview()->getMobile(1, 1));
     }
+
+    /**
+     * @test
+     */
+    public function emailCampaignDeleteEndPoint()
+    {
+        $response = $this->factory->createCampaign()->deleteById(1, 1);
+        $this->assertSame($response, null);
+    }
 }

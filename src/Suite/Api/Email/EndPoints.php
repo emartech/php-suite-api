@@ -35,4 +35,9 @@ class EndPoints
     {
         return $this->emailCampaign($customerId, $campaignId)."launch/";
     }
+
+    public function emailCampaignDelete($customerId): string
+    {
+        return $this->getCampaignBaseUrl($customerId)."delete/";
+    }
 }

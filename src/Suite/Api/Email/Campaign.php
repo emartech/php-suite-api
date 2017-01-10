@@ -48,6 +48,21 @@ class Campaign
             throw new RequestFailed('Could not get details for email list: ' . $ex->getMessage(), $ex->getCode(), $ex);
         }
     }
+
+    public function deleteById(int $customerId,int $campaignId)
+    {
+        try
+        {
+            $response = $this->apiClient->post($this->endPoints->emailCampaignDelete($customerId), [
+                'emailId' => $campaignId
+            ]);
+            return $response['data'];
+        }
+        catch (Error $ex)
+        {
+            throw new RequestFailed('Could not delete email list: ' . $ex->getMessage(), $ex->getCode(), $ex);
+        }
+    }
 }
 
 

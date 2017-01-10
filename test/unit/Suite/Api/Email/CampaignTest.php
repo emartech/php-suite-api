@@ -110,6 +110,32 @@ class CampaignTest extends BaseTestCase
         $this->fail('No exception was thrown.');
     }
 
+    /**
+     * @test
+     */
+    public function deleteById_CampaignFound_CampaignDeleted()
+    {
+        $this->expectApiCallForCampaignDelete($this->campaignId);
+        $responseData = $this->emailCampaign->deleteById($this->customerId, $this->campaignId);
+        $this->assertSame(null, $responseData);
+    }
+
+    /**
+     * @test
+     */
+    public function deleteById_ApiFailure_ExceptionThrown()
+    {
+        $this->expectApiFailureOnPost();
+
+        try {
+            $this->emailCampaign->deleteById($this->customerId, 1);
+        } catch (RequestFailed $e) {
+            return;
+        }
+
+        $this->fail('No exception was thrown.');
+    }
+
 
     private function expectApiCallForCampaign($id)
     {
@@ -139,6 +165,19 @@ class CampaignTest extends BaseTestCase
     {
         $this->apiClient->expects($this->once())->method('get')
             ->will($this->throwException(new Error()));
+    }
+
+    private function expectApiFailureOnPost()
+    {
+        $this->apiClient->expects($this->once())->method('post')
+            ->will($this->throwException(new Error()));
+    }
+
+    private function expectApiCallForCampaignDelete($id)
+    {
+        $this->apiClient->expects($this->once())->method('post')
+            ->with($this->endPoints->emailCampaignDelete($this->customerId), ['emailId' => $id])
+            ->will($this->apiSuccess(null));
     }
 
 

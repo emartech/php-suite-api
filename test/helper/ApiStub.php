@@ -31,7 +31,10 @@ class ApiStub
         });
 
         $app->post('/{customerId}/email/{campaignId}/launch/', function (Request $request) {
-            $params = json_decode($request->getContent(), true);
+            return new Response(self::success("null"));
+        });
+
+        $app->post('/{customerId}/email/delete/', function (Request $request) {
             return new Response(self::success("null"));
         });
 
