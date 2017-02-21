@@ -139,15 +139,6 @@ class Client
     }
 
     /**
-     * @param RequestInterface $request
-     * @return string
-     */
-    private function serializeRequestForLogging(RequestInterface $request)
-    {
-        return "{$request->getMethod()} {$request->getUri()}";
-    }
-
-    /**
      * @param string $url
      * @param array $data
      * @return string
