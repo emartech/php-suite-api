@@ -81,13 +81,13 @@ class Client
     private function executeRequest(RequestInterface $request = null)
     {
         try {
-            $this->logger->info('Executing request: ' . $this->serializeRequestForLogging($request));
+            $this->logRequest($request, 'executing');
             $response = $this->client->send($request, [
-                'on_stats' => function (TransferStats $stats) {
-                    $this->logger->info("Request transfer time: ". $stats->getTransferTime());
+                'on_stats' => function (TransferStats $stats) use ($request) {
+                    $this->logRequest($request, 'stats', $stats);
                 }
             ]);
-            $this->logger->info('Request successful.');
+            $this->logRequest($request, 'successful');
             return $this->responseProcessor->processResponse($request, $response);
         } catch (BadResponseException $ex) {
             $this->logger->error($ex->getMessage());
@@ -162,5 +162,23 @@ class Client
         {
             return $url;
         }
+    }
+
+    private function logRequest(RequestInterface $request, string $event, TransferStats $stats = null)
+    {
+        $message = [
+            'type'    => 'suite_api_client',
+            'action'  => 'request',
+            'event'   => $event,
+            'host'    => $request->getUri()->getHost(),
+            'uri'     => (string)$request->getUri(),
+            'method'  => $request->getMethod()
+        ];
+
+        if ($stats) {
+            $message += [ 'time' => $stats->getTransferTime() ];
+        }
+
+        $this->logger->info(json_encode($message));
     }
 }
