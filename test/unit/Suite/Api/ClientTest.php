@@ -11,6 +11,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Uri;
 use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_Constraint_IsEqual;
 use PHPUnit_Framework_MockObject_Builder_InvocationMocker;
@@ -312,7 +313,7 @@ class ClientTest extends BaseTestCase
     {
         $this->expectEscherSigning($method);
         $this->request->expects($this->any())->method('getMethod')->will($this->returnValue($method));
-        $this->request->expects($this->any())->method('getUri')->will($this->returnValue('mocked URI'));
+        $this->request->expects($this->any())->method('getUri')->willReturn(new Uri($uri));
         $this->requestFactory->expects($this->once())->method('createRequest')
             ->with(
                 $method,
