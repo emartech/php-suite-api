@@ -167,7 +167,7 @@ class Client
         ];
 
         if ($stats) {
-            $message += [ 'time' => $stats->getTransferTime() ];
+            $message += [ 'time' => (int) ($stats->getTransferTime() * 1000) ];
         }
 
         $this->logger->info(json_encode($message));
