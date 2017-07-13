@@ -148,4 +148,19 @@
             }
         }
     ]',
+
+    '/{customerId}/filter' => '[
+        {
+            "id": "1",
+            "name": "segment 1",
+            "type": "standard",
+            "predefinedSegmentId": "3"
+        },
+        {
+            "id": "2",
+            "name": "segment 2",
+            "type": "standard",
+            "predefinedSegmentId": "5"
+        }
+    ]',
 ];

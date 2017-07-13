@@ -12,6 +12,8 @@ use Suite\Api\Email\Launch;
 use Suite\Api\Email\Preview;
 use Suite\Api\ExternalEvent\EndPoints as ExternalEventEndPoints;
 use Suite\Api\ExternalEvent\ExternalEvent;
+use Suite\Api\Segment\Segment;
+use Suite\Api\Segment\EndPoints as SegmentEndPoints;
 
 class Factory
 {
@@ -56,6 +58,11 @@ class Factory
     public function createExternalEvent()
     {
         return new ExternalEvent($this->apiClient, new ExternalEventEndPoints($this->apiBaseUrl));
+    }
+
+    public function createSegment()
+    {
+        return new Segment($this->apiClient, new SegmentEndPoints($this->apiBaseUrl));
     }
 
     public function createLaunch()
