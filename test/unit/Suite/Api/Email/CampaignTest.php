@@ -104,7 +104,7 @@ class CampaignTest extends TestCase
      */
     public function deleteById_ApiFailure_ExceptionThrown()
     {
-        $this->expectApiFailureOnPost();
+        $this->expectApiFailure('post');
 
         try {
             $this->emailCampaign->deleteById($this->customerId, 1);
@@ -137,19 +137,6 @@ class CampaignTest extends TestCase
         $this->apiClient->expects($this->once())->method('get')
             ->with($this->endPoints->emailCampaignList($this->customerId))
             ->will($this->apiSuccess($expectedResponseData));
-    }
-
-
-    private function expectApiFailure()
-    {
-        $this->apiClient->expects($this->once())->method('get')
-            ->will($this->throwException(new Error()));
-    }
-
-    private function expectApiFailureOnPost()
-    {
-        $this->apiClient->expects($this->once())->method('post')
-            ->will($this->throwException(new Error()));
     }
 
     private function expectApiCallForCampaignDelete($id)

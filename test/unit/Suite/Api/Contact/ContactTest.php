@@ -49,7 +49,7 @@ class ContactTest extends TestCase
      */
     public function get_ApiFailure_ExceptionThrown()
     {
-        $this->expectApiFailure();
+        $this->expectApiFailure('post');
 
         try {
             $this->contact->getList($this->customerId, 'id', [1, 2], [3]);
@@ -81,11 +81,4 @@ class ContactTest extends TestCase
             'uid'=> 'testuid'
         ];
     }
-
-    private function expectApiFailure()
-    {
-        $this->apiClient->expects($this->once())->method('post')
-            ->will($this->throwException(new Error()));
-    }
-
 }

@@ -49,7 +49,7 @@ class LaunchTest extends TestCase
      */
     public function launch_ApiFailure_ExceptionThrown()
     {
-        $this->expectApiFailure();
+        $this->expectApiFailure('post');
 
         try {
             $this->emailLaunch->launch($this->customerId, $this->campaignId);
@@ -58,11 +58,5 @@ class LaunchTest extends TestCase
         }
 
         $this->fail('No exception was thrown.');
-    }
-
-    private function expectApiFailure()
-    {
-        $this->apiClient->expects($this->once())->method('post')
-            ->will($this->throwException(new \Exception()));
     }
 }

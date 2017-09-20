@@ -59,7 +59,7 @@ class PreviewTest extends TestCase
      */
     public function getText_ApiFailure_ExceptionThrown()
     {
-        $this->expectApiFailure();
+        $this->expectApiFailure('post');
 
         try {
             $this->emailPreview->getText($this->customerId, $this->campaignId);
@@ -76,7 +76,7 @@ class PreviewTest extends TestCase
      */
     public function getHtml_ApiFailure_ExceptionThrown()
     {
-        $this->expectApiFailure();
+        $this->expectApiFailure('post');
 
         try {
             $this->emailPreview->getHtml($this->customerId, $this->campaignId);
@@ -93,7 +93,7 @@ class PreviewTest extends TestCase
      */
     public function getMobile_ApiFailure_ExceptionThrown()
     {
-        $this->expectApiFailure();
+        $this->expectApiFailure('post');
 
         try {
             $this->emailPreview->getMobile($this->customerId, $this->campaignId);
@@ -117,14 +117,6 @@ class PreviewTest extends TestCase
             ->with($this->endPoints->emailPreview($this->customerId, $this->campaignId), ['version' => $version])
             ->will($this->apiSuccess($this->getEmailBody()));
     }
-
-
-    private function expectApiFailure()
-    {
-        $this->apiClient->expects($this->once())->method('post')
-            ->will($this->throwException(new \Exception()));
-    }
-
 
     private function apiSuccess($data)
     {

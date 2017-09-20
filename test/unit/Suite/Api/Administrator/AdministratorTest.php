@@ -56,14 +56,6 @@ class AdministratorTest extends TestCase
         $this->fail('No exception was thrown.');
     }
 
-
-    private function expectApiFailure()
-    {
-        $this->apiClient->expects($this->once())->method('get')
-            ->will($this->throwException(new Error()));
-    }
-
-
     protected function apiSuccess($data)
     {
         return $this->returnValue([
