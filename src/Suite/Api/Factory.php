@@ -6,6 +6,8 @@ use Escher\Provider as EscherProvider;
 use Psr\Log\LoggerInterface;
 use Suite\Api\Administrator\Administrator;
 use Suite\Api\Administrator\EndPoints as AdminEndPoints;
+use Suite\Api\Contact\Contact;
+use Suite\Api\Contact\EndPoints as ContactEndPoints;
 use Suite\Api\Email\Campaign;
 use Suite\Api\Email\EndPoints as CampaignEndPoints;
 use Suite\Api\Email\Launch;
@@ -43,6 +45,11 @@ class Factory
     public function createCampaign()
     {
         return new Campaign($this->apiClient, new CampaignEndPoints($this->apiBaseUrl));
+    }
+
+    public function createContact()
+    {
+        return new Contact($this->apiClient, new ContactEndPoints($this->apiBaseUrl));
     }
 
     public function createPreview()
