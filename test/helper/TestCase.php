@@ -29,10 +29,4 @@ class TestCase extends BaseTestCase
         $this->apiClient->expects($this->once())->method($method)
             ->will($this->throwException(new Error()));
     }
-
-    protected function expectApiFailureOnGet()
-    {
-        $this->apiClient->expects($this->once())->method('post')
-            ->will($this->throwException(new Error()));
-    }
 }
