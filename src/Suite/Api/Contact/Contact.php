@@ -8,6 +8,9 @@ use Suite\Api\RequestFailed;
 
 class Contact
 {
+    const FIELD_ID = 'id';
+    const FIELD_EMAIL = 3;
+
     /* @var Client */
     private $apiClient;
 
