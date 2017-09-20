@@ -5,34 +5,14 @@ namespace Suite\Api;
 use PHPUnit_Framework_MockObject_MockObject;
 
 use Emartech\TestHelper\BaseTestCase;
+use Suite\Api\Test\Helper\TestCase;
 
-class ContactListTest extends BaseTestCase
+class ContactListTest extends TestCase
 {
-    const API_BASE_URL = 'api_base_url';
-    const API_SUCCESS_TEXT = 'OK';
-    const API_SUCCESS_CODE = 0;
-    const API_FAILURE_TEXT = 'FAIL';
-    const API_FAILURE_CODE = 9999;
-
-    /**
-     * @var ContactListEndPoints
-     */
-    private $endPoints;
-
-    /**
-     * @var Client|PHPUnit_Framework_MockObject_MockObject
-     */
-    private $apiClient;
-
     /**
      * @var Contactlist
      */
     private $listService;
-
-    /**
-     * @var int
-     */
-    private $customerId = 123456;
 
     /**
      * @var int

@@ -2,33 +2,14 @@
 
 namespace Suite\Api;
 
-use PHPUnit_Framework_MockObject_MockObject;
-use Emartech\TestHelper\BaseTestCase;
-use Suite\Api\Client;
 use Suite\Api\Email\EndPoints;
 use Suite\Api\Email\Launch;
+use Suite\Api\Test\Helper\TestCase;
 
-class LaunchTest extends BaseTestCase
+class LaunchTest extends TestCase
 {
-    const API_BASE_URL = 'api_base_url';
-    const API_SUCCESS_TEXT = 'OK';
-    const API_SUCCESS_CODE = 0;
-
-    /** @var ServicesEndPoints */
-    private $endPoints;
-
-    /** @var Client|PHPUnit_Framework_MockObject_MockObject */
-    private $apiClient;
-
     /** @var Launch */
     private $emailLaunch;
-
-    /* @var int */
-    private $customerId;
-
-    /* @var int */
-    private $campaignId;
-
 
     protected function setUp()
     {
@@ -37,8 +18,6 @@ class LaunchTest extends BaseTestCase
         $this->endPoints = new EndPoints(self::API_BASE_URL);
         $this->apiClient = $this->mock(Client::class);
         $this->emailLaunch = new Launch($this->apiClient, $this->endPoints);
-        $this->customerId = 555;
-        $this->campaignId = 123;
     }
 
 

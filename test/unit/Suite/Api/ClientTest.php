@@ -2,8 +2,6 @@
 
 namespace Suite\Api;
 
-use Emartech\TestHelper\BaseTestCase;
-
 use Escher\Escher;
 use Escher\Provider as EscherProvider;
 
@@ -18,14 +16,10 @@ use PHPUnit_Framework_MockObject_Builder_InvocationMocker;
 use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Suite\Api\Test\Helper\TestCase;
 
-class ClientTest extends BaseTestCase
+class ClientTest extends TestCase
 {
-    const API_SUCCESS_TEXT = 'OK';
-    const API_SUCCESS_CODE = 0;
-    const API_FAILURE_TEXT = 'FAIL';
-    const API_FAILURE_CODE = 9999;
-
     const ESCHER_KEY = 'escher_key';
     const ESCHER_SECRET = 'escher_secret';
     const URL = 'https://url';
@@ -59,11 +53,6 @@ class ClientTest extends BaseTestCase
      * @var ResponseInterface|PHPUnit_Framework_MockObject_MockObject
      */
     private $response;
-
-    /**
-     * @var Client
-     */
-    protected $apiClient;
 
     /**
      * @var string
