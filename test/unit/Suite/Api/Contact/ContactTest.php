@@ -47,6 +47,18 @@ class ContactTest extends TestCase
     /**
      * @test
      */
+    public function getData_ContactNotFound_EmptyArrayReturned()
+    {
+        $this->apiClient->expects($this->once())->method('post')
+            ->will($this->apiSuccess([]));
+
+        $responseData = $this->contact->getList($this->customerId, 'id', [1, 2], [3]);
+        $this->assertEquals([], $responseData);
+    }
+
+    /**
+     * @test
+     */
     public function get_ApiFailure_ExceptionThrown()
     {
         $this->expectApiFailure('post');
@@ -60,7 +72,7 @@ class ContactTest extends TestCase
         $this->fail('No exception was thrown.');
     }
 
-    private function apiSuccess($data = [])
+    private function apiSuccess(array $data = [])
     {
         return $this->returnValue([
             'success' => true,
@@ -68,8 +80,8 @@ class ContactTest extends TestCase
             'replyText' => self::API_SUCCESS_TEXT,
             'data' => [
                 'errors' => [],
-                'result' => $data
-            ]
+                'result' => $data ?: false,
+            ],
         ]);
     }
 

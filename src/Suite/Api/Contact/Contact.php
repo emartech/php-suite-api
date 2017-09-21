@@ -36,7 +36,7 @@ class Contact
         try
         {
             $response = $this->apiClient->post($this->endPoints->getData($customerId), $postData);
-            return $response['data']['result'];
+            return $response['data']['result'] ?: [];
         }
         catch (Error $ex)
         {
