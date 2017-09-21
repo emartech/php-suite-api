@@ -31,16 +31,16 @@ class ContactTest extends TestCase
         ];
 
         $postData = [
-            'keyId' => 'id',
+            'keyId' => Contact::FIELD_ID,
             'keyValues' => [1, 2],
-            'fields' => [3]
+            'fields' => [Contact::FIELD_EMAIL]
         ];
 
         $this->apiClient->expects($this->once())->method('post')
             ->with($this->endPoints->getData($this->customerId), $postData)
             ->will($this->apiSuccess($contacts));
 
-        $responseData = $this->contact->getList($this->customerId, 'id', [1, 2], [3]);
+        $responseData = $this->contact->getList($this->customerId, Contact::FIELD_ID, [1, 2], [Contact::FIELD_EMAIL]);
         $this->assertEquals($contacts, $responseData);
     }
 
@@ -52,7 +52,7 @@ class ContactTest extends TestCase
         $this->apiClient->expects($this->once())->method('post')
             ->will($this->apiSuccess([]));
 
-        $responseData = $this->contact->getList($this->customerId, 'id', [1, 2], [3]);
+        $responseData = $this->contact->getList($this->customerId, Contact::FIELD_ID, [], [Contact::FIELD_EMAIL]);
         $this->assertEquals([], $responseData);
     }
 
@@ -64,7 +64,7 @@ class ContactTest extends TestCase
         $this->expectApiFailure('post');
 
         try {
-            $this->contact->getList($this->customerId, 'id', [1, 2], [3]);
+            $this->contact->getList($this->customerId, Contact::FIELD_ID, [], [Contact::FIELD_EMAIL]);
         } catch (RequestFailed $e) {
             return;
         }
@@ -88,9 +88,9 @@ class ContactTest extends TestCase
     private function createContact(string $email, int $id)
     {
         return [
-            '3'=> $email,
-            'id' => $id,
-            'uid'=> 'testuid'
+            Contact::FIELD_EMAIL => $email,
+            Contact::FIELD_ID => $id,
+            Contact::FIELD_UID => 'testuid'
         ];
     }
 }

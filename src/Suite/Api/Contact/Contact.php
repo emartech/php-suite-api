@@ -10,6 +10,7 @@ class Contact
 {
     const FIELD_ID = 'id';
     const FIELD_EMAIL = 3;
+    const FIELD_UID = 'uid';
 
     /* @var Client */
     private $apiClient;
