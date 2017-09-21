@@ -68,7 +68,7 @@ class ContactTest extends TestCase
             'replyText' => self::API_SUCCESS_TEXT,
             'data' => [
                 'errors' => [],
-                'data' => $data
+                'result' => $data
             ]
         ]);
     }
