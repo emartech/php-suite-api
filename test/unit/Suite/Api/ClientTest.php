@@ -149,6 +149,17 @@ class ClientTest extends TestCase
 
     /**
      * @test
+     */
+    public function responseOfSuccessfulPutRequestShouldIndicateSuccessAndContainApiResponseCodeAndText()
+    {
+        $this->expectSuccessfulPut(self::URL, [])->will($this->apiSuccess());
+        $response = $this->apiClient->put(self::URL, []);
+        $this->assertSuccessful($response);
+        $this->assertResponseContains($response, self::API_SUCCESS_CODE, self::API_SUCCESS_TEXT);
+    }
+
+    /**
+     * @test
      * @expectedException \Suite\Api\Error
      * @expectedExceptionMessage FAIL
      */
@@ -244,6 +255,17 @@ class ClientTest extends TestCase
     protected function expectSuccessfulPost($apiUrl, $expectedParams)
     {
         $this->expectSuccessfulRequest('POST', $apiUrl, $this->apiHeaders(), json_encode($expectedParams));
+        return $this->response->expects($this->any())->method('getBody');
+    }
+
+    /**
+     * @param $apiUrl
+     * @param $expectedParams
+     * @return \PHPUnit_Framework_MockObject_Builder_InvocationMocker
+     */
+    protected function expectSuccessfulPut($apiUrl, $expectedParams)
+    {
+        $this->expectSuccessfulRequest('PUT', $apiUrl, $this->apiHeaders(), json_encode($expectedParams));
         return $this->response->expects($this->any())->method('getBody');
     }
 
