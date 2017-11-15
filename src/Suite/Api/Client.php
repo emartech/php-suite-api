@@ -67,7 +67,16 @@ class Client
 
     public function post(string $url, $data)
     {
-        $method = 'POST';
+        return $this->sendRequestWithBody($url, $data, 'POST');
+    }
+
+    public function put(string $url, $data)
+    {
+        return $this->sendRequestWithBody($url, $data, 'PUT');
+    }
+
+    private function sendRequestWithBody(string $url, $data, $method): array
+    {
         $requestBody = $this->getBody($data);
         $headers = $this->getHeaders($url, $method, $requestBody);
         return $this->executeRequest($this->createRequest($method, $url, $headers, $requestBody));
