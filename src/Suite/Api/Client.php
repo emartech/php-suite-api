@@ -75,18 +75,13 @@ class Client
         return $this->sendRequestWithBody($url, $data, 'PUT');
     }
 
-    private function sendRequestWithBody(string $url, $data, $method): array
+    private function sendRequestWithBody(string $url, $data, $method)
     {
         $requestBody = $this->getBody($data);
         $headers = $this->getHeaders($url, $method, $requestBody);
         return $this->executeRequest($this->createRequest($method, $url, $headers, $requestBody));
     }
 
-    /**
-     * @param RequestInterface $request
-     * @return array
-     * @throws Error
-     */
     private function executeRequest(RequestInterface $request = null)
     {
         try {
