@@ -6,9 +6,13 @@ use Escher\Provider as EscherProvider;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\TransferStats;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
+use Suite\Api\Middleware\Retry;
 
 class Client
 {
@@ -45,6 +49,19 @@ class Client
     public static function create(LoggerInterface $logger, EscherProvider $escherProvider, ResponseProcessor $responseProcessor)
     {
         return new self($logger, $escherProvider, new \GuzzleHttp\Client(), new RequestFactory(), $responseProcessor);
+    }
+
+    public static function createWithRetry(LoggerInterface $logger, EscherProvider $escherProvider, ResponseProcessor $responseProcessor, int $retryCount = 1)
+    {
+        $handler = (new Retry($logger, $retryCount))->createHandler();
+        $stack   = HandlerStack::create(new CurlHandler());
+        $stack->push(Middleware::retry($handler), 'retry');
+
+        $client = new \GuzzleHttp\Client([
+            'handler' => $stack,
+        ]);
+
+        return new self($logger, $escherProvider, $client, new RequestFactory(), $responseProcessor);
     }
 
     public function __construct(LoggerInterface $logger, EscherProvider $escherProvider, ClientInterface $client, RequestFactory $requestFactory, ResponseProcessor $responseProcessor)

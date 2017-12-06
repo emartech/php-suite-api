@@ -12,6 +12,18 @@ use Suite\Api\Test\Helper\AcceptanceBaseTestCase;
 
 class ClientTest extends AcceptanceBaseTestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->cleanupLogFile();
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->cleanupLogFile();
+    }
+
     /**
      * @test
      */
@@ -36,6 +48,20 @@ class ClientTest extends AcceptanceBaseTestCase
         }
     }
 
+    /**
+     * @test
+     */
+    public function retryWorks()
+    {
+        $client = $this->createRetryClient();
+
+        try {
+            $client->get("{$this->apiBaseUrl}/serverError");
+        } catch (\Exception $e) {
+            $this->assertEquals(2, $client->get("{$this->apiBaseUrl}/retryCount")['data']);
+        }
+    }
+
     private function isSuccessfulApiResponse() : PHPUnit_Framework_Constraint
     {
         return $this->structure([
@@ -55,10 +81,25 @@ class ClientTest extends AcceptanceBaseTestCase
     }
 
     /**
+     * @return Client
+     */
+    private function createRetryClient() : Client
+    {
+        return Client::createWithRetry($this->spyLogger, $this->escherProvider, new SuiteResponseProcessor($this->spyLogger), 1);
+    }
+
+    /**
      * @return EscherProvider
      */
     private function badEscherProvider():EscherProvider
     {
         return new EscherProvider('foo/bar/invalid_credential', 'key', 'secret', []);
+    }
+
+    private function cleanupLogFile(): void
+    {
+        if (file_exists('retry.log')) {
+            unlink('retry.log');
+        }
     }
 }

@@ -46,7 +46,7 @@ class Retry
         return $retries < $this->maxRetryCount;
     }
 
-    private function isServerError(Response $response)
+    private function isServerError(Response $response = null)
     {
         return $response && $response->getStatusCode() >= 500;
     }
