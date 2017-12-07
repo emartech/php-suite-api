@@ -38,6 +38,15 @@ class ApiStub
             return new Response(self::success("null"));
         });
 
+        $app->get('/serverError', function (Request $request) {
+            self::logRetry();
+            return new Response(self::error("null"), 500);
+        });
+
+        $app->get('/retryCount', function (Request $request) {
+            return new Response(self::success(self::getRetryCount()));
+        });
+
         return $app;
     }
 
@@ -78,5 +87,16 @@ class ApiStub
     private static function error($message, $data = '""')
     {
         return '{"replyCode":1, "replyText" : "'.$message.'", "data" : '.$data.'}';
+    }
+
+    private static function logRetry()
+    {
+        file_put_contents('retry.log', "called\n", FILE_APPEND);
+    }
+
+    private static function getRetryCount()
+    {
+        $content = file_get_contents('retry.log');
+        return count(explode("\n", trim($content)));
     }
 }
