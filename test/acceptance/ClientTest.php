@@ -91,12 +91,12 @@ class ClientTest extends AcceptanceBaseTestCase
     /**
      * @return EscherProvider
      */
-    private function badEscherProvider():EscherProvider
+    private function badEscherProvider() : EscherProvider
     {
         return new EscherProvider('foo/bar/invalid_credential', 'key', 'secret', []);
     }
 
-    private function cleanupLogFile(): void
+    private function cleanupLogFile()
     {
         if (file_exists('retry.log')) {
             unlink('retry.log');
