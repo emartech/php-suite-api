@@ -15,7 +15,7 @@
     "require": {
         "guzzlehttp/guzzle": "~6.0",
         "monolog/monolog": "1.*",
-        "emartech/escher": "1.0.*",
+        "emartech/escher": "1.1.0",
         "php": "~7.0"
     },
     "require-dev": {
