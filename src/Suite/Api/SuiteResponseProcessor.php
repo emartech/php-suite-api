@@ -31,8 +31,11 @@ class SuiteResponseProcessor implements ResponseProcessor
         $result = json_decode($responseBody, true);
 
         if (!$result) {
-            $this->logger->error('Bad API response for ' . $request->getUri());
-            $this->logger->debug("API response was: {$responseBody}");
+            $this->logger->error('Bad API response', [ 'uri' => $request->getUri() ]);
+            $this->logger->debug('Bad API response', [
+                'uri' => $request->getUri(),
+                'reponseBody' => $responseBody,
+            ]);
             throw new Error(self::API_RESPONSE_FORMAT_WAS_WRONG);
         }
 
@@ -41,8 +44,26 @@ class SuiteResponseProcessor implements ResponseProcessor
         if (!$result['success']) {
             $replyText = isset($result['replyText']) ? $result['replyText'] : self::UNKNOWN_ERROR;
             $replyCode = isset($result['replyCode']) ? $result['replyCode'] : 0;
-            $this->logger->error("Unsuccessful API response for {$request->getUri()}. replyText: '{$replyText}', replyCode: {$replyCode}");
-            $this->logger->debug("API response was: {$responseBody}");
+
+            $this->logger->error(
+                "Unsuccessful API response",
+                [
+                    'request_uri' => $request->getUri(),
+                    'replyText' => $replyText,
+                    'replyCode' => $replyCode,
+                ]
+            );
+
+            $this->logger->debug(
+                "Unsuccessful API response",
+                [
+                    'uri' => $request->getUri(),
+                    'replyText' => $replyText,
+                    'replyCode' => $replyCode,
+                    'responseBody' => $responseBody,
+                ]
+            );
+
             throw new Error($replyText, $replyCode);
         }
 

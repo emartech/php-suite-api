@@ -181,7 +181,6 @@ class Client
         $message = [
             'type'    => 'suite_api_client',
             'action'  => 'request',
-            'event'   => $event,
             'host'    => $request->getUri()->getHost(),
             'uri'     => (string)$request->getUri(),
             'method'  => $request->getMethod()
@@ -191,6 +190,6 @@ class Client
             $message += [ 'time' => (int) ($stats->getTransferTime() * 1000) ];
         }
 
-        $this->logger->info(json_encode($message));
+        $this->logger->info("request $event", [ $message ]);
     }
 }

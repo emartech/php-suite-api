@@ -58,13 +58,16 @@ class Retry
 
     private function log(int $retries, Request $request, Response $response = null, RequestException $exception = null)
     {
-        $this->logger->warning(sprintf(
-            'Retrying %s %s %s/%s, %s',
-            $request->getMethod(),
-            $request->getUri(),
-            $retries + 1,
-            $this->maxRetryCount,
-            $response ? 'status code: ' . $response->getStatusCode() : $exception->getMessage()
-        ));
+        $this->logger->warning(
+            'Retrying API call',
+            [
+                'method' => $request->getMethod(),
+                'uri' => $request->getUri(),
+                'retries' => $retries + 1,
+                'maxRetryCount' => $this->maxRetryCount,
+                'statusCode' => $response ? 'status code: ' . $response->getStatusCode() : '',
+                'message' => $exception ? $exception->getMessage() : '',
+            ]
+        );
     }
 }
