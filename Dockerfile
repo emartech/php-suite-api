@@ -1,1 +1,1 @@
-FROM emarsys/php7-1-apache
+FROM emarsys/php7:7.1-apache
