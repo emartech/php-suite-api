@@ -2,6 +2,7 @@
 
 namespace Suite\Api\Acceptance;
 
+use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit_Framework_Constraint;
 
 use Escher\Provider as EscherProvider;
@@ -62,7 +63,7 @@ class ClientTest extends AcceptanceBaseTestCase
         }
     }
 
-    private function isSuccessfulApiResponse() : PHPUnit_Framework_Constraint
+    private function isSuccessfulApiResponse()
     {
         return $this->structure([
             'replyCode' => 0,
