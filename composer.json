@@ -15,13 +15,15 @@
     "require": {
         "guzzlehttp/guzzle": "~6.0",
         "monolog/monolog": "1.*",
-        "emartech/escher": "1.1.0",
+        "emartech/escher": "1.*",
         "php": "~7.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "5.2.*",
+        "phpunit/phpunit": "5.*",
+        "phpunit/php-timer": "1.0.8",
         "silex/silex": "~2.0",
-        "emartech/php-test-helpers": "~0.1"
+        "emartech/php-test-helpers": "~0.1",
+        "fqqdk/packagist-publisher": "*"
     },
     "authors": [
         {
