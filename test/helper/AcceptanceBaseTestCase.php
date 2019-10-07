@@ -4,8 +4,6 @@ namespace Suite\Api\Test\Helper;
 
 use Escher\Provider as EscherProvider;
 use Emartech\TestHelper\BaseTestCase;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Suite\Api\Factory;
 
@@ -34,7 +32,7 @@ class AcceptanceBaseTestCase extends BaseTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->spyLogger = new Logger('spy', [new StreamHandler(fopen('/tmp/php-suite-api.log', 'a'))]);
+        $this->spyLogger = $this->getMock(LoggerInterface::class);
         $this->escherProvider = new EscherProvider('foo/bar/baz', 'key', 'secret', []);
         $this->factory = Factory::create($this->spyLogger, $this->escherProvider, $this->apiBaseUrl);
     }
