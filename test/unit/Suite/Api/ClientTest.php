@@ -9,6 +9,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\BufferStream;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit_Framework_Constraint;
 use PHPUnit_Framework_Constraint_IsEqual;
@@ -17,6 +18,7 @@ use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Suite\Api\Test\Helper\TestCase;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ClientTest extends TestCase
 {
@@ -187,7 +189,7 @@ class ClientTest extends TestCase
      */
     public function responseContainingInvalidFormatShouldIndicateFailureAndContainErrorMessage()
     {
-        $this->expectSuccessfulGet(self::URL)->will($this->returnValue('NOT A JSON STRING'));
+        $this->expectSuccessfulGet(self::URL)->will($this->returnValue($this->createStream('NOT A JSON STRING')));
         $this->apiClient->get(self::URL);
     }
 
@@ -337,18 +339,18 @@ class ClientTest extends TestCase
 
     private function apiSuccess($additionalData = [])
     {
-        return $this->returnValue(json_encode([
-                'replyCode' => self::API_SUCCESS_CODE,
-                'replyText' => self::API_SUCCESS_TEXT
-            ] + $additionalData));
+        return $this->returnValue($this->createStream(json_encode([
+                    'replyCode' => self::API_SUCCESS_CODE,
+                    'replyText' => self::API_SUCCESS_TEXT
+        ] + $additionalData)));
     }
 
     private function apiFailure()
     {
-        return $this->returnValue(json_encode([
+        return $this->returnValue($this->createStream(json_encode([
             'replyCode' => self::API_FAILURE_CODE,
             'replyText' => self::API_FAILURE_TEXT
-        ]));
+        ])));
     }
 
     private function expectedHeaders()
@@ -405,6 +407,13 @@ class ClientTest extends TestCase
                 $this->contentTypeHeader()
             )
             ->will($this->returnValue($this->allHeaders()));
+    }
+
+    private function createStream(string $contents): BufferStream
+    {
+        $stream = new BufferStream();
+        $stream->write($contents);
+        return $stream;
     }
 
 }
