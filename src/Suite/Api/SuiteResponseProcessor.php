@@ -48,7 +48,7 @@ class SuiteResponseProcessor implements ResponseProcessor
             $this->logger->error(
                 "Unsuccessful API response",
                 [
-                    'request_uri' => $request->getUri(),
+                    'uri' => $request->getRequestTarget(),
                     'replyText' => $replyText,
                     'replyCode' => $replyCode,
                 ]
@@ -57,7 +57,7 @@ class SuiteResponseProcessor implements ResponseProcessor
             $this->logger->debug(
                 "Unsuccessful API response",
                 [
-                    'uri' => $request->getUri(),
+                    'uri' => $request->getRequestTarget(),
                     'replyText' => $replyText,
                     'replyCode' => $replyCode,
                     'responseBody' => $responseBody,
