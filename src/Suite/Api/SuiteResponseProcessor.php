@@ -31,9 +31,9 @@ class SuiteResponseProcessor implements ResponseProcessor
         $result = json_decode($responseBody, true);
 
         if (!$result) {
-            $this->logger->error('Bad API response', [ 'uri' => $request->getUri() ]);
+            $this->logger->error('Bad API response', [ 'uri' => $request->getRequestTarget() ]);
             $this->logger->debug('Bad API response', [
-                'uri' => $request->getUri(),
+                'uri' => $request->getRequestTarget(),
                 'reponseBody' => $responseBody,
             ]);
             throw new Error(self::API_RESPONSE_FORMAT_WAS_WRONG);
