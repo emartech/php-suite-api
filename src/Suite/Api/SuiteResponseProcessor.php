@@ -34,7 +34,7 @@ class SuiteResponseProcessor implements ResponseProcessor
             $this->logger->error('Bad API response', [ 'uri' => $request->getRequestTarget() ]);
             $this->logger->debug('Bad API response', [
                 'uri' => $request->getRequestTarget(),
-                'reponse_Body' => $responseBody->getContents(),
+                'reponseBody' => $responseBody->getContents(),
             ]);
             throw new Error(self::API_RESPONSE_FORMAT_WAS_WRONG);
         }
@@ -60,7 +60,7 @@ class SuiteResponseProcessor implements ResponseProcessor
                     'uri' => $request->getRequestTarget(),
                     'replyText' => $replyText,
                     'replyCode' => $replyCode,
-                    'response_Body' => $responseBody->getContents(),
+                    'responseBody' => $responseBody->getContents(),
                 ]
             );
 
