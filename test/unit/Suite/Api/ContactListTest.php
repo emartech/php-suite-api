@@ -273,6 +273,36 @@ class ContactListTest extends TestCase
         $this->assertEquals([[1, 2, 3]], iterator_to_array($iterator));
     }
 
+
+    /**
+     * @test
+     */
+    public function deleteContactsFromList_Perfect_Perfect()
+    {
+        $contactIds = [1, 2, 3];
+        $this->apiClient->expects($this->once())->method('post')->with(
+            $this->endPoints->deleteContactsFromList($this->customerId, $this->contactListId), ([
+                'key_id' => 'id',
+                'external_ids' => $contactIds
+            ])
+        );
+
+        $this->listService->deleteContactsFromList($this->customerId, $this->contactListId, $contactIds);
+    }
+
+
+    /**
+     * @test
+     */
+    public function deleteContactsFromList_postThrowsError_ThrowsRequestFailException()
+    {
+        $this->apiClient->expects($this->once())->method('post')->willThrowException(new Error());
+
+        $this->assertExceptionThrown(RequestFailed::class, function () {
+            $this->listService->deleteContactsFromList($this->customerId, $this->contactListId, []);
+        });
+    }
+
     public function contactListData($id, $name)
     {
         return array(

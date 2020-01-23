@@ -83,6 +83,20 @@ class ContactList
 
     }
 
+    public function deleteContactsFromList(int $customerId, int $contactListId, array $contactIds)
+    {
+        try {
+            $this->apiClient->post($this->endPoints->deleteContactsFromList($customerId, $contactListId), [
+                'key_id'        => 'id',
+                'external_ids'  => $contactIds
+            ]);
+            return $contactListId;
+        } catch (Error $error) {
+            throw new RequestFailed('Could not add contacts to list: ' . $error->getMessage(), $error->getCode(), $error);
+        }
+
+    }
+
     public function getContactsOfList(int $customerId, int $contactListId, int $limit, int $offset)
     {
         try {
