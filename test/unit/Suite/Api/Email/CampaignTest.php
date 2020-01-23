@@ -145,15 +145,4 @@ class CampaignTest extends TestCase
             ->with($this->endPoints->emailCampaignDelete($this->customerId), ['emailId' => $id])
             ->will($this->apiSuccess(null));
     }
-
-
-    protected function apiSuccess($data)
-    {
-        return $this->returnValue([
-            'success' => true,
-            'replyCode' => self::API_SUCCESS_CODE,
-            'replyText' => self::API_SUCCESS_TEXT,
-            'data' => $data
-        ]);
-    }
 }

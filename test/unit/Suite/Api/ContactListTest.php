@@ -44,7 +44,7 @@ class ContactListTest extends TestCase
                 'key_id'        => 'id',
                 'external_ids'  => $contactIds,
             ])
-            ->will($this->apiSuccess(['data' => ['id' => $this->contactListId]]));
+            ->will($this->apiSuccess(['id' => $this->contactListId]));
 
         $contactListId = $this->listService->createContactList($this->customerId, $this->listName, $contactIds);
         $this->assertEquals($this->contactListId, $contactListId);
@@ -60,7 +60,7 @@ class ContactListTest extends TestCase
             ->with($this->endPoints->createContactList($this->customerId), [
                 'name' => $this->listName,
             ])
-            ->will($this->apiSuccess(['data' => ['id' => $this->contactListId]]));
+            ->will($this->apiSuccess(['id' => $this->contactListId]));
 
         $contactListId = $this->listService->createContactList($this->customerId, $this->listName, $contactIds);
         $this->assertEquals($this->contactListId, $contactListId);
@@ -102,7 +102,7 @@ class ContactListTest extends TestCase
         );
 
         $this->apiClient->expects($this->once())->method('get')->with($this->endPoints->contactLists($this->customerId))
-            ->will($this->apiSuccess(['data' => $contactLists]));
+            ->will($this->apiSuccess($contactLists));
 
         $contactListId = $this->listService->findContactListByName($this->customerId, $this->listName);
 
@@ -121,7 +121,7 @@ class ContactListTest extends TestCase
         );
 
         $this->apiClient->expects($this->once())->method('get')->with($this->endPoints->contactLists($this->customerId))
-            ->will($this->apiSuccess(['data' => $contactLists]));
+            ->will($this->apiSuccess($contactLists));
 
         $contactListId = $this->listService->findContactListByName($this->customerId, $this->listName);
 
@@ -139,7 +139,7 @@ class ContactListTest extends TestCase
         );
 
         $this->apiClient->expects($this->once())->method('get')->with($this->endPoints->contactLists($this->customerId))
-            ->will($this->apiSuccess(['data' => $contactLists]));
+            ->will($this->apiSuccess($contactLists));
 
         $contactListId = $this->listService->findContactListByName($this->customerId, $this->listName);
 
@@ -217,7 +217,7 @@ class ContactListTest extends TestCase
         $chunk = [1, 2, 3];
         $this->apiClient->expects($this->once())->method('get')->with(
             $this->endPoints->contactsOfList($this->customerId, $this->contactListId, $limit, $offset)
-        )->will($this->apiSuccess(['data' => $chunk]));
+        )->will($this->apiSuccess($chunk));
 
         $result = $this->listService->getContactsOfList($this->customerId, $this->contactListId, $limit, $offset);
         $this->assertEquals($chunk, $result);
@@ -264,7 +264,7 @@ class ContactListTest extends TestCase
 
         $this->apiClient->expects($this->at(0))->method('get')->with(
             $this->endPoints->contactsOfList($this->customerId, $this->contactListId, $chunkSize, 0)
-        )->will($this->apiSuccess(['data' => [1, 2, 3]]));
+        )->will($this->apiSuccess([1, 2, 3]));
 
         $this->apiClient->expects($this->at(1))->method('get')->with(
             $this->endPoints->contactsOfList($this->customerId, $this->contactListId, $chunkSize, $chunkSize)
@@ -311,15 +311,6 @@ class ContactListTest extends TestCase
             'created' => '2014-11-05 12:34:56',
             'type' => 0
         );
-    }
-
-    private function apiSuccess($additionalData = [])
-    {
-        return $this->returnValue([
-            'success'   => true,
-            'replyCode' => self::API_SUCCESS_CODE,
-            'replyText' => self::API_SUCCESS_TEXT
-        ] + $additionalData);
     }
 
     private function apiFailure()

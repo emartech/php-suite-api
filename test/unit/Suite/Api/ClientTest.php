@@ -337,7 +337,7 @@ class ClientTest extends TestCase
         return $this->guzzleClient->expects($this->once())->method('send')->with($this->request);
     }
 
-    private function apiSuccess($additionalData = [])
+    protected function apiSuccess($additionalData = [])
     {
         return $this->returnValue($this->createStream(json_encode([
                     'replyCode' => self::API_SUCCESS_CODE,

@@ -34,13 +34,9 @@ class LaunchTest extends TestCase
         $this->assertNull($responseData);
     }
 
-    private function apiSuccess()
+    protected function apiSuccess($data = [])
     {
-        return $this->returnValue([
-            'replyCode' => self::API_SUCCESS_CODE,
-            'replyText' => self::API_SUCCESS_TEXT,
-            'data' => null
-        ]);
+        return parent::apiSuccess(null);
     }
 
 

@@ -56,16 +56,6 @@ class AdministratorTest extends TestCase
         $this->fail('No exception was thrown.');
     }
 
-    protected function apiSuccess($data)
-    {
-        return $this->returnValue([
-            'success' => true,
-            'replyCode' => self::API_SUCCESS_CODE,
-            'replyText' => self::API_SUCCESS_TEXT,
-            'data' => $data
-        ]);
-    }
-
 
     private function createAdmin(string $id, string $username): array
     {

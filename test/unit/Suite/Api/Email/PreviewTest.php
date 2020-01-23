@@ -117,14 +117,4 @@ class PreviewTest extends TestCase
             ->with($this->endPoints->emailPreview($this->customerId, $this->campaignId), ['version' => $version])
             ->will($this->apiSuccess($this->getEmailBody()));
     }
-
-    private function apiSuccess($data)
-    {
-        return $this->returnValue([
-            'success' => true,
-            'replyCode' => self::API_SUCCESS_CODE,
-            'replyText' => self::API_SUCCESS_TEXT,
-            'data' => $data
-        ]);
-    }
 }

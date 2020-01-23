@@ -29,4 +29,14 @@ class TestCase extends BaseTestCase
         $this->apiClient->expects($this->once())->method($method)
             ->will($this->throwException(new Error()));
     }
+
+    protected function apiSuccess($data = [])
+    {
+        return $this->returnValue([
+            'success' => true,
+            'replyCode' => self::API_SUCCESS_CODE,
+            'replyText' => self::API_SUCCESS_TEXT,
+            'data' => $data
+        ]);
+    }
 }

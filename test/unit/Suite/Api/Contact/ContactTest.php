@@ -72,16 +72,11 @@ class ContactTest extends TestCase
         $this->fail('No exception was thrown.');
     }
 
-    private function apiSuccess(array $data = [])
+    protected function apiSuccess($data = [])
     {
-        return $this->returnValue([
-            'success' => true,
-            'replyCode' => self::API_SUCCESS_CODE,
-            'replyText' => self::API_SUCCESS_TEXT,
-            'data' => [
-                'errors' => [],
-                'result' => $data ?: false,
-            ],
+        return parent::apiSuccess([
+            'errors' => [],
+            'result' => $data ?: false,
         ]);
     }
 
