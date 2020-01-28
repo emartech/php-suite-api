@@ -92,7 +92,7 @@ class ContactList
             ]);
             return $contactListId;
         } catch (Error $error) {
-            throw new RequestFailed('Could not add contacts to list: ' . $error->getMessage(), $error->getCode(), $error);
+            throw new RequestFailed('Could not delete contacts from list: ' . $error->getMessage(), $error->getCode(), $error);
         }
 
     }

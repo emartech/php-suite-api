@@ -46,6 +46,6 @@ class ContactListEndPoints
 
     public function deleteContactsFromList(int $customerId, int $contactListId): string
     {
-        return $this->baseUrl($customerId) . "/contactlist/{$contactListId}/delete";
+        return $this->baseUrl($customerId) . "/{$contactListId}/delete";
     }
 }
