@@ -190,6 +190,6 @@ class Client
             $message += [ 'time' => (int) ($stats->getTransferTime() * 1000) ];
         }
 
-        $this->logger->info("request $event", $message);
+        $this->logger->debug("request $event", $message);
     }
 }
