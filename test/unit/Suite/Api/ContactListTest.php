@@ -93,6 +93,25 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
+    public function getContactLists_Perfect_Perfect()
+    {
+        $contactLists = array(
+            $this->contactListData('id1', 'contact list 1'),
+            $this->contactListData('id2', 'contact list 2'),
+        );
+
+        $this->apiClient->expects($this->once())->method('get')->with($this->endPoints->contactLists($this->customerId))
+            ->will($this->apiSuccess($contactLists));
+
+        $returnedContactLists = $this->listService->getContactLists($this->customerId);
+
+        $this->assertEquals($contactLists, $returnedContactLists);
+    }
+
+
+    /**
+     * @test
+     */
     public function findContactListByName_Perfect_Perfect()
     {
         $contactLists = array(

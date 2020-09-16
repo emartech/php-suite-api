@@ -42,10 +42,19 @@ class ContactList
         }
     }
 
+    public function getContactLists(int $customerId)
+    {
+        try {
+            return $this->apiClient->get($this->endPoints->contactLists($customerId))['data'];
+        } catch (Error $error) {
+            throw new RequestFailed('Could not fetch contact lists: ' . $error->getMessage(), $error->getCode(), $error);
+        }
+    }
+
     public function findContactListByName(int $customerId, string $listName)
     {
         try {
-            foreach ($this->apiClient->get($this->endPoints->contactLists($customerId))['data'] as $contactListData) {
+            foreach ($this->getContactLists($customerId) as $contactListData) {
                 if (strtolower($contactListData['name']) == strtolower($listName)) {
                     return $contactListData['id'];
                 }
