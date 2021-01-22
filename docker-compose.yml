@@ -1,0 +1,7 @@
+version: '3'
+services:
+  web:
+    build: ./
+    volumes:
+      - ".:/var/www/html/:delegated"
+      - "~/.composer/docker-cache/:/root/.composer:cached"

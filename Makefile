@@ -1,6 +1,3 @@
-DOCKER = docker
-CONTAINER = php-suite-api
-
 ifndef TESTMETHOD
 FILTERARGS=
 else
@@ -14,38 +11,32 @@ help: ## help page
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/\(.*\):.*##[ \t]*/    \1 ## /' | column -t -s '##'
 	@echo
 
-all: destroy update build run packages ## destroy update build run packages
+all: destroy update build up packages ## destroy update build run packages
 
 destroy: ## remove container
-	-$(DOCKER) rm -f $(CONTAINER)
+	docker-compose down
 
-build: ## build comtainer
-	$(DOCKER) build --no-cache -t $(CONTAINER) .
+build: ## build container
+	@docker-compose build
 
-run: ## run
-	$(DOCKER) run -d -v "$$PWD":/var/www/html/ --rm --name=$(CONTAINER) -h $(CONTAINER).ett.local $(CONTAINER)
+up: ## run
+	docker-compose up -d
+	## $(DOCKER) run -d -v "$$PWD":/var/www/html/ --rm --name=$(CONTAINER) -h $(CONTAINER).ett.local $(CONTAINER)
 
 stop: ## stop container
-	-$(DOCKER) rm -f $(CONTAINER)
+	docker-compose stop
 
-restart: stop run  ## restart container and run
+restart: stop up  ## restart container and run
 
 ssh: sh  ## get a shell in the container (alias for sh)
 sh: ## get a shell in the container
-	$(DOCKER) exec -it $(CONTAINER) /bin/bash
+	@docker-compose exec web /bin/bash
 
 logs: ## show logs
-	$(DOCKER) logs --follow $(CONTAINER)
+	@docker-compose logs -f web
 
 test: ## run tests
-	$(DOCKER) exec $(CONTAINER) bash -c "cd /var/www/html && vendor/bin/phpunit -c test/phpunit.xml $(FILTERARGS) $(TESTFILE)"
+	docker-compose exec web /bin/bash -l -c "cd /var/www/html && vendor/bin/phpunit -c test/phpunit.xml $(FILTERARGS) $(TESTFILE)"
 
 packages: ## install packages
-	$(DOCKER) exec -i -t $(CONTAINER) /bin/bash -l -c "composer install 2>&1"
-
-pu: packages-update ## update packages (alias for packages-update)
-packages-update: ## update packages
-	$(DOCKER) exec -i -t $(CONTAINER) /bin/bash -l -c "composer update 2>&1"
-
-update: ## update container
-	$(DOCKER) pull $(shell awk '/^FROM/ { print $$2; exit }' Dockerfile)
+	docker-compose run --rm web composer install
