@@ -1,7 +1,7 @@
 version: '3'
 services:
   web:
-    build: ./
+    image: emarsys/php7:7.1-apache
     volumes:
       - ".:/var/www/html/:delegated"
       - "~/.composer/docker-cache/:/root/.composer:cached"
