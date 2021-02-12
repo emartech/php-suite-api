@@ -12,8 +12,11 @@ class AdministratorTest extends AcceptanceBaseTestCase
     public function emailCampaignEndPoint()
     {
         $list = $this->factory->createAdministrator()->getList(1);
+
         $this->assertCount(2, $list);
-        $this->assertThat($list[0], $this->structure(['id' => 1, 'username' => 'admin']));
-        $this->assertThat($list[1], $this->structure(['id' => 2, 'username' => 'admin2']));
+        $this->assertEquals(1, $list[0]['id']);
+        $this->assertEquals('admin', $list[0]['username']);
+        $this->assertEquals(2, $list[1]['id']);
+        $this->assertEquals('admin2', $list[1]['username']);
     }
 }

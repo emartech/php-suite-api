@@ -2,12 +2,11 @@
 
 namespace Suite\Api\Test\Helper;
 
-use Emartech\TestHelper\BaseTestCase;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 use Suite\Api\Client;
 use Suite\Api\Error;
 
-class TestCase extends BaseTestCase
+class TestCase extends \PHPUnit\Framework\TestCase
 {
     const API_BASE_URL = 'api_base_url';
     const API_SUCCESS_TEXT = 'OK';
@@ -21,7 +20,7 @@ class TestCase extends BaseTestCase
     /** @var EndPoints */
     protected $endPoints;
 
-    /** @var Client|PHPUnit_Framework_MockObject_MockObject */
+    /** @var Client|MockObject */
     protected $apiClient;
 
     protected function expectApiFailure(string $method = 'get')
@@ -32,11 +31,11 @@ class TestCase extends BaseTestCase
 
     protected function apiSuccess($data = [])
     {
-        return $this->returnValue([
+        return [
             'success' => true,
             'replyCode' => self::API_SUCCESS_CODE,
             'replyText' => self::API_SUCCESS_TEXT,
             'data' => $data
-        ]);
+        ];
     }
 }

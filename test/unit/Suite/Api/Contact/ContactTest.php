@@ -11,12 +11,12 @@ class ContactTest extends TestCase
 
     private $contact;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->endPoints = new EndPoints(self::API_BASE_URL);
-        $this->apiClient = $this->mock(Client::class);
+        $this->apiClient = $this->createMock(Client::class);
         $this->contact = new Contact($this->apiClient, $this->endPoints);
     }
 
@@ -38,7 +38,7 @@ class ContactTest extends TestCase
 
         $this->apiClient->expects($this->once())->method('post')
             ->with($this->endPoints->getData($this->customerId), $postData)
-            ->will($this->apiSuccess($contacts));
+            ->willReturn($this->apiSuccess($contacts));
 
         $responseData = $this->contact->getList($this->customerId, Contact::FIELD_ID, [1, 2], [Contact::FIELD_EMAIL]);
         $this->assertEquals($contacts, $responseData);
@@ -50,7 +50,7 @@ class ContactTest extends TestCase
     public function getData_ContactNotFound_EmptyArrayReturned()
     {
         $this->apiClient->expects($this->once())->method('post')
-            ->will($this->apiSuccess([]));
+            ->willReturn($this->apiSuccess([]));
 
         $responseData = $this->contact->getList($this->customerId, Contact::FIELD_ID, [], [Contact::FIELD_EMAIL]);
         $this->assertEquals([], $responseData);

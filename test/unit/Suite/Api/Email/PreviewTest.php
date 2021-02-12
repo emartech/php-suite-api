@@ -11,12 +11,12 @@ class PreviewTest extends TestCase
     /** @var Preview */
     private $emailPreview;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->endPoints = new EndPoints(self::API_BASE_URL);
-        $this->apiClient = $this->mock(Client::class);
+        $this->apiClient = $this->createMock(Client::class);
         $this->emailPreview = new Preview($this->apiClient, $this->endPoints);
     }
 
@@ -115,6 +115,6 @@ class PreviewTest extends TestCase
     {
         $this->apiClient->expects($this->once())->method('post')
             ->with($this->endPoints->emailPreview($this->customerId, $this->campaignId), ['version' => $version])
-            ->will($this->apiSuccess($this->getEmailBody()));
+            ->willReturn($this->apiSuccess($this->getEmailBody()));
     }
 }

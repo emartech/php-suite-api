@@ -3,15 +3,13 @@
 namespace Suite\Api\Test\Helper;
 
 use Escher\Provider as EscherProvider;
-use Emartech\TestHelper\BaseTestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Log\LoggerInterface;
 use Suite\Api\Factory;
 
-class AcceptanceBaseTestCase extends BaseTestCase
+class AcceptanceBaseTestCase extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var LoggerInterface|PHPUnit_Framework_MockObject_MockObject
+     * @var LoggerInterface
      */
     protected $spyLogger;
 
@@ -30,11 +28,12 @@ class AcceptanceBaseTestCase extends BaseTestCase
      */
     protected $apiBaseUrl = 'http://localhost:7984';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->spyLogger = $this->mock(LoggerInterface::class);
+        $this->spyLogger = $this->createMock(LoggerInterface::class);
         $this->escherProvider = new EscherProvider('foo/bar/baz', 'key', 'secret', []);
         $this->factory = Factory::create($this->spyLogger, $this->escherProvider, $this->apiBaseUrl);
     }
+
 }

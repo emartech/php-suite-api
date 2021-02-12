@@ -21,7 +21,6 @@ build: ## build container
 
 up: ## run
 	docker-compose up -d
-	## $(DOCKER) run -d -v "$$PWD":/var/www/html/ --rm --name=$(CONTAINER) -h $(CONTAINER).ett.local $(CONTAINER)
 
 stop: ## stop container
 	docker-compose stop
@@ -30,7 +29,7 @@ restart: stop up  ## restart container and run
 
 ssh: sh  ## get a shell in the container (alias for sh)
 sh: ## get a shell in the container
-	@docker-compose exec web /bin/bash
+	docker-compose exec web /bin/bash
 
 logs: ## show logs
 	@docker-compose logs -f web

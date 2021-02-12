@@ -7,7 +7,7 @@ use Psr\Http\Message\RequestInterface;
 
 class RequestFactory
 {
-    public function createRequest($method, $uri, array $headers = [], $body) : RequestInterface
+    public function createRequest($method, $uri, array $headers, $body) : RequestInterface
     {
         return new Request($method, $uri, $headers, $body);
     }

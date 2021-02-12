@@ -13,7 +13,10 @@ class ExternalEventTest extends AcceptanceBaseTestCase
     {
         $list = $this->factory->createExternalEvent()->getList(123456);
         $this->assertCount(2, $list);
-        $this->assertThat($list[0], $this->structure(['id' => 1, 'usages' => $this->structure(['email_ids' => [3]])]));
-        $this->assertThat($list[1], $this->structure(['id' => 2, 'usages' => $this->structure(['program_ids' => [4]])]));
+
+        $this->assertEquals(1, $list[0]['id']);
+        $this->assertEquals([3], $list[0]['usages']['email_ids']);
+        $this->assertEquals(2, $list[1]['id']);
+        $this->assertEquals([4], $list[1]['usages']['program_ids']);
     }
 }

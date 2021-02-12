@@ -13,13 +13,13 @@ use Suite\Api\Test\Helper\AcceptanceBaseTestCase;
 
 class ClientTest extends AcceptanceBaseTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->cleanupLogFile();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->cleanupLogFile();
@@ -32,7 +32,13 @@ class ClientTest extends AcceptanceBaseTestCase
     {
         $client = $this->createClient($this->escherProvider);
 
-        $this->assertThat($client->get("{$this->apiBaseUrl}/"), $this->isSuccessfulApiResponse());
+        $successfulApiResponse = [
+            'replyCode' => 0,
+            'replyText' => 'OK',
+            'data' => '',
+            'success' => true,
+        ];
+        $this->assertEquals($successfulApiResponse, $client->get("{$this->apiBaseUrl}/"));
     }
     /**
      * @test
@@ -61,15 +67,6 @@ class ClientTest extends AcceptanceBaseTestCase
         } catch (\Exception $e) {
             $this->assertEquals(2, $client->get("{$this->apiBaseUrl}/retryCount")['data']);
         }
-    }
-
-    private function isSuccessfulApiResponse()
-    {
-        return $this->structure([
-            'replyCode' => 0,
-            'replyText' => 'OK',
-            'data' => '',
-        ]);
     }
 
     /**

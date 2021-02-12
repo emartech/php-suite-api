@@ -2,27 +2,14 @@
 
 namespace Suite\Api;
 
-use Emartech\TestHelper\BaseTestCase;
+use Suite\Api\Test\Helper\TestCase;
 
-use PHPUnit_Framework_MockObject_Builder_InvocationMocker;
-use PHPUnit_Framework_MockObject_Matcher_Invocation;
-
-class ContactListChunkIteratorTest extends BaseTestCase
+class ContactListChunkIteratorTest extends TestCase
 {
-    /**
-     * @var ContactList|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $listService;
-
-    /**
-     * @var ContactListChunkIterator
-     */
-    private $iter;
-
     /**
      * @var int
      */
-    private $customerId = 123456;
+    protected $customerId = 123456;
 
     /**
      * @var int
@@ -34,25 +21,20 @@ class ContactListChunkIteratorTest extends BaseTestCase
      */
     private $chunkSize = 3;
 
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->listService = $this->mock(ContactList::class);
-        $this->iter = new ContactListChunkIterator(
-            $this->listService, $this->customerId, $this->contactListId, $this->chunkSize
-        );
-    }
-
-
     /**
      * @test
      */
     public function iterate_EmptyContactList_Perfect()
     {
-        $this->expectChunkLoad($this->at(0), 0)->will($this->returnValue([]));
-
-        $this->assertEquals([], iterator_to_array($this->iter));
+        $iter = new ContactListChunkIterator(
+            new class implements ContactListChunkFetcher {
+                public function getContactsOfList(int $customerId, int $contactListId, int $limit, int $offset)
+                {
+                    return [];
+                }
+            }, $this->customerId, $this->contactListId, $this->chunkSize
+        );
+        $this->assertEquals([], iterator_to_array($iter));
     }
 
 
@@ -61,12 +43,22 @@ class ContactListChunkIteratorTest extends BaseTestCase
      */
     public function iterate_OneChunk_Perfect()
     {
-        $theChunk = [1, 2];
+        $iter = new ContactListChunkIterator(
+            new class implements ContactListChunkFetcher {
+                private $counter = 0;
+                public function getContactsOfList(int $customerId, int $contactListId, int $limit, int $offset)
+                {
+                    if ($this->counter == 0) {
+                        $this->counter++;
+                        return [1, 2];
+                    }
+                    $this->counter++;
+                    return [];
+                }
+            }, $this->customerId, $this->contactListId, $this->chunkSize
+        );
 
-        $this->expectChunkLoad($this->at(0), 0)->will($this->returnValue($theChunk));
-        $this->expectChunkLoad($this->at(1), 3)->will($this->returnValue([]));
-
-        $this->assertEquals([$theChunk], iterator_to_array($this->iter));
+        $this->assertEquals([[1, 2]], iterator_to_array($iter));
     }
 
 
@@ -75,6 +67,23 @@ class ContactListChunkIteratorTest extends BaseTestCase
      */
     public function iterate_SeveralChunks_Perfect()
     {
+        $iter = new ContactListChunkIterator(
+            new class implements ContactListChunkFetcher {
+                private $counter = 0;
+                public function getContactsOfList(int $customerId, int $contactListId, int $limit, int $offset)
+                {
+                    switch ($this->counter) {
+                        case 0: $result = [1, 2, 3]; break;
+                        case 1: $result = [4, 5, 6]; break;
+                        case 2: $result = [7, 8, 9]; break;
+                        case 3: $result = [10, 11]; break;
+                        default: $result = [];
+                    }
+                    $this->counter++;
+                    return $result;
+                }
+            }, $this->customerId, $this->contactListId, $this->chunkSize
+        );
         $chunks = [
             [1, 2, 3],
             [4, 5, 6],
@@ -82,36 +91,25 @@ class ContactListChunkIteratorTest extends BaseTestCase
             [10, 11],
         ];
 
-        $this->expectChunkLoad($this->at(0), 0)->will($this->returnValue($chunks[0]));
-        $this->expectChunkLoad($this->at(1), 3)->will($this->returnValue($chunks[1]));
-        $this->expectChunkLoad($this->at(2), 6)->will($this->returnValue($chunks[2]));
-        $this->expectChunkLoad($this->at(3), 9)->will($this->returnValue($chunks[3]));
-        $this->expectChunkLoad($this->at(4), 12)->will($this->returnValue([]));
-
-        $this->assertEquals($chunks, iterator_to_array($this->iter));
+        $this->assertEquals($chunks, iterator_to_array($iter));
     }
 
 
     /**
      * @test
-     * @expectedException \Suite\Api\RequestFailed
      */
     public function iterate_ApiRequestFailed_ThrowsException()
     {
-        $this->expectChunkLoad($this->at(0), 0)->will($this->throwException(new RequestFailed()));
+        $iter = new ContactListChunkIterator(
+            new class implements ContactListChunkFetcher {
+                public function getContactsOfList(int $customerId, int $contactListId, int $limit, int $offset)
+                {
+                    throw new RequestFailed();
+                }
+            }, $this->customerId, $this->contactListId, $this->chunkSize
+        );
 
-        iterator_to_array($this->iter);
-    }
-
-
-    /**
-     * @param PHPUnit_Framework_MockObject_Matcher_Invocation $matcher
-     * @param int $offset
-     * @return PHPUnit_Framework_MockObject_Builder_InvocationMocker
-     */
-    private function expectChunkLoad(PHPUnit_Framework_MockObject_Matcher_Invocation $matcher, $offset) : PHPUnit_Framework_MockObject_Builder_InvocationMocker
-    {
-        return $this->listService->expects($matcher)->method('getContactsOfList')
-            ->with($this->customerId, $this->contactListId, $this->chunkSize, $offset);
+        $this->expectException(RequestFailed::class);
+        iterator_to_array($iter);
     }
 }

@@ -5,9 +5,9 @@ namespace Suite\Api;
 class ContactListChunkIterator implements \Iterator
 {
     /**
-     * @var ContactList
+     * @var ContactListChunkFetcher
      */
-    private $listService;
+    private $chunkFetcher;
 
     /**
      * @var int
@@ -35,9 +35,9 @@ class ContactListChunkIterator implements \Iterator
     private $currentChunk = [];
 
 
-    public function __construct(ContactList $listService, int $customerId, int $contactListId, int $chunkSize = 10000)
+    public function __construct(ContactListChunkFetcher $chunkFetcher, int $customerId, int $contactListId, int $chunkSize = 10000)
     {
-        $this->listService = $listService;
+        $this->chunkFetcher = $chunkFetcher;
         $this->chunkSize = $chunkSize;
         $this->customerId = $customerId;
         $this->contactListId = $contactListId;
@@ -103,7 +103,7 @@ class ContactListChunkIterator implements \Iterator
 
     private function loadPage()
     {
-        $this->currentChunk = $this->listService->getContactsOfList(
+        $this->currentChunk = $this->chunkFetcher->getContactsOfList(
             $this->customerId,
             $this->contactListId,
             $this->chunkSize,

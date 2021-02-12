@@ -11,12 +11,12 @@ class LaunchTest extends TestCase
     /** @var Launch */
     private $emailLaunch;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->endPoints = new EndPoints(self::API_BASE_URL);
-        $this->apiClient = $this->mock(Client::class);
+        $this->apiClient = $this->createMock(Client::class);
         $this->emailLaunch = new Launch($this->apiClient, $this->endPoints);
     }
 
@@ -28,7 +28,7 @@ class LaunchTest extends TestCase
     {
         $this->apiClient->expects($this->once())->method('post')
             ->with($this->endPoints->emailLaunch($this->customerId, $this->campaignId))
-            ->will($this->apiSuccess());
+            ->willReturn($this->apiSuccess());
 
         $responseData = $this->emailLaunch->launch($this->customerId, $this->campaignId);
         $this->assertNull($responseData);

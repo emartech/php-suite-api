@@ -3,16 +3,19 @@
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Suite\Api\Middleware\Retry;
 
-class RetryTest extends \Emartech\TestHelper\BaseTestCase
+class RetryTest extends TestCase
 {
     const DEFAULT_RETRY_COUNT      = 3;
 
     const EXCEEDED_RETRY_COUNT     = 3;
     const NOT_EXCEEDED_RETRY_COUNT = 1;
     /**
-     * @var Request|PHPUnit_Framework_MockObject_MockObject
+     * @var Request|MockObject
      */
     private $request;
 
@@ -21,11 +24,11 @@ class RetryTest extends \Emartech\TestHelper\BaseTestCase
      */
     private $handler;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        $this->handler = (new Retry($this->dummyLogger, self::DEFAULT_RETRY_COUNT))->createHandler();
-        $this->request = $this->mock(Request::class);
+        $this->handler = (new Retry(new NullLogger(), self::DEFAULT_RETRY_COUNT))->createHandler();
+        $this->request = $this->createMock(Request::class);
     }
 
     /**

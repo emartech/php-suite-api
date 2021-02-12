@@ -11,12 +11,12 @@ class CampaignTest extends TestCase
     /** @var Campaign */
     private $emailCampaign;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->endPoints = new EndPoints(self::API_BASE_URL);
-        $this->apiClient = $this->mock(Client::class);
+        $this->apiClient = $this->createMock(Client::class);
         $this->emailCampaign = new Campaign($this->apiClient, $this->endPoints);
     }
 
@@ -120,7 +120,7 @@ class CampaignTest extends TestCase
     {
         $this->apiClient->expects($this->once())->method('get')
             ->with($this->endPoints->emailCampaign($this->customerId, $this->campaignId))
-            ->will($this->apiSuccess(array('id' => $id)));
+            ->willReturn($this->apiSuccess(array('id' => $id)));
     }
 
 
@@ -128,7 +128,7 @@ class CampaignTest extends TestCase
     {
         $this->apiClient->expects($this->once())->method('get')
             ->with($this->endPoints->emailCampaignList($this->customerId), $expectedFilter)
-            ->will($this->apiSuccess($expectedResponseData));
+            ->willReturn($this->apiSuccess($expectedResponseData));
     }
 
 
@@ -136,13 +136,13 @@ class CampaignTest extends TestCase
     {
         $this->apiClient->expects($this->once())->method('get')
             ->with($this->endPoints->emailCampaignList($this->customerId))
-            ->will($this->apiSuccess($expectedResponseData));
+            ->willReturn($this->apiSuccess($expectedResponseData));
     }
 
     private function expectApiCallForCampaignDelete($id)
     {
         $this->apiClient->expects($this->once())->method('post')
             ->with($this->endPoints->emailCampaignDelete($this->customerId), ['emailId' => $id])
-            ->will($this->apiSuccess(null));
+            ->willReturn($this->apiSuccess(null));
     }
 }

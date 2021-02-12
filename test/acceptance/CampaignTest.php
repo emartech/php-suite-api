@@ -11,7 +11,7 @@ class CampaignTest extends AcceptanceBaseTestCase
      */
     public function emailCampaignEndPoint()
     {
-        $this->assertThat($this->factory->createCampaign()->getById(1, 1), $this->structure(['id' => 1]));
+        $this->assertEquals(1, $this->factory->createCampaign()->getById(1, 1)['id']);
     }
 
     /**
@@ -21,8 +21,9 @@ class CampaignTest extends AcceptanceBaseTestCase
     {
         $list = $this->factory->createCampaign()->getList(1);
         $this->assertCount(2, $list);
-        $this->assertThat($list[0], $this->structure(['id' => 2]));
-        $this->assertThat($list[1], $this->structure(['id' => 3]));
+
+        $this->assertEquals(2, $list[0]['id']);
+        $this->assertEquals(3, $list[1]['id']);
     }
 
     /**
@@ -55,6 +56,6 @@ class CampaignTest extends AcceptanceBaseTestCase
     public function emailCampaignDeleteEndPoint()
     {
         $response = $this->factory->createCampaign()->deleteById(1, 1);
-        $this->assertSame($response, null);
+        $this->assertNull($response);
     }
 }

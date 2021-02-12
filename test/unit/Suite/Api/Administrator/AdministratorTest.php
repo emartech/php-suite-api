@@ -11,12 +11,12 @@ class AdministratorTest extends TestCase
     /** @var Administrator */
     private $administrator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->endPoints = new EndPoints(self::API_BASE_URL);
-        $this->apiClient = $this->mock(Client::class);
+        $this->apiClient = $this->createMock(Client::class);
         $this->administrator = new Administrator($this->apiClient, $this->endPoints);
     }
 
@@ -33,7 +33,7 @@ class AdministratorTest extends TestCase
 
         $this->apiClient->expects($this->once())->method('get')
             ->with($this->endPoints->administratorList($this->customerId))
-            ->will($this->apiSuccess($admins));
+            ->willReturn($this->apiSuccess($admins));
 
         $responseData = $this->administrator->getList($this->customerId);
         $this->assertEquals($admins, $responseData);
