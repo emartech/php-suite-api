@@ -19,7 +19,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "9.*",
-        "silex/silex": "~2.0"
+        "silex/silex": "~2.0",
+        "fqqdk/packagist-publisher": ">=1.2.5"
     },
     "authors": [
         {

@@ -39,3 +39,6 @@ test: ## run tests
 
 packages: ## install packages
 	docker-compose run --rm web composer install
+
+update-packages: ## install packages
+	docker-compose run --rm web composer update
