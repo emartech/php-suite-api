@@ -13,7 +13,7 @@
         }
     },
     "require": {
-        "guzzlehttp/guzzle": "~6.0",
+        "guzzlehttp/guzzle": ">=6.0",
         "emartech/escher": "1.*",
         "php": ">=7.0"
     },
