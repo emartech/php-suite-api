@@ -128,21 +128,33 @@ class ContactListTest extends TestCase
 
     /**
      * @test
+     * @dataProvider contactListNameProvider
      */
-    public function findContactListByName_CasesDoNotMatch_ContactListIdStillReturned()
+    public function findContactListByName_CasesDoNotMatch_ContactListIdStillReturned($contactListName)
     {
-        $contactLists = array(
+        $contactLists = [
             $this->contactListData('id1', 'contact list 1'),
             $this->contactListData('id2', 'contact list 2'),
-            $this->contactListData($this->contactListId, strtoupper($this->listName)),
-        );
+            $this->contactListData($this->contactListId, $contactListName),
+        ];
 
         $this->apiClient->expects($this->once())->method('get')->with($this->endPoints->contactLists($this->customerId))
             ->willReturn($this->apiSuccess($contactLists));
 
-        $contactListId = $this->listService->findContactListByName($this->customerId, $this->listName);
+        $contactListId = $this->listService->findContactListByName($this->customerId, trim(strtolower($contactListName)));
 
         $this->assertEquals($this->contactListId, $contactListId);
+    }
+
+    public function contactListNameProvider()
+    {
+        return [
+          'upperCase' => [strtoupper($this->listName)],
+          'lowerCase' => [strtolower($this->listName)],
+          'spaceAfter' => [$this->listName . "     "],
+          'spaceBefore' => ["     " . $this->listName],
+          'spaceInContactListName' => [" my very best contact list "]
+        ];
     }
 
     /**
