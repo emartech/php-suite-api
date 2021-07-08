@@ -55,7 +55,7 @@ class ContactList implements ContactListChunkFetcher
     {
         try {
             foreach ($this->getContactLists($customerId) as $contactListData) {
-                if (trim(strtolower($contactListData['name'])) == strtolower($listName)) {
+                if (trim(strtolower($contactListData['name'])) == trim(strtolower($listName))) {
                     return $contactListData['id'];
                 }
             }

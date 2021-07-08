@@ -141,7 +141,7 @@ class ContactListTest extends TestCase
         $this->apiClient->expects($this->once())->method('get')->with($this->endPoints->contactLists($this->customerId))
             ->willReturn($this->apiSuccess($contactLists));
 
-        $contactListId = $this->listService->findContactListByName($this->customerId, trim(strtolower($contactListName)));
+        $contactListId = $this->listService->findContactListByName($this->customerId, $contactListName);
 
         $this->assertEquals($this->contactListId, $contactListId);
     }
