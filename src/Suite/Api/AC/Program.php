@@ -21,13 +21,14 @@ class Program
         $this->endPoints = $endPoints;
     }
 
-    private function programCallback(int $customerId, string $triggerId, $userId, $listId)
+    private function programCallback(int $customerId, string $triggerId, $userId, $listId, string $status)
     {
         try
         {
             $this->apiClient->post($this->endPoints->programCallbackUrl($customerId, $triggerId),[
                 'user_id' => $userId,
                 'list_id' => $listId,
+                'status' => $status,
             ]);
         }
         catch (Error $ex)
@@ -36,13 +37,13 @@ class Program
         }
     }
 
-    public function programCallbackWithUserId(int $customerId, string $triggerId, int $userId)
+    public function programCallbackWithUserId(int $customerId, string $triggerId, int $userId, string $status = 'done')
     {
-        $this->programCallback($customerId, $triggerId, $userId, null);
+        $this->programCallback($customerId, $triggerId, $userId, null, $status);
     }
 
-    public function programCallbackWithListId(int $customerId, string $triggerId, int $listId)
+    public function programCallbackWithListId(int $customerId, string $triggerId, int $listId, string $status = 'done')
     {
-        $this->programCallback($customerId, $triggerId, null, $listId);
+        $this->programCallback($customerId, $triggerId, null, $listId, $status);
     }
 }

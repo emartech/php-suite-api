@@ -33,10 +33,27 @@ class ProgramTest extends TestCase
             [
                 'user_id' => self::USER_ID,
                 'list_id' => null,
+                'status' => 'done',
             ]
         );
 
         $this->program->programCallbackWithUserId($this->customerId, self::TRIGGER_ID, self::USER_ID);
+    }
+
+    /**
+     * @test
+     */
+    public function programCallbackWithUserId_ContainsStatus_Perfect()
+    {
+        $this->expectApiCallSuccess(
+            [
+                'user_id' => self::USER_ID,
+                'list_id' => null,
+                'status' => 'some_status'
+            ]
+        );
+
+        $this->program->programCallbackWithUserId($this->customerId, self::TRIGGER_ID, self::USER_ID, 'some_status');
     }
 
     /**
@@ -63,6 +80,22 @@ class ProgramTest extends TestCase
         );
 
         $this->program->programCallbackWithListId($this->customerId, self::TRIGGER_ID, self::LIST_ID);
+    }
+
+    /**
+     * @test
+     */
+    public function programCallbackWithListId_ContainsStatus_Perfect()
+    {
+        $this->expectApiCallSuccess(
+            [
+                'user_id' => null,
+                'list_id' => self::LIST_ID,
+                'status' => 'some_status',
+            ]
+        );
+
+        $this->program->programCallbackWithListId($this->customerId, self::TRIGGER_ID, self::LIST_ID, 'some_status');
     }
 
     /**
