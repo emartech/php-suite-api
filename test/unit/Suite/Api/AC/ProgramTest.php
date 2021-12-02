@@ -76,6 +76,7 @@ class ProgramTest extends TestCase
             [
                 'user_id' => null,
                 'list_id' => self::LIST_ID,
+                'status' => 'done'
             ]
         );
 
@@ -111,14 +112,14 @@ class ProgramTest extends TestCase
 
     private function expectApiCallSuccess(array $postParams)
     {
-        return $this->apiClient->expects($this->once())->method('post')->with(
+        $this->apiClient->expects($this->once())->method('post')->with(
             $this->endPoints->programCallbackUrl($this->customerId, self::TRIGGER_ID), $postParams
         )->willReturn($this->apiSuccess());
     }
 
     private function expectApiCallFailure()
     {
-        return $this->apiClient
+        $this->apiClient
             ->expects($this->any())
             ->method('post')
             ->willThrowException(new Error());
