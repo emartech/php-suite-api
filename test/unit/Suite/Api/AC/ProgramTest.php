@@ -43,22 +43,6 @@ class ProgramTest extends TestCase
     /**
      * @test
      */
-    public function programCallbackWithUserId_ContainsStatus_Perfect()
-    {
-        $this->expectApiCallSuccess(
-            [
-                'user_id' => self::USER_ID,
-                'list_id' => null,
-                'status' => Program::CALLBACK_STATUS_CANCELED
-            ]
-        );
-
-        $this->program->programCallbackWithUserId($this->customerId, self::TRIGGER_ID, self::USER_ID, Program::CALLBACK_STATUS_CANCELED);
-    }
-
-    /**
-     * @test
-     */
     public function programCallbackWithUserId_postThrowsError_ThrowsRequestFailException()
     {
         $this->expectException(RequestFailed::class);
@@ -86,28 +70,28 @@ class ProgramTest extends TestCase
     /**
      * @test
      */
-    public function programCallbackWithListId_ContainsStatus_Perfect()
-    {
-        $this->expectApiCallSuccess(
-            [
-                'user_id' => null,
-                'list_id' => self::LIST_ID,
-                'status' => Program::CALLBACK_STATUS_CANCELED
-            ]
-        );
-
-        $this->program->programCallbackWithListId($this->customerId, self::TRIGGER_ID, self::LIST_ID, Program::CALLBACK_STATUS_CANCELED);
-    }
-
-    /**
-     * @test
-     */
     public function programCallbackWithListId_postThrowsError_ThrowsRequestFailException()
     {
         $this->expectException(RequestFailed::class);
         $this->expectApiCallFailure();
 
         $this->program->programCallbackWithListId($this->customerId, self::TRIGGER_ID, self::LIST_ID);
+    }
+
+    /**
+     * @test
+     */
+    public function programCallbackCancel_Perfect_Perfect()
+    {
+        $this->expectApiCallSuccess(
+            [
+                'user_id' => 0,
+                'list_id' => null,
+                'status' => Program::CALLBACK_STATUS_CANCELED
+            ]
+        );
+
+        $this->program->programCallbackCancel($this->customerId, self::TRIGGER_ID);
     }
 
     private function expectApiCallSuccess(array $postParams)

@@ -24,7 +24,7 @@ class Program
         $this->endPoints = $endPoints;
     }
 
-    private function programCallback(int $customerId, string $triggerId, $userId, $listId, string $status)
+    private function programCallback(int $customerId, string $triggerId, $userId, $listId, string $status = self::CALLBACK_STATUS_DONE)
     {
         try
         {
@@ -40,13 +40,18 @@ class Program
         }
     }
 
-    public function programCallbackWithUserId(int $customerId, string $triggerId, int $userId, string $status = self::CALLBACK_STATUS_DONE)
+    public function programCallbackWithUserId(int $customerId, string $triggerId, int $userId)
     {
-        $this->programCallback($customerId, $triggerId, $userId, null, $status);
+        $this->programCallback($customerId, $triggerId, $userId, null);
     }
 
-    public function programCallbackWithListId(int $customerId, string $triggerId, int $listId, string $status = self::CALLBACK_STATUS_DONE)
+    public function programCallbackWithListId(int $customerId, string $triggerId, int $listId)
     {
-        $this->programCallback($customerId, $triggerId, null, $listId, $status);
+        $this->programCallback($customerId, $triggerId, null, $listId);
+    }
+
+    public function programCallbackCancel(int $customerId, string $triggerId)
+    {
+        $this->programCallback($customerId, $triggerId, null, null, Program::CALLBACK_STATUS_CANCELED);
     }
 }
