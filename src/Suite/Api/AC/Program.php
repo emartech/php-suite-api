@@ -8,6 +8,9 @@ use Suite\Api\RequestFailed;
 
 class Program
 {
+    const CALLBACK_STATUS_DONE = 'done';
+    const CALLBACK_STATUS_CANCELED = 'canceled';
+
     /* @var Client */
     private $apiClient;
 
