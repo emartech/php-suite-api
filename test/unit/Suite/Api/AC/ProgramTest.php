@@ -33,7 +33,7 @@ class ProgramTest extends TestCase
             [
                 'user_id' => self::USER_ID,
                 'list_id' => null,
-                'status' => 'done',
+                'status' => Program::CALLBACK_STATUS_DONE,
             ]
         );
 
@@ -49,11 +49,11 @@ class ProgramTest extends TestCase
             [
                 'user_id' => self::USER_ID,
                 'list_id' => null,
-                'status' => 'some_status'
+                'status' => Program::CALLBACK_STATUS_CANCELED
             ]
         );
 
-        $this->program->programCallbackWithUserId($this->customerId, self::TRIGGER_ID, self::USER_ID, 'some_status');
+        $this->program->programCallbackWithUserId($this->customerId, self::TRIGGER_ID, self::USER_ID, Program::CALLBACK_STATUS_CANCELED);
     }
 
     /**
@@ -76,7 +76,7 @@ class ProgramTest extends TestCase
             [
                 'user_id' => null,
                 'list_id' => self::LIST_ID,
-                'status' => 'done'
+                'status' => Program::CALLBACK_STATUS_DONE
             ]
         );
 
@@ -92,11 +92,11 @@ class ProgramTest extends TestCase
             [
                 'user_id' => null,
                 'list_id' => self::LIST_ID,
-                'status' => 'some_status',
+                'status' => Program::CALLBACK_STATUS_CANCELED
             ]
         );
 
-        $this->program->programCallbackWithListId($this->customerId, self::TRIGGER_ID, self::LIST_ID, 'some_status');
+        $this->program->programCallbackWithListId($this->customerId, self::TRIGGER_ID, self::LIST_ID, Program::CALLBACK_STATUS_CANCELED);
     }
 
     /**

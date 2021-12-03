@@ -40,12 +40,12 @@ class Program
         }
     }
 
-    public function programCallbackWithUserId(int $customerId, string $triggerId, int $userId, string $status = 'done')
+    public function programCallbackWithUserId(int $customerId, string $triggerId, int $userId, string $status = self::CALLBACK_STATUS_DONE)
     {
         $this->programCallback($customerId, $triggerId, $userId, null, $status);
     }
 
-    public function programCallbackWithListId(int $customerId, string $triggerId, int $listId, string $status = 'done')
+    public function programCallbackWithListId(int $customerId, string $triggerId, int $listId, string $status = self::CALLBACK_STATUS_DONE)
     {
         $this->programCallback($customerId, $triggerId, null, $listId, $status);
     }
