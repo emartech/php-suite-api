@@ -168,6 +168,17 @@ class ClientTest extends TestCase
     /**
      * @test
      */
+    public function responseOfSuccessfulDeleteRequestShouldIndicateSuccessAndContainApiResponseCodeAndText()
+    {
+        $this->expectSuccessfulDelete(self::URL, [])->willReturn($this->apiSuccess());
+        $response = $this->apiClient->delete(self::URL, []);
+        $this->assertSuccessful($response);
+        $this->assertResponseContains($response, self::API_SUCCESS_CODE, self::API_SUCCESS_TEXT);
+    }
+
+    /**
+     * @test
+     */
     public function responseOfBadApiRequestShouldIndicateFailureAndContainErrorMessage()
     {
         $this->expectGetYieldingBadResponse(self::URL)->willReturn($this->apiFailure());
@@ -287,6 +298,13 @@ class ClientTest extends TestCase
     protected function expectSuccessfulPut($apiUrl, $expectedParams): InvocationMocker
     {
         $this->expectSuccessfulRequest('PUT', $apiUrl, $this->apiHeaders(), json_encode($expectedParams));
+        return $this->response->expects($this->any())->method('getBody');
+    }
+
+
+    protected function expectSuccessfulDelete($apiUrl, $expectedParams): InvocationMocker
+    {
+        $this->expectSuccessfulRequest('DELETE', $apiUrl, $this->apiHeaders(), json_encode($expectedParams));
         return $this->response->expects($this->any())->method('getBody');
     }
 

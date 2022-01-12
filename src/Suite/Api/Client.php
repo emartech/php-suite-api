@@ -92,6 +92,11 @@ class Client
         return $this->sendRequestWithBody($url, $data, 'PUT');
     }
 
+    public function delete(string $url, $data)
+    {
+        return $this->sendRequestWithBody($url, $data, 'DELETE');
+    }
+
     private function sendRequestWithBody(string $url, $data, $method)
     {
         $requestBody = $this->getBody($data);
