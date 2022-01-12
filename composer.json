@@ -35,5 +35,10 @@
     },
     "license": [
         "MIT"
-    ]
+    ],
+    "config": {
+        "allow-plugins": {
+            "fqqdk/packagist-publisher": true
+        }
+    }
 }
