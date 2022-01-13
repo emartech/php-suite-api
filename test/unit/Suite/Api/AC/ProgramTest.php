@@ -33,6 +33,7 @@ class ProgramTest extends TestCase
             [
                 'user_id' => self::USER_ID,
                 'list_id' => null,
+                'status' => Program::CALLBACK_STATUS_DONE,
             ]
         );
 
@@ -59,6 +60,7 @@ class ProgramTest extends TestCase
             [
                 'user_id' => null,
                 'list_id' => self::LIST_ID,
+                'status' => Program::CALLBACK_STATUS_DONE
             ]
         );
 
@@ -81,14 +83,20 @@ class ProgramTest extends TestCase
      */
     public function programCallbackCancel_Perfect_Perfect()
     {
-        $this->expectApiCallSuccess([], 'delete');
+        $this->expectApiCallSuccess(
+            [
+                'user_id' => 0,
+                'list_id' => null,
+                'status' => Program::CALLBACK_STATUS_CANCELED
+            ]
+        );
 
         $this->program->programCallbackCancel($this->customerId, self::TRIGGER_ID);
     }
 
-    private function expectApiCallSuccess(array $postParams, string $httpVerb = 'post')
+    private function expectApiCallSuccess(array $postParams)
     {
-        $this->apiClient->expects($this->once())->method($httpVerb)->with(
+        $this->apiClient->expects($this->once())->method('post')->with(
             $this->endPoints->programCallbackUrl($this->customerId, self::TRIGGER_ID), $postParams
         )->willReturn($this->apiSuccess());
     }

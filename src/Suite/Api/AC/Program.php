@@ -8,6 +8,9 @@ use Suite\Api\RequestFailed;
 
 class Program
 {
+    const CALLBACK_STATUS_DONE = 'done';
+    const CALLBACK_STATUS_CANCELED = 'canceled';
+
     /* @var Client */
     private $apiClient;
 
@@ -19,6 +22,22 @@ class Program
     {
         $this->apiClient = $apiClient;
         $this->endPoints = $endPoints;
+    }
+
+    private function programCallback(int $customerId, string $triggerId, $userId, $listId, string $status = self::CALLBACK_STATUS_DONE)
+    {
+        try
+        {
+            $this->apiClient->post($this->endPoints->programCallbackUrl($customerId, $triggerId),[
+                'user_id' => $userId,
+                'list_id' => $listId,
+                'status' => $status,
+            ]);
+        }
+        catch (Error $ex)
+        {
+            throw new RequestFailed('Program callback failed: ' . $ex->getMessage(), $ex->getCode(), $ex);
+        }
     }
 
     public function programCallbackWithUserId(int $customerId, string $triggerId, int $userId)
@@ -33,33 +52,6 @@ class Program
 
     public function programCallbackCancel(int $customerId, string $triggerId)
     {
-        try
-        {
-            $this->apiClient->delete($this->endPoints->programCallbackUrl($customerId, $triggerId), []);
-        }
-        catch (Error $ex)
-        {
-            $this->throwRequestFailedException($ex);
-        }
-    }
-
-    private function programCallback(int $customerId, string $triggerId, $userId, $listId)
-    {
-        try
-        {
-            $this->apiClient->post($this->endPoints->programCallbackUrl($customerId, $triggerId),[
-                'user_id' => $userId,
-                'list_id' => $listId,
-            ]);
-        }
-        catch (Error $ex)
-        {
-            $this->throwRequestFailedException($ex);
-        }
-    }
-
-    private function throwRequestFailedException($ex)
-    {
-        throw new RequestFailed('Program callback failed: ' . $ex->getMessage(), $ex->getCode(), $ex);
+        $this->programCallback($customerId, $triggerId, null, null, Program::CALLBACK_STATUS_CANCELED);
     }
 }
