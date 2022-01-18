@@ -11,9 +11,14 @@ class EndPoints
         $this->apiBaseUrl = $apiBaseUrl;
     }
 
-    public function programCallbackUrl(int $customerId, string $triggerId): string
+    public function programCallbackDoneUrl(int $customerId, string $triggerId): string
     {
         return "{$this->apiBaseUrl}/{$customerId}/ac/programs/callbacks/{$triggerId}";
+    }
+
+    public function programCallbackCancelUrl(int $customerId, string $triggerId): string
+    {
+        return "{$this->apiBaseUrl}/{$customerId}/ac/programs/callbacks/{$triggerId}/cancel";
     }
 }
 

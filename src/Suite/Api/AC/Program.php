@@ -24,34 +24,46 @@ class Program
         $this->endPoints = $endPoints;
     }
 
-    private function programCallback(int $customerId, string $triggerId, $userId, $listId, string $status = self::CALLBACK_STATUS_DONE)
+    private function programCallbackDone(int $customerId, string $triggerId, $userId, $listId)
+    {
+        $this->sendRequest(
+            $this->endPoints->programCallbackDoneUrl($customerId, $triggerId),
+            $userId,
+            $listId
+        );
+    }
+
+    public function programCallbackWithUserId(int $customerId, string $triggerId, int $userId)
+    {
+        $this->programCallbackDone($customerId, $triggerId, $userId, null);
+    }
+
+    public function programCallbackWithListId(int $customerId, string $triggerId, int $listId)
+    {
+        $this->programCallbackDone($customerId, $triggerId, null, $listId);
+    }
+
+    public function programCallbackCancel(int $customerId, string $triggerId)
+    {
+        $this->sendRequest(
+            $this->endPoints->programCallbackCancelUrl($customerId, $triggerId),
+            null,
+            null
+        );
+    }
+
+    private function sendRequest(string $url, $userId, $listId)
     {
         try
         {
-            $this->apiClient->post($this->endPoints->programCallbackUrl($customerId, $triggerId),[
+            $this->apiClient->post($url, [
                 'user_id' => $userId,
                 'list_id' => $listId,
-                'status' => $status,
             ]);
         }
         catch (Error $ex)
         {
             throw new RequestFailed('Program callback failed: ' . $ex->getMessage(), $ex->getCode(), $ex);
         }
-    }
-
-    public function programCallbackWithUserId(int $customerId, string $triggerId, int $userId)
-    {
-        $this->programCallback($customerId, $triggerId, $userId, null);
-    }
-
-    public function programCallbackWithListId(int $customerId, string $triggerId, int $listId)
-    {
-        $this->programCallback($customerId, $triggerId, null, $listId);
-    }
-
-    public function programCallbackCancel(int $customerId, string $triggerId)
-    {
-        $this->programCallback($customerId, $triggerId, null, null, Program::CALLBACK_STATUS_CANCELED);
     }
 }
