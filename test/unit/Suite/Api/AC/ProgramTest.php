@@ -32,7 +32,7 @@ class ProgramTest extends TestCase
      */
     public function programCallbackWithUserId_Perfect_Perfect()
     {
-        $this->expectDoneCallSuccess(
+        $this->expectSuccessfulDoneRequest(
             [
                 'user_id' => self::USER_ID,
                 'list_id' => null
@@ -58,7 +58,7 @@ class ProgramTest extends TestCase
      */
     public function programCallbackWithListId_Perfect_Perfect()
     {
-        $this->expectDoneCallSuccess(
+        $this->expectSuccessfulDoneRequest(
             [
                 'user_id' => null,
                 'list_id' => self::LIST_ID
@@ -84,28 +84,36 @@ class ProgramTest extends TestCase
      */
     public function programCallbackCancel_Perfect_Perfect()
     {
-        $this->expectCancelCallSuccess(
-            [
-                'user_id' => 0,
-                'list_id' => null
-            ]
-        );
+        $this->expectSuccessfulCancelRequest();
 
         $this->program->programCallbackCancel($this->customerId, self::TRIGGER_ID);
     }
 
-    private function expectDoneCallSuccess(array $postParams)
+    private function expectSuccessfulDoneRequest(array $postParams)
     {
-        $this->apiClient->expects($this->once())->method('post')->with(
-            $this->endPoints->programCallbackDoneUrl($this->customerId, self::TRIGGER_ID), $postParams
-        )->willReturn($this->apiSuccess());
+        $this->apiClient
+            ->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->endPoints->programCallbackDoneUrl($this->customerId, self::TRIGGER_ID),
+                $postParams
+            )
+            ->willReturn($this->apiSuccess());
     }
 
-    private function expectCancelCallSuccess(array $postParams)
+    private function expectSuccessfulCancelRequest()
     {
-        $this->apiClient->expects($this->once())->method('post')->with(
-            $this->endPoints->programCallbackCancelUrl($this->customerId, self::TRIGGER_ID), $postParams
-        )->willReturn($this->apiSuccess());
+        $this->apiClient
+            ->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->endPoints->programCallbackCancelUrl($this->customerId, self::TRIGGER_ID),
+                [
+                    'user_id' => null,
+                    'list_id' => null
+                ]
+            )
+            ->willReturn($this->apiSuccess());
     }
 
     private function expectApiCallFailure()

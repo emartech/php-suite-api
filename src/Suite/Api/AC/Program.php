@@ -8,9 +8,6 @@ use Suite\Api\RequestFailed;
 
 class Program
 {
-    const CALLBACK_STATUS_DONE = 'done';
-    const CALLBACK_STATUS_CANCELED = 'canceled';
-
     /* @var Client */
     private $apiClient;
 
@@ -22,15 +19,6 @@ class Program
     {
         $this->apiClient = $apiClient;
         $this->endPoints = $endPoints;
-    }
-
-    private function programCallbackDone(int $customerId, string $triggerId, $userId, $listId)
-    {
-        $this->sendRequest(
-            $this->endPoints->programCallbackDoneUrl($customerId, $triggerId),
-            $userId,
-            $listId
-        );
     }
 
     public function programCallbackWithUserId(int $customerId, string $triggerId, int $userId)
@@ -52,17 +40,23 @@ class Program
         );
     }
 
+    private function programCallbackDone(int $customerId, string $triggerId, $userId, $listId)
+    {
+        $this->sendRequest(
+            $this->endPoints->programCallbackDoneUrl($customerId, $triggerId),
+            $userId,
+            $listId
+        );
+    }
+
     private function sendRequest(string $url, $userId, $listId)
     {
-        try
-        {
+        try {
             $this->apiClient->post($url, [
                 'user_id' => $userId,
                 'list_id' => $listId,
             ]);
-        }
-        catch (Error $ex)
-        {
+        } catch (Error $ex) {
             throw new RequestFailed('Program callback failed: ' . $ex->getMessage(), $ex->getCode(), $ex);
         }
     }
