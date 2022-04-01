@@ -14,7 +14,7 @@
     },
     "require": {
         "guzzlehttp/guzzle": ">=6.0",
-        "emartech/escher": "1.*",
+        "emartech/escher": "^3.0",
         "php": ">=7.0"
     },
     "require-dev": {
