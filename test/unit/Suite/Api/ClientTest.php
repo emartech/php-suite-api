@@ -15,15 +15,10 @@ use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit_Framework_Constraint;
-use PHPUnit_Framework_Constraint_IsEqual;
-use PHPUnit_Framework_MockObject_Builder_InvocationMocker;
-use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\NullLogger;
 use Suite\Api\Test\Helper\TestCase;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ClientTest extends TestCase
 {
@@ -317,7 +312,7 @@ class ClientTest extends TestCase
     private function expectGetYieldingBadResponse($apiUrl): InvocationMocker
     {
         $this->expectRequest('GET', $apiUrl, $this->apiHeaders())
-            ->willReturn($this->throwException(new BadResponseException('Bad response', $this->request, $this->response)));
+            ->willThrowException(new BadResponseException('Bad response', $this->request, $this->response));
 
         return $this->response->expects($this->any())->method('getBody');
     }
@@ -325,12 +320,12 @@ class ClientTest extends TestCase
     private function expectGetYieldingRequestException($apiUrl): InvocationMocker
     {
         return $this->expectRequest('GET', $apiUrl, $this->apiHeaders())
-            ->willReturn($this->throwException(new RequestException('Request exception', $this->request)));
+            ->willThrowException(new RequestException('Request exception', $this->request));
     }
 
     private function expectSuccessfulRequest($method, $uri = null, $headers = null, $body = null)
     {
-        $this->expectRequest($method, $uri, $headers, $body)->willReturn($this->returnValue($this->response));
+        $this->expectRequest($method, $uri, $headers, $body)->willReturn($this->response);
     }
 
     private function expectRequest(string $method, $uri, $headers, $body = null): InvocationMocker

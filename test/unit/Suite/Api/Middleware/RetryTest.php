@@ -1,6 +1,5 @@
 <?php
 
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -11,9 +10,9 @@ use Suite\Api\Middleware\Retry;
 class RetryTest extends TestCase
 {
     const DEFAULT_RETRY_COUNT      = 3;
-
     const EXCEEDED_RETRY_COUNT     = 3;
     const NOT_EXCEEDED_RETRY_COUNT = 1;
+
     /**
      * @var Request|MockObject
      */
@@ -90,21 +89,6 @@ class RetryTest extends TestCase
                 self::NOT_EXCEEDED_RETRY_COUNT,
                 $this->request,
                 new Response(500)
-            )
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function createHandler_returnsTrueWhenConnectionErrorOccurred()
-    {
-        $this->assertTrue(
-            ($this->handler)(
-                self::NOT_EXCEEDED_RETRY_COUNT,
-                $this->request,
-                new Response(200),
-                new ConnectException('', $this->request)
             )
         );
     }
