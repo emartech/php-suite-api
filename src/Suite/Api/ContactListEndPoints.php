@@ -41,7 +41,7 @@ class ContactListEndPoints
 
     public function contactsOfList(int $customerId, int $contactListId, int $limit, int $offset)
     {
-        return $this->baseUrl($customerId) . "/contactlists/{$contactListId}?limit={$limit}&offset={$offset}";
+        return $this->baseUrl($customerId) . "/{$contactListId}/contacts/?limit={$limit}&offset={$offset}";
     }
 
     public function deleteContactsFromList(int $customerId, int $contactListId): string
