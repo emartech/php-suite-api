@@ -3,7 +3,7 @@
 namespace Suite\Api\Middleware;
 
 use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Psr\Log\LoggerInterface;
@@ -27,7 +27,7 @@ class Retry
 
     public function createHandler()
     {
-        return function (int $retries, Request $request, Response $response = null, RequestException $exception = null) {
+        return function (int $retries, Request $request, Response $response = null, TransferException $exception = null) {
             if ($this->stillHasRetryAttempts($retries) && $this->isRetriableError($response, $exception)) {
                 $this->log($retries, $request, $response, $exception);
                 return true;
@@ -51,12 +51,12 @@ class Retry
         return $response && $response->getStatusCode() >= 500;
     }
 
-    private function isConnectError(RequestException $exception = null)
+    private function isConnectError(TransferException $exception = null)
     {
         return $exception instanceof ConnectException;
     }
 
-    private function log(int $retries, Request $request, Response $response = null, RequestException $exception = null)
+    private function log(int $retries, Request $request, Response $response = null, TransferException $exception = null)
     {
         $this->logger->warning(
             'Retrying API call',
