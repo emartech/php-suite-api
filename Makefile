@@ -1,3 +1,5 @@
+DOCKER_COMPOSE = docker-compose -f docker-compose-development.yml
+
 ifndef TESTMETHOD
 FILTERARGS=
 else
@@ -14,31 +16,31 @@ help: ## help page
 all: destroy update build up packages ## destroy update build run packages
 
 destroy: ## remove container
-	docker-compose down
+	$(DOCKER_COMPOSE) down
 
 build: ## build container
-	@docker-compose build
+	$(DOCKER_COMPOSE) build
 
 up: ## run
-	docker-compose up -d
+	$(DOCKER_COMPOSE) up -d
 
 stop: ## stop container
-	docker-compose stop
+	$(DOCKER_COMPOSE) stop
 
 restart: stop up  ## restart container and run
 
 ssh: sh  ## get a shell in the container (alias for sh)
 sh: ## get a shell in the container
-	docker-compose exec web /bin/bash
+	$(DOCKER_COMPOSE) exec web /bin/bash
 
 logs: ## show logs
-	@docker-compose logs -f web
+	$(DOCKER_COMPOSE) logs -f web
 
 test: ## run tests
-	docker-compose exec web /bin/bash -l -c "cd /var/www/html && vendor/bin/phpunit -c test/phpunit.xml $(FILTERARGS) $(TESTFILE)"
+	$(DOCKER_COMPOSE) exec web /bin/bash -l -c "cd /var/www/html && vendor/bin/phpunit -c test/phpunit.xml $(FILTERARGS) $(TESTFILE)"
 
 packages: ## install packages
-	docker-compose run --rm web composer install
+	$(DOCKER_COMPOSE) run --rm web composer install
 
 update-packages: ## install packages
-	docker-compose run --rm web composer update
+	$(DOCKER_COMPOSE) run --rm web composer update

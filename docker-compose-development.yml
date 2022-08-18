@@ -1,7 +1,9 @@
 version: '3'
 services:
   web:
-    build: ./
+    build:
+      context: .
+      dockerfile: Dockerfile.development
     volumes:
       - ".:/var/www/html/:delegated"
       - "~/.composer/docker-cache/:/root/.composer:cached"
