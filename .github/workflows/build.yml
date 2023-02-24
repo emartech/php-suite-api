@@ -8,36 +8,15 @@ env:
 
 jobs:
   test:
-    name: Tests 🚦
+    name: Tests & Deploy 🚦🚢
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
-      - name: Use correct PHP version
-        run: phpenv local 8.0
-      - name: Install dependencies
-        run: composer install --no-interaction
+      - name: Setup and start container
+        run: make all
       - name: Run tests
-        run: composer test
-      - name: Slack notification
-        uses: 8398a7/action-slack@a189acbf0b7ea434558662ae25a0de71df69a435
-        if: ${{ failure() }}
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,author,job,ref
-          job_name: Test 🚦
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-  deploy:
-    name: Deploy 🚢
-    needs: [test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
-      - name: Use correct PHP version
-        run: phpenv local 8.0
+        run: make test
       - name: Release package
         if: github.ref_name == 'master'
         run: composer publish emartech ${PACKAGIST_TOKEN}
@@ -46,7 +25,7 @@ jobs:
         with:
           status: ${{ job.status }}
           fields: repo,message,author,job,ref
-          job_name: Deploy 🚢
+          job_name: Tests & Deploy 🚦🚢
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
