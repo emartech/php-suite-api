@@ -44,6 +44,3 @@ packages: ## install packages
 
 update-packages: ## install packages
 	$(DOCKER_COMPOSE) run --rm web composer update
-
-publish: #publish packages
-	$(DOCKER_COMPOSE) run --rm web composer publish emartech $(PACKAGIST_TOKEN)
