@@ -37,7 +37,7 @@ logs: ## show logs
 	$(DOCKER_COMPOSE) logs -f web
 
 test: ## run tests
-	$(DOCKER_COMPOSE) exec web /bin/bash -l -c "cd /var/www/html && vendor/bin/phpunit -c test/phpunit.xml $(FILTERARGS) $(TESTFILE)"
+	$(DOCKER_COMPOSE) exec -T web /bin/bash -l -c "cd /var/www/html && vendor/bin/phpunit -c test/phpunit.xml $(FILTERARGS) $(TESTFILE)"
 
 packages: ## install packages
 	$(DOCKER_COMPOSE) run --rm web composer install
