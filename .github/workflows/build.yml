@@ -18,7 +18,6 @@ jobs:
       - name: Run tests
         run: make test
       - name: Release package
-        if: github.ref_name == 'master'
         run: composer publish emartech ${PACKAGIST_TOKEN}
       - name: Slack notification
         uses: 8398a7/action-slack@a189acbf0b7ea434558662ae25a0de71df69a435
