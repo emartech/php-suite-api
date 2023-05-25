@@ -208,7 +208,7 @@ class ClientTest extends TestCase
      */
     public function responseContainingInvalidFormatShouldIndicateFailureAndContainErrorMessage()
     {
-        $this->expectSuccessfulGet(self::URL)->willReturn($this->returnValue($this->createStream('NOT A JSON STRING')));
+        $this->expectSuccessfulGet(self::URL)->willReturn($this->createStream('NOT A JSON STRING'));
         $this->expectException(Error::class);
         $this->expectExceptionMessage('API response format was wrong');
         $this->apiClient->get(self::URL);
@@ -370,29 +370,25 @@ class ClientTest extends TestCase
         return $this->guzzleClient->expects($this->once())->method('send')->with($this->request);
     }
 
-    protected function apiSuccess($data = [])
+    protected function apiSuccess($data = []): BufferStream
     {
-        return $this->returnValue(
-            $this->createStream(
-                json_encode(
-                    [
-                        'replyCode' => self::API_SUCCESS_CODE,
-                        'replyText' => self::API_SUCCESS_TEXT,
-                    ] + $data
-                )
+        return $this->createStream(
+            json_encode(
+                [
+                    'replyCode' => self::API_SUCCESS_CODE,
+                    'replyText' => self::API_SUCCESS_TEXT,
+                ] + $data
             )
         );
     }
 
-    private function apiFailure(): ReturnStub
+    private function apiFailure(): BufferStream
     {
-        return $this->returnValue(
-            $this->createStream(
-                json_encode([
-                    'replyCode' => self::API_FAILURE_CODE,
-                    'replyText' => self::API_FAILURE_TEXT,
-                ])
-            )
+        return $this->createStream(
+            json_encode([
+                'replyCode' => self::API_FAILURE_CODE,
+                'replyText' => self::API_FAILURE_TEXT,
+            ])
         );
     }
 
