@@ -60,13 +60,6 @@ class SuiteResponseProcessor implements ResponseProcessor
                     'url' => [
                         'full' => $request->getRequestTarget(),
                     ],
-                    'http' => [
-                        'response' => [
-                            'body' => [
-                                'content' => $responseBody->getContents(),
-                            ],
-                        ],
-                    ],
                     'replyText' => $replyText,
                     'replyCode' => $replyCode,
                 ]
