@@ -2,7 +2,6 @@
 
 namespace Suite\Api\Email;
 
-use Psr\Log\LoggerInterface;
 use Suite\Api\Client;
 use Suite\Api\RequestFailed;
 

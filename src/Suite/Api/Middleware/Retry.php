@@ -61,13 +61,18 @@ class Retry
         $this->logger->warning(
             'Retrying API call',
             [
-                'method' => $request->getMethod(),
-                'uri' => $request->getUri(),
+                'http' => [
+                    'request' => [
+                        'method' => $request->getMethod(),
+                    ],
+                    'response' => $response ? ['status_code' => $response->getStatusCode()] : [],
+                ],
+                'url' => [
+                    'full' => $request->getUri(),
+                ],
                 'retries' => $retries + 1,
-                'maxRetryCount' => $this->maxRetryCount,
-                'statusCode' => $response ? 'status code: ' . $response->getStatusCode() : '',
-                'message' => $exception ? $exception->getMessage() : '',
-            ]
+                'max_retry_count' => $this->maxRetryCount,
+            ] + ($exception ? ['error' => $exception] : [])
         );
     }
 }

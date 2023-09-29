@@ -26,7 +26,7 @@ class Client
     private $logger;
 
     /**
-     * @var Escher\Provider
+     * @var \Escher\Provider
      */
     private $escherProvider;
 
@@ -116,10 +116,10 @@ class Client
             $this->logRequest($request, 'successful');
             return $this->responseProcessor->processResponse($request, $response);
         } catch (BadResponseException $ex) {
-            $this->logger->error($ex->getMessage());
+            $this->logger->error($ex->getMessage(), ['error' => $ex]);
             return $this->responseProcessor->processResponse($request, $ex->getResponse());
         } catch (RequestException $ex) {
-            $this->logger->error($ex->getMessage());
+            $this->logger->error($ex->getMessage(), ['error' => $ex]);
             throw new Error(self::COULD_NOT_EXECUTE_API_REQUEST);
         }
     }
@@ -183,18 +183,24 @@ class Client
 
     private function logRequest(RequestInterface $request, string $event, TransferStats $stats = null)
     {
-        $message = [
-            'type'    => 'suite_api_client',
-            'action'  => 'request',
-            'host'    => $request->getUri()->getHost(),
-            'uri'     => (string)$request->getUri(),
-            'method'  => $request->getMethod()
+        $context = [
+            'application' => [
+                'origin' => [
+                    'kind' => 'php_suite_api_client',
+                    'category' => 'request',
+                    'type' => $event
+                ]],
+            'http' => ['request' => ['method'=>$request->getMethod()]],
+            'url' => ['full' => $request->getUri()],
         ];
 
-        if ($stats) {
-            $message += [ 'time' => (int) ($stats->getTransferTime() * 1000) ];
-        }
+        $context['application'] += $stats ? [
+            'metric' => [
+                'name' => 'http_request_time_ms',
+                'value' => ['integer'=> (int)($stats->getTransferTime() * 1000)]
+            ]
+        ] : [];
 
-        $this->logger->info("request $event", $message);
+        $this->logger->info("request $event", $context);
     }
 }
