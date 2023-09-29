@@ -51,13 +51,22 @@ class SuiteResponseProcessor implements ResponseProcessor
         $result['success'] = isset($result['replyCode']) && $result['replyCode'] === 0;
 
         if (!$result['success']) {
-            $replyText = isset($result['replyText']) ? $result['replyText'] : self::UNKNOWN_ERROR;
-            $replyCode = isset($result['replyCode']) ? $result['replyCode'] : 0;
+            $replyText = $result['replyText'] ?? self::UNKNOWN_ERROR;
+            $replyCode = $result['replyCode'] ?? 0;
 
             $this->logger->error(
                 "Unsuccessful API response",
                 [
-                    'uri' => $request->getRequestTarget(),
+                    'url' => [
+                        'full' => $request->getRequestTarget(),
+                    ],
+                    'http' => [
+                        'response' => [
+                            'body' => [
+                                'content' => $responseBody->getContents(),
+                            ],
+                        ],
+                    ],
                     'replyText' => $replyText,
                     'replyCode' => $replyCode,
                 ]
@@ -66,10 +75,18 @@ class SuiteResponseProcessor implements ResponseProcessor
             $this->logger->debug(
                 "Unsuccessful API response",
                 [
-                    'uri' => $request->getRequestTarget(),
+                    'url' => [
+                        'full' => $request->getRequestTarget(),
+                    ],
+                    'http' => [
+                        'response' => [
+                            'body' => [
+                                'content' => $responseBody->getContents(),
+                            ],
+                        ],
+                    ],
                     'replyText' => $replyText,
                     'replyCode' => $replyCode,
-                    'responseBody' => $responseBody->getContents(),
                 ]
             );
 
