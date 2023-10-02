@@ -107,13 +107,7 @@ class Client
     private function executeRequest(RequestInterface $request = null)
     {
         try {
-            $this->logRequest($request, 'executing');
-            $response = $this->client->send($request, [
-                'on_stats' => function (TransferStats $stats) use ($request) {
-                    $this->logRequest($request, 'stats', $stats);
-                }
-            ]);
-            $this->logRequest($request, 'successful');
+            $response = $this->client->send($request);
             return $this->responseProcessor->processResponse($request, $response);
         } catch (BadResponseException $ex) {
             $this->logger->error($ex->getMessage(), ['error' => $ex]);
@@ -179,28 +173,5 @@ class Client
         {
             return $url;
         }
-    }
-
-    private function logRequest(RequestInterface $request, string $event, TransferStats $stats = null)
-    {
-        $context = [
-            'application' => [
-                'origin' => [
-                    'kind' => 'php_suite_api_client',
-                    'category' => 'request',
-                    'type' => $event
-                ]],
-            'http' => ['request' => ['method'=>$request->getMethod()]],
-            'url' => ['full' => $request->getUri()],
-        ];
-
-        $context['application'] += $stats ? [
-            'metric' => [
-                'name' => 'http_request_time_ms',
-                'value' => ['integer'=> (int)($stats->getTransferTime() * 1000)]
-            ]
-        ] : [];
-
-        $this->logger->info("request $event", $context);
     }
 }
