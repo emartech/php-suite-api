@@ -113,7 +113,7 @@ class ContactList implements ContactListChunkFetcher
     {
         try {
             $response = $this->apiClient->get($this->endPoints->contactsOfList($customerId, $contactListId, $limit, $offset));
-            return !empty($response['data']) ? $response['data'] : [];
+            return $response['data'] ?? [];
         } catch (Error $error) {
             throw new RequestFailed('Could not fetch contact ids: ' . $error->getMessage(), $error->getCode(), $error);
         }
@@ -122,7 +122,8 @@ class ContactList implements ContactListChunkFetcher
     public function getContactIdsInList(int $customerId, int $contactListId)
     {
         try {
-            return $this->apiClient->get($this->endPoints->contactIdsInList($customerId, $contactListId));
+            $response = $this->apiClient->get($this->endPoints->contactIdsInList($customerId, $contactListId));
+            return $response['data'] ?? [];
         } catch (Error $error) {
             throw new RequestFailed('Could not fetch contact ids: ' . $error->getMessage(), $error->getCode(), $error);
         }

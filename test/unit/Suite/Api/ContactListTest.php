@@ -242,7 +242,7 @@ class ContactListTest extends TestCase
         $response = ['value' => [1, 2, 3], 'next' => null];
         $this->apiClient->expects($this->once())->method('get')->with(
             $this->endPoints->contactIdsInList($this->customerId, $this->contactListId)
-        )->willReturn($response);
+        )->willReturn($this->apiSuccess($response));
 
         $result = $this->listService->getContactIdsInList($this->customerId, $this->contactListId);
         $this->assertEquals($response, $result);
