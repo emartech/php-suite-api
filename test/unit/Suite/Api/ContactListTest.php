@@ -27,11 +27,14 @@ class ContactListTest extends TestCase
         $contactIds = [1, 2, 3];
         $this->apiClient
             ->method('post')
-            ->with($this->endPoints->createContactList($this->customerId), [
-                'name' => $this->listName,
-                'key_id' => 'id',
-                'external_ids' => $contactIds,
-            ])
+            ->with(
+                "api_base_url/$this->customerId/contactlist",
+                [
+                    'name' => $this->listName,
+                    'key_id' => 'id',
+                    'external_ids' => $contactIds,
+                ]
+            )
             ->willReturn($this->apiSuccess(['id' => $this->contactListId]));
 
         $contactListId = $this->listService->createContactList($this->customerId, $this->listName, $contactIds);
@@ -88,7 +91,7 @@ class ContactListTest extends TestCase
 
         $this->apiClient
             ->method('get')
-            ->with($this->endPoints->contactLists($this->customerId))
+            ->with("api_base_url/$this->customerId/contactlist")
             ->willReturn($this->apiSuccess($contactLists));
 
         $returnedContactLists = $this->listService->getContactLists($this->customerId);
@@ -109,7 +112,7 @@ class ContactListTest extends TestCase
 
         $this->apiClient
             ->method('get')
-            ->with($this->endPoints->contactLists($this->customerId))
+            ->with("api_base_url/$this->customerId/contactlist")
             ->willReturn($this->apiSuccess($contactLists));
 
         $contactListId = $this->listService->findContactListByName($this->customerId, $this->listName);
@@ -178,7 +181,7 @@ class ContactListTest extends TestCase
             ->expects($this->once())
             ->method('post')
             ->with(
-                $this->endPoints->addToContactList($this->customerId, $this->contactListId),
+                "api_base_url/$this->customerId/contactlist/654321/add",
                 [
                     'key_id' => 'id',
                     'external_ids' => $contactIds,
@@ -211,7 +214,7 @@ class ContactListTest extends TestCase
         $this->apiClient
             ->method('post')
             ->with(
-                $this->endPoints->replaceContactList($this->customerId, $this->contactListId),
+                "api_base_url/$this->customerId/contactlist/654321/replace",
                 [
                     'key_id' => 'id',
                     'external_ids' => $contactIds,
@@ -239,12 +242,12 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
-    public function getContactIdsInList_Perfect_Perfect(): void
+    public function getContactIdsInList_CalledWithProperUrl_ApiResponseConverted(): void
     {
         $response = ['value' => [1, 2, 3], 'next' => null];
         $this->apiClient
             ->method('get')
-            ->with($this->endPoints->contactIdsInList($this->customerId, $this->contactListId))
+            ->with("api_base_url/$this->customerId/contactlist/$this->contactListId/contactIds")
             ->willReturn($this->apiSuccess($response));
 
         $result = $this->listService->getContactIdsInList($this->customerId, $this->contactListId);
@@ -273,7 +276,7 @@ class ContactListTest extends TestCase
         $chunk = [1, 2, 3];
         $this->apiClient
             ->method('get')
-            ->with($this->endPoints->contactsOfList($this->customerId, $this->contactListId, $limit, $offset))
+            ->with("api_base_url/$this->customerId/contactlist/654321/contacts/?limit=100&offset=200")
             ->willReturn($this->apiSuccess($chunk));
 
         $result = $this->listService->getContactsOfList($this->customerId, $this->contactListId, $limit, $offset);
@@ -328,7 +331,7 @@ class ContactListTest extends TestCase
             ->expects($this->once())
             ->method('post')
             ->with(
-                $this->endPoints->deleteContactsFromList($this->customerId, $this->contactListId),
+                "api_base_url/$this->customerId/contactlist/654321/delete",
                 [
                     'key_id' => 'id',
                     'external_ids' => $contactIds,
