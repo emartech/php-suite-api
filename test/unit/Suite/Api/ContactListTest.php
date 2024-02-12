@@ -7,20 +7,9 @@ use Suite\Api\Test\Helper\TestCase;
 
 class ContactListTest extends TestCase
 {
-    /**
-     * @var Contactlist
-     */
-    private $listService;
-
-    /**
-     * @var int
-     */
-    private $contactListId = 654321;
-
-    /**
-     * @var string
-     */
-    private $listName = 'list_name';
+    private Contactlist $listService;
+    private int $contactListId = 654321;
+    private string $listName = 'list_name';
 
     protected function setUp(): void
     {
@@ -33,30 +22,15 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
-    public function createContactList_Perfect_Perfect()
+    public function createContactList_Perfect_Perfect(): void
     {
         $contactIds = [1, 2, 3];
-        $this->apiClient->expects($this->once())->method('post')
-            ->with($this->endPoints->createContactList($this->customerId), [
-                'name'          => $this->listName,
-                'key_id'        => 'id',
-                'external_ids'  => $contactIds,
-            ])
-            ->willReturn($this->apiSuccess(['id' => $this->contactListId]));
-
-        $contactListId = $this->listService->createContactList($this->customerId, $this->listName, $contactIds);
-        $this->assertEquals($this->contactListId, $contactListId);
-    }
-
-    /**
-     * @test
-     */
-    public function createContactList_NoContactIdsGiven_ListCreated()
-    {
-        $contactIds = [];
-        $this->apiClient->expects($this->once())->method('post')
+        $this->apiClient
+            ->method('post')
             ->with($this->endPoints->createContactList($this->customerId), [
                 'name' => $this->listName,
+                'key_id' => 'id',
+                'external_ids' => $contactIds,
             ])
             ->willReturn($this->apiSuccess(['id' => $this->contactListId]));
 
@@ -67,19 +41,34 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
-    public function createContactList_ApiCallFails_ExceptionThrown()
+    public function createContactList_NoContactIdsGiven_ListCreated(): void
     {
-        $this->apiClient->expects($this->once())->method('post')->willReturn($this->apiFailure());
+        $contactIds = [];
+        $this->apiClient
+            ->method('post')
+            ->willReturn($this->apiSuccess(['id' => $this->contactListId]));
+
+        $contactListId = $this->listService->createContactList($this->customerId, $this->listName, $contactIds);
+        $this->assertEquals($this->contactListId, $contactListId);
+    }
+
+    /**
+     * @test
+     */
+    public function createContactList_ApiCallFails_ExceptionThrown(): void
+    {
+        $this->apiClient
+            ->method('post')
+            ->willReturn($this->apiFailure());
         $this->expectException(RequestFailed::class);
 
         $this->listService->createContactList($this->customerId, $this->listName, []);
     }
 
-
     /**
      * @test
      */
-    public function createContactList_ContactListNameIsEmptyString_SuiteAPINotCalled()
+    public function createContactList_ContactListNameIsEmptyString_SuiteAPINotCalled(): void
     {
         $this->apiClient->expects($this->never())->method('post');
         $this->expectException(InvalidArgumentException::class);
@@ -87,18 +76,19 @@ class ContactListTest extends TestCase
         $this->listService->createContactList($this->customerId, '       ');
     }
 
-
     /**
      * @test
      */
-    public function getContactLists_Perfect_Perfect()
+    public function getContactLists_Perfect_Perfect(): void
     {
-        $contactLists = array(
+        $contactLists = [
             $this->contactListData('id1', 'contact list 1'),
             $this->contactListData('id2', 'contact list 2'),
-        );
+        ];
 
-        $this->apiClient->expects($this->once())->method('get')->with($this->endPoints->contactLists($this->customerId))
+        $this->apiClient
+            ->method('get')
+            ->with($this->endPoints->contactLists($this->customerId))
             ->willReturn($this->apiSuccess($contactLists));
 
         $returnedContactLists = $this->listService->getContactLists($this->customerId);
@@ -106,19 +96,20 @@ class ContactListTest extends TestCase
         $this->assertEquals($contactLists, $returnedContactLists);
     }
 
-
     /**
      * @test
      */
-    public function findContactListByName_Perfect_Perfect()
+    public function findContactListByName_Perfect_Perfect(): void
     {
-        $contactLists = array(
+        $contactLists = [
             $this->contactListData('id1', 'contact list 1'),
             $this->contactListData('id2', 'contact list 2'),
             $this->contactListData($this->contactListId, $this->listName),
-        );
+        ];
 
-        $this->apiClient->expects($this->once())->method('get')->with($this->endPoints->contactLists($this->customerId))
+        $this->apiClient
+            ->method('get')
+            ->with($this->endPoints->contactLists($this->customerId))
             ->willReturn($this->apiSuccess($contactLists));
 
         $contactListId = $this->listService->findContactListByName($this->customerId, $this->listName);
@@ -130,7 +121,7 @@ class ContactListTest extends TestCase
      * @test
      * @dataProvider contactListNameProvider
      */
-    public function findContactListByName_CasesDoNotMatch_ContactListIdStillReturned($contactListName)
+    public function findContactListByName_CasesDoNotMatch_ContactListIdStillReturned($contactListName): void
     {
         $contactLists = [
             $this->contactListData('id1', 'contact list 1'),
@@ -138,7 +129,8 @@ class ContactListTest extends TestCase
             $this->contactListData($this->contactListId, $contactListName),
         ];
 
-        $this->apiClient->expects($this->once())->method('get')->with($this->endPoints->contactLists($this->customerId))
+        $this->apiClient
+            ->method('get')
             ->willReturn($this->apiSuccess($contactLists));
 
         $contactListId = $this->listService->findContactListByName($this->customerId, $contactListName);
@@ -146,28 +138,29 @@ class ContactListTest extends TestCase
         $this->assertEquals($this->contactListId, $contactListId);
     }
 
-    public function contactListNameProvider()
+    public function contactListNameProvider(): array
     {
         return [
-          'upperCase' => [strtoupper($this->listName)],
-          'lowerCase' => [strtolower($this->listName)],
-          'spaceAfter' => [$this->listName . "     "],
-          'spaceBefore' => ["     " . $this->listName],
-          'spaceInContactListName' => [" my very best contact list "]
+            'upperCase' => [strtoupper($this->listName)],
+            'lowerCase' => [strtolower($this->listName)],
+            'spaceAfter' => [$this->listName . "     "],
+            'spaceBefore' => ["     " . $this->listName],
+            'spaceInContactListName' => [" my very best contact list "],
         ];
     }
 
     /**
      * @test
      */
-    public function findContactListByName_ListDoesNotExist_ReturnsNull()
+    public function findContactListByName_ListDoesNotExist_ReturnsNull(): void
     {
-        $contactLists = array(
+        $contactLists = [
             $this->contactListData('id1', 'contact list 1'),
             $this->contactListData('id2', 'contact list 2'),
-        );
+        ];
 
-        $this->apiClient->expects($this->once())->method('get')->with($this->endPoints->contactLists($this->customerId))
+        $this->apiClient
+            ->method('get')
             ->willReturn($this->apiSuccess($contactLists));
 
         $contactListId = $this->listService->findContactListByName($this->customerId, $this->listName);
@@ -178,13 +171,19 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
-    public function addToContactList_Perfect_Perfect()
+    public function addToContactList_Perfect_Perfect(): void
     {
         $contactIds = [1, 2, 3];
-        $this->apiClient->expects($this->once())->method('post')->with($this->endPoints->addToContactList($this->customerId, $this->contactListId), [
-            'key_id'        => 'id',
-            'external_ids'  => $contactIds
-        ])->willReturn($this->apiSuccess());
+        $this->apiClient
+            ->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->endPoints->addToContactList($this->customerId, $this->contactListId),
+                [
+                    'key_id' => 'id',
+                    'external_ids' => $contactIds,
+                ]
+            )->willReturn($this->apiSuccess());
 
         $this->listService->addToContactList($this->customerId, $this->contactListId, $contactIds);
     }
@@ -192,13 +191,12 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
-    public function addToContactList_ApiFailure_ThrowsException()
+    public function addToContactList_ApiFailure_ThrowsException(): void
     {
         $contactIds = [1, 2, 3];
-        $this->apiClient->expects($this->once())->method('post')->with($this->endPoints->addToContactList($this->customerId, $this->contactListId), [
-            'key_id'        => 'id',
-            'external_ids'  => $contactIds
-        ])->willReturn($this->apiFailure());
+        $this->apiClient
+            ->method('post')
+            ->willReturn($this->apiFailure());
         $this->expectException(RequestFailed::class);
 
         $this->listService->addToContactList($this->customerId, $this->contactListId, $contactIds);
@@ -207,13 +205,18 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
-    public function replaceContactList_Perfect_Perfect()
+    public function replaceContactList_Perfect_Perfect(): void
     {
         $contactIds = [1, 2, 3];
-        $this->apiClient->expects($this->once())->method('post')->with($this->endPoints->replaceContactList($this->customerId, $this->contactListId), [
-            'key_id'        => 'id',
-            'external_ids'  => $contactIds
-        ])->willReturn($this->apiSuccess());
+        $this->apiClient
+            ->method('post')
+            ->with(
+                $this->endPoints->replaceContactList($this->customerId, $this->contactListId),
+                [
+                    'key_id' => 'id',
+                    'external_ids' => $contactIds,
+                ]
+            )->willReturn($this->apiSuccess());
 
         $contactListId = $this->listService->replaceContactList($this->customerId, $this->contactListId, $contactIds);
         $this->assertEquals($this->contactListId, $contactListId);
@@ -222,13 +225,12 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
-    public function replaceContactList_ApiFailure_ThrowsException()
+    public function replaceContactList_ApiFailure_ThrowsException(): void
     {
         $contactIds = [1, 2, 3];
-        $this->apiClient->expects($this->once())->method('post')->with($this->endPoints->replaceContactList($this->customerId, $this->contactListId), [
-            'key_id'        => 'id',
-            'external_ids'  => $contactIds
-        ])->willReturn($this->apiFailure());
+        $this->apiClient
+            ->method('post')
+            ->willReturn($this->apiFailure());
         $this->expectException(RequestFailed::class);
 
         $this->listService->replaceContactList($this->customerId, $this->contactListId, $contactIds);
@@ -237,12 +239,13 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
-    public function getContactIdsInList_Perfect_Perfect()
+    public function getContactIdsInList_Perfect_Perfect(): void
     {
         $response = ['value' => [1, 2, 3], 'next' => null];
-        $this->apiClient->expects($this->once())->method('get')->with(
-            $this->endPoints->contactIdsInList($this->customerId, $this->contactListId)
-        )->willReturn($this->apiSuccess($response));
+        $this->apiClient
+            ->method('get')
+            ->with($this->endPoints->contactIdsInList($this->customerId, $this->contactListId))
+            ->willReturn($this->apiSuccess($response));
 
         $result = $this->listService->getContactIdsInList($this->customerId, $this->contactListId);
         $this->assertEquals($response, $result);
@@ -251,112 +254,112 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
-    public function getContactIdsInList_ApiCallFails_ExceptionThrown()
+    public function getContactIdsInList_ApiCallFails_ExceptionThrown(): void
     {
-        $this->apiClient->expects($this->once())->method('get')->will($this->apiFailure());
+        $this->apiClient->method('get')->will($this->apiFailure());
         $this->expectException(RequestFailed::class);
 
         $this->listService->getContactIdsInList($this->customerId, $this->contactListId);
     }
 
-
     /**
      * @test
      */
-    public function getContactsOfList_Perfect_Perfect()
+    public function getContactsOfList_Perfect_Perfect(): void
     {
         $limit = 100;
         $offset = 200;
 
         $chunk = [1, 2, 3];
-        $this->apiClient->expects($this->once())->method('get')->with(
-            $this->endPoints->contactsOfList($this->customerId, $this->contactListId, $limit, $offset)
-        )->willReturn($this->apiSuccess($chunk));
+        $this->apiClient
+            ->method('get')
+            ->with($this->endPoints->contactsOfList($this->customerId, $this->contactListId, $limit, $offset))
+            ->willReturn($this->apiSuccess($chunk));
 
         $result = $this->listService->getContactsOfList($this->customerId, $this->contactListId, $limit, $offset);
         $this->assertEquals($chunk, $result);
     }
 
-
     /**
      * @test
      */
-    public function getContactsOfList_NoDataInResult_EmptyArrayReturned()
+    public function getContactsOfList_NoDataInResult_EmptyArrayReturned(): void
     {
         $limit = 100;
         $offset = 200;
 
-        $this->apiClient->expects($this->once())->method('get')->with(
-            $this->endPoints->contactsOfList($this->customerId, $this->contactListId, $limit, $offset)
-        )->willReturn($this->apiSuccess());
+        $this->apiClient
+            ->method('get')
+            ->with($this->endPoints->contactsOfList($this->customerId, $this->contactListId, $limit, $offset))
+            ->willReturn($this->apiSuccess());
 
         $result = $this->listService->getContactsOfList($this->customerId, $this->contactListId, $limit, $offset);
         $this->assertEquals([], $result);
     }
 
-
     /**
      * @test
      */
-    public function getContactsOfList_ApiCallFails_ExceptionThrown()
+    public function getContactsOfList_ApiCallFails_ExceptionThrown(): void
     {
-        $this->apiClient->expects($this->once())->method('get')->will($this->apiFailure());
+        $this->apiClient->method('get')->will($this->apiFailure());
         $this->expectException(RequestFailed::class);
 
         $this->listService->getContactsOfList($this->customerId, $this->contactListId, 100, 200);
     }
 
-
     /**
      * @test
      */
-    public function getContactListChunkIterator_Perfect_Perfect()
+    public function getContactListChunkIterator_Perfect_Perfect(): void
     {
         $chunkSize = 3;
         $iterator = $this->listService->getListChunkIterator($this->customerId, $this->contactListId, $chunkSize);
         $this->assertInstanceOf(\Traversable::class, $iterator);
     }
 
-
     /**
      * @test
      */
-    public function deleteContactsFromList_Perfect_Perfect()
+    public function deleteContactsFromList_Perfect_Perfect(): void
     {
         $contactIds = [1, 2, 3];
-        $this->apiClient->expects($this->once())->method('post')->with(
-            $this->endPoints->deleteContactsFromList($this->customerId, $this->contactListId), ([
-                'key_id' => 'id',
-                'external_ids' => $contactIds
-            ])
-        );
+        $this->apiClient
+            ->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->endPoints->deleteContactsFromList($this->customerId, $this->contactListId),
+                [
+                    'key_id' => 'id',
+                    'external_ids' => $contactIds,
+                ]
+            );
 
         $this->listService->deleteContactsFromList($this->customerId, $this->contactListId, $contactIds);
     }
 
-
     /**
      * @test
      */
-    public function deleteContactsFromList_postThrowsError_ThrowsRequestFailException()
+    public function deleteContactsFromList_postThrowsError_ThrowsRequestFailException(): void
     {
-        $this->apiClient->expects($this->once())->method('post')->willThrowException(new Error());
+        $this->apiClient->method('post')->willThrowException(new Error());
 
         $this->expectException(RequestFailed::class);
         $this->listService->deleteContactsFromList($this->customerId, $this->contactListId, []);
     }
 
-    public function contactListData($id, $name)
+    public function contactListData($id, $name): array
     {
-        return array(
+        return [
             'id' => $id,
             'name' => $name,
             'created' => '2014-11-05 12:34:56',
-            'type' => 0
-        );
+            'type' => 0,
+        ];
     }
 
-    private function apiFailure()
+    private function apiFailure(): \PHPUnit\Framework\MockObject\Stub\Exception
     {
         return $this->throwException(new Error(self::API_FAILURE_TEXT, self::API_FAILURE_CODE));
     }
