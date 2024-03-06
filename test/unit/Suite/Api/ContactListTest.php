@@ -257,6 +257,21 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
+    public function getContactIdsInList_CalledWithProperUrlAndParams_ApiResponseConverted(): void
+    {
+        $response = ['value' => [1, 2, 3], 'next' => null];
+        $this->apiClient
+            ->method('get')
+            ->with("api_base_url/$this->customerId/contactlist/$this->contactListId/contactIds?\$top=1&\$skiptoken=1")
+            ->willReturn($this->apiSuccess($response));
+
+        $result = $this->listService->getContactIdsInList($this->customerId, $this->contactListId, 1, 1);
+        $this->assertEquals($response, $result);
+    }
+
+    /**
+     * @test
+     */
     public function getContactIdsInList_ApiCallFails_ExceptionThrown(): void
     {
         $this->apiClient->method('get')->will($this->apiFailure());
