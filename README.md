@@ -1,5 +1,7 @@
 # php-suite-api
 
+[![REUSE status](https://api.reuse.software/badge/github.com/emartech/php-suite-api)](https://api.reuse.software/info/github.com/emartech/php-suite-api)
+
 PHP wrapper library for the Emarsys Suite v2 API. 
 
 This library is for accessing the v2 API using Escher authentication (aka 
