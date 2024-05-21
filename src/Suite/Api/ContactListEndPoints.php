@@ -44,11 +44,11 @@ class ContactListEndPoints
         return $this->baseUrl($customerId) . "/{$contactListId}/contacts/?limit={$limit}&offset={$offset}";
     }
 
-    public function contactIdsInList(int $customerId, int $contactListId, int $limit = null, int $offset = null)
+    public function contactIdsInList(int $customerId, int $contactListId, int $limit = null, int $skipToken = null)
     {
         $result = $this->baseUrl($customerId) . "/{$contactListId}/contactIds";
-        if (null !== $limit && null !== $offset) {
-            $result .= "?\$top={$limit}&\$skiptoken={$offset}";
+        if (null !== $limit && null !== $skipToken) {
+            $result .= "?\$top={$limit}&\$skiptoken={$skipToken}";
         }
         return $result;
     }
