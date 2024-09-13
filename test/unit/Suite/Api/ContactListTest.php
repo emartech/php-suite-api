@@ -329,11 +329,16 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
-    public function getContactListChunkIterator_Perfect_Perfect(): void
+    public function getContactListChunkIterator_ListFitsInSingleChunk_ContactIdsReturned(): void
     {
         $chunkSize = 3;
+        $this->apiClient->expects($this->once())->method('get')
+            ->with("api_base_url/$this->customerId/contactlist/654321/contactIds?\$top=3&\$skiptoken=first batch")
+            ->willReturn(
+                $this->apiSuccess(['value' => [1, 2, 3], 'next' => null])
+            );
         $iterator = $this->listService->getListChunkIterator($this->customerId, $this->contactListId, $chunkSize);
-        $this->assertInstanceOf(\Traversable::class, $iterator);
+        $this->assertEquals([[1, 2, 3]], iterator_to_array($iterator));
     }
 
     /**

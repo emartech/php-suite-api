@@ -119,7 +119,7 @@ class ContactList implements ContactListChunkFetcher
         }
     }
 
-    public function getContactIdsInList(int $customerId, int $contactListId, int $limit = null, int $skipToken = null)
+    public function getContactIdsInList(int $customerId, int $contactListId, int $limit = null, string $skipToken = null)
     {
         try {
             $response = $this->apiClient->get($this->endPoints->contactIdsInList($customerId, $contactListId, $limit, $skipToken));
@@ -129,14 +129,16 @@ class ContactList implements ContactListChunkFetcher
         }
     }
 
-    /**
-     * @param int $customerId
-     * @param int $contactListId
-     * @param int $chunkSize
-     * @return Traversable
-     */
-    public function getListChunkIterator(int $customerId, int $contactListId, int $chunkSize = 10000) : Traversable
+    public function getListChunkIterator(int $customerId, int $contactListId, int $chunkSize = 10000) : iterable
     {
-        return new ContactListChunkIterator($this, $customerId, $contactListId, $chunkSize);
+        $next = $this->endPoints->contactIdsInList($customerId, $contactListId, $chunkSize, 'first batch');
+        try {
+            do {
+                ['value' => $value, 'next' => $next] = $this->apiClient->get($next)['data'];
+                yield $value;
+            } while ($next !== null);
+        } catch (Error $error) {
+            throw new RequestFailed('Could not fetch contact ids: ' . $error->getMessage(), $error->getCode(), $error);
+        }
     }
 }

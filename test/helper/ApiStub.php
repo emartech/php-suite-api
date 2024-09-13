@@ -12,6 +12,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ApiStub
 {
+    public const LIST_ID_FOR_EMPTY_LIST = 123;
+    public const LIST_ID_FOR_LIST_WITH_SINGLE_CHUNK = 456;
+    public const LIST_ID_FOR_LIST_WITH_MULTIPLE_CHUNKS = 789;
+    public const LIST_ID_FOR_WRONG_RESPONSE = 666;
+
     public static function setUp()
     {
         $app = new Application();
@@ -45,6 +50,21 @@ class ApiStub
 
         $app->get('/retryCount', function (Request $request) {
             return new Response(self::success(self::getRetryCount()));
+        });
+
+        $app->get('/{customerId}/contactlist/{contactListId}/contactIds', function (Request $request, $contactListId, $customerId) {
+            return match ($contactListId) {
+                (string) self::LIST_ID_FOR_EMPTY_LIST => new Response(self::success('{"value":[],"next":null}')),
+                (string) self::LIST_ID_FOR_LIST_WITH_SINGLE_CHUNK => new Response(self::success('{"value":[1,2,3],"next":null}')),
+                (string) self::LIST_ID_FOR_LIST_WITH_MULTIPLE_CHUNKS => match ($request->query->get('$skiptoken')) {
+                    'first batch' => new Response(self::success('{"value":[1,2,3],"next":"http://localhost:7984/'.$customerId.'/contactlist/'.$contactListId.'/contactIds?$skiptoken=second%20batch"}')),
+                    'second batch' => new Response(self::success('{"value":[4,5,6],"next":"http://localhost:7984/'.$customerId.'/contactlist/'.$contactListId.'/contactIds?$skiptoken=third%20batch"}')),
+                    'third batch' => new Response(self::success('{"value":[7,8,9],"next":"http://localhost:7984/'.$customerId.'/contactlist/'.$contactListId.'/contactIds?$skiptoken=fourth%20batch"}')),
+                    'fourth batch' => new Response(self::success('{"value":[10,11],"next":null}')),
+                },
+                (string) self::LIST_ID_FOR_WRONG_RESPONSE => new Response(self::error('invalid response format')),
+                default => new Response(self::error('contact list not found'), 404),
+            };
         });
 
         return $app;

@@ -52,6 +52,11 @@ class Factory
         return new Contact($this->apiClient, new ContactEndPoints($this->apiBaseUrl));
     }
 
+    public function createContactList()
+    {
+        return new ContactList($this->apiClient, new ContactListEndPoints($this->apiBaseUrl));
+    }
+
     public function createPreview()
     {
         return new Preview($this->apiClient, new CampaignEndPoints($this->apiBaseUrl));
