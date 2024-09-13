@@ -4,7 +4,7 @@ namespace Suite\Api;
 
 use Traversable;
 
-class ContactList implements ContactListChunkFetcher
+class ContactList
 {
     /**
      * @var Client
