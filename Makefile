@@ -1,4 +1,4 @@
-DOCKER_COMPOSE = docker-compose -f docker-compose-development.yml
+DOCKER_COMPOSE = docker compose -f docker-compose-development.yml
 
 ifndef TESTMETHOD
 FILTERARGS=
