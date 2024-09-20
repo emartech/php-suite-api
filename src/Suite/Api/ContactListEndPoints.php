@@ -44,13 +44,15 @@ class ContactListEndPoints
         return $this->baseUrl($customerId) . "/{$contactListId}/contacts/?limit={$limit}&offset={$offset}";
     }
 
-    public function contactIdsInList(int $customerId, int $contactListId, int $limit = null, string $skipToken = null)
+    public function contactIdsInList(int $customerId, int $contactListId, int $top = null, int $skiptoken = null): string
     {
-        $result = $this->baseUrl($customerId) . "/{$contactListId}/contactIds";
-        if (null !== $limit && null !== $skipToken) {
-            $result .= "?\$top={$limit}&\$skiptoken={$skipToken}";
-        }
-        return $result;
+        return QueryStringAppender::appendParamsToUrl(
+            $this->baseUrl($customerId) . "/{$contactListId}/contactIds",
+            array_filter(
+                ['$top' => $top, '$skiptoken' => $skiptoken],
+                fn ($value) => $value !== null
+            )
+        );
     }
 
     public function deleteContactsFromList(int $customerId, int $contactListId): string

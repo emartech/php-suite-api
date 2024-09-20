@@ -56,11 +56,11 @@ class ApiStub
             return match ($contactListId) {
                 (string) self::LIST_ID_FOR_EMPTY_LIST => new Response(self::success('{"value":[],"next":null}')),
                 (string) self::LIST_ID_FOR_LIST_WITH_SINGLE_CHUNK => new Response(self::success('{"value":[1,2,3],"next":null}')),
-                (string) self::LIST_ID_FOR_LIST_WITH_MULTIPLE_CHUNKS => match ($request->query->get('$skiptoken')) {
-                    'first batch' => new Response(self::success('{"value":[1,2,3],"next":"http://localhost:7984/'.$customerId.'/contactlist/'.$contactListId.'/contactIds?$skiptoken=second%20batch"}')),
-                    'second batch' => new Response(self::success('{"value":[4,5,6],"next":"http://localhost:7984/'.$customerId.'/contactlist/'.$contactListId.'/contactIds?$skiptoken=third%20batch"}')),
-                    'third batch' => new Response(self::success('{"value":[7,8,9],"next":"http://localhost:7984/'.$customerId.'/contactlist/'.$contactListId.'/contactIds?$skiptoken=fourth%20batch"}')),
-                    'fourth batch' => new Response(self::success('{"value":[10,11],"next":null}')),
+                (string) self::LIST_ID_FOR_LIST_WITH_MULTIPLE_CHUNKS => match ($request->query->get('$skiptoken') ?? '0') {
+                    '0' => new Response(self::success('{"value":[1,2,3],"next":"http://localhost:7984/'.$customerId.'/contactlist/'.$contactListId.'/contactIds?$skiptoken=1"}')),
+                    '1' => new Response(self::success('{"value":[4,5,6],"next":"http://localhost:7984/'.$customerId.'/contactlist/'.$contactListId.'/contactIds?$skiptoken=2"}')),
+                    '2' => new Response(self::success('{"value":[7,8,9],"next":"http://localhost:7984/'.$customerId.'/contactlist/'.$contactListId.'/contactIds?$skiptoken=3"}')),
+                    '3' => new Response(self::success('{"value":[10,11],"next":null}')),
                 },
                 (string) self::LIST_ID_FOR_WRONG_RESPONSE => new Response(self::error('invalid response format')),
                 default => new Response(self::error('contact list not found'), 404),

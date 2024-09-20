@@ -119,10 +119,10 @@ class ContactList
         }
     }
 
-    public function getContactIdsInList(int $customerId, int $contactListId, int $limit = null, string $skipToken = null)
+    public function getContactIdsInList(int $customerId, int $contactListId, int $top = null, string $skiptoken = null): array
     {
         try {
-            $response = $this->apiClient->get($this->endPoints->contactIdsInList($customerId, $contactListId, $limit, $skipToken));
+            $response = $this->apiClient->get($this->endPoints->contactIdsInList($customerId, $contactListId, $top, $skiptoken));
             return $response['data'] ?? [];
         } catch (Error $error) {
             throw new RequestFailed('Could not fetch contact ids: ' . $error->getMessage(), $error->getCode(), $error);
@@ -131,7 +131,7 @@ class ContactList
 
     public function getListChunkIterator(int $customerId, int $contactListId, int $chunkSize = 10000) : iterable
     {
-        $next = $this->endPoints->contactIdsInList($customerId, $contactListId, $chunkSize, 'first batch');
+        $next = $this->endPoints->contactIdsInList($customerId, $contactListId, $chunkSize);
         try {
             do {
                 ['value' => $value, 'next' => $next] = $this->apiClient->get($next)['data'];
