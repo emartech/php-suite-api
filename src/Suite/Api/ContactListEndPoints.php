@@ -55,6 +55,11 @@ class ContactListEndPoints
         );
     }
 
+    public function contactIdsInListNextChunk(int $customerId, string $next = null): ?string
+    {
+        return $next ? "{$this->apiBaseUrl}/{$customerId}{$next}" : null;
+    }
+    
     public function deleteContactsFromList(int $customerId, int $contactListId): string
     {
         return $this->baseUrl($customerId) . "/{$contactListId}/delete";

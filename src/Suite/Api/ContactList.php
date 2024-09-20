@@ -131,10 +131,11 @@ class ContactList
 
     public function getListChunkIterator(int $customerId, int $contactListId, int $chunkSize = null) : iterable
     {
-        $next = $this->endPoints->contactIdsInList($customerId, $contactListId, $chunkSize);
+        $nextUrlFull = $this->endPoints->contactIdsInList($customerId, $contactListId, $chunkSize);
         try {
             do {
-                ['value' => $value, 'next' => $next] = $this->apiClient->get($next)['data'];
+                ['value' => $value, 'next' => $next] = $this->apiClient->get($nextUrlFull)['data'];
+                $nextUrlFull = $this->endPoints->contactIdsInListNextChunk($customerId, $next);
                 yield $value;
             } while ($next !== null);
         } catch (Error $error) {
