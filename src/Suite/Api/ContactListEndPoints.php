@@ -57,11 +57,17 @@ class ContactListEndPoints
 
     public function contactIdsInListNextChunk(int $customerId, string $next = null): ?string
     {
-        return $next ? "{$this->apiBaseUrl}/{$customerId}{$next}" : null;
+
+        return $next ? $this->getBaseUrlWithoutInternalPostfix() . "{$next}" : null;
     }
     
     public function deleteContactsFromList(int $customerId, int $contactListId): string
     {
         return $this->baseUrl($customerId) . "/{$contactListId}/delete";
+    }
+
+    public function getBaseUrlWithoutInternalPostfix(): string
+    {
+        return preg_replace('/\/internal$/', '', $this->apiBaseUrl);
     }
 }
