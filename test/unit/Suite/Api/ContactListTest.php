@@ -344,6 +344,21 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
+    public function getContactListChunkIterator_ChunkSizeNotPassed_TopNotSentInRequest(): void
+    {
+        $chunkSize = 3;
+        $this->apiClient->expects($this->once())->method('get')
+            ->with("api_base_url/$this->customerId/contactlist/$this->contactListId/contactIds")
+            ->willReturn(
+                $this->apiSuccess(['value' => [1, 2, 3], 'next' => null])
+            );
+        $iterator = $this->listService->getListChunkIterator($this->customerId, $this->contactListId);
+        $this->assertEquals([[1, 2, 3]], iterator_to_array($iterator));
+    }
+
+    /**
+     * @test
+     */
     public function deleteContactsFromList_Perfect_Perfect(): void
     {
         $contactIds = [1, 2, 3];

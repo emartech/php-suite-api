@@ -129,7 +129,7 @@ class ContactList
         }
     }
 
-    public function getListChunkIterator(int $customerId, int $contactListId, int $chunkSize = 10000) : iterable
+    public function getListChunkIterator(int $customerId, int $contactListId, int $chunkSize = null) : iterable
     {
         $next = $this->endPoints->contactIdsInList($customerId, $contactListId, $chunkSize);
         try {
