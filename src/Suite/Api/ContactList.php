@@ -119,7 +119,7 @@ class ContactList
         }
     }
 
-    public function getContactIdsInList(int $customerId, int $contactListId, int $top = null, string $skiptoken = null): array
+    public function getContactIdsInList(int $customerId, int $contactListId, int $top = null, int $skiptoken = null): array
     {
         try {
             $response = $this->apiClient->get($this->endPoints->contactIdsInList($customerId, $contactListId, $top, $skiptoken));
@@ -135,7 +135,7 @@ class ContactList
         try {
             do {
                 ['value' => $value, 'next' => $next] = $this->apiClient->get($nextUrlFull)['data'];
-                $nextUrlFull = $this->endPoints->contactIdsInListNextChunk($customerId, $next);
+                $nextUrlFull = $this->endPoints->contactIdsInListNextChunk($customerId, $contactListId, $next);
                 yield $value;
             } while ($next !== null);
         } catch (Error $error) {

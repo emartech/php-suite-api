@@ -55,19 +55,18 @@ class ContactListEndPoints
         );
     }
 
-    public function contactIdsInListNextChunk(int $customerId, string $next = null): ?string
+    public function contactIdsInListNextChunk(int $customerId, int $contactListId, string $next = null): ?string
     {
-
-        return $next ? $this->getBaseUrlWithoutInternalPostfix() . "{$next}" : null;
+        if (null === $next) {
+            return null;
+        }
+        $rawQuery = parse_url($next, PHP_URL_QUERY);
+        parse_str($rawQuery, $query);
+        return $this->contactIdsInList($customerId, $contactListId, $query['$top'] ?? null, $query['$skiptoken'] ?? null);
     }
     
     public function deleteContactsFromList(int $customerId, int $contactListId): string
     {
         return $this->baseUrl($customerId) . "/{$contactListId}/delete";
-    }
-
-    public function getBaseUrlWithoutInternalPostfix(): string
-    {
-        return preg_replace('/\/internal$/', '', $this->apiBaseUrl);
     }
 }
