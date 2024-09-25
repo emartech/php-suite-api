@@ -26,7 +26,7 @@ class AcceptanceBaseTestCase extends \PHPUnit\Framework\TestCase
     /**
      * @var string
      */
-    protected $apiBaseUrl = 'http://localhost:7984';
+    protected $apiBaseUrl = 'http://localhost:7984/internal';
 
     protected function setUp(): void
     {

@@ -1,5 +1,5 @@
 <?php return [
-    '/{customerId}/email/{campaignId}/' => '{
+    '/internal/{customerId}/email/{campaignId}/' => '{
         "id": "1",
         "language": "en",
         "name": "20160407_1502_Copy of Test mail 1",
@@ -35,7 +35,7 @@
         "source": "userlist"
     }',
 
-    '/{customerId}/email/' => '[
+    '/internal/{customerId}/email/' => '[
         {
           "id": "2",
           "administrator": "3",
@@ -87,7 +87,7 @@
           "source": "profile"
         }
     ]',
-    '/{customerId}/administrator/' => '[
+    '/internal/{customerId}/administrator/' => '[
         {
             "id": "1",
             "username": "admin",
@@ -130,7 +130,7 @@
         }
     ]',
 
-    '/{customerId}/event' => '[
+    '/internal/{customerId}/event' => '[
         {
             "id": "1",
             "name": "event egy",
@@ -149,7 +149,7 @@
         }
     ]',
 
-    '/{customerId}/filter' => '[
+    '/internal/{customerId}/filter' => '[
         {
             "id": "1",
             "name": "segment 1",

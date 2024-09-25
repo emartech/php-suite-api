@@ -119,22 +119,23 @@ class ContactList
         }
     }
 
-    public function getContactIdsInList(int $customerId, int $contactListId, int $limit = null, string $skipToken = null)
+    public function getContactIdsInList(int $customerId, int $contactListId, int $top = null, int $skiptoken = null): array
     {
         try {
-            $response = $this->apiClient->get($this->endPoints->contactIdsInList($customerId, $contactListId, $limit, $skipToken));
+            $response = $this->apiClient->get($this->endPoints->contactIdsInList($customerId, $contactListId, $top, $skiptoken));
             return $response['data'] ?? [];
         } catch (Error $error) {
             throw new RequestFailed('Could not fetch contact ids: ' . $error->getMessage(), $error->getCode(), $error);
         }
     }
 
-    public function getListChunkIterator(int $customerId, int $contactListId, int $chunkSize = 10000) : iterable
+    public function getListChunkIterator(int $customerId, int $contactListId, int $chunkSize = null) : iterable
     {
-        $next = $this->endPoints->contactIdsInList($customerId, $contactListId, $chunkSize, 'first batch');
+        $nextUrlFull = $this->endPoints->contactIdsInList($customerId, $contactListId, $chunkSize);
         try {
             do {
-                ['value' => $value, 'next' => $next] = $this->apiClient->get($next)['data'];
+                ['value' => $value, 'next' => $next] = $this->apiClient->get($nextUrlFull)['data'];
+                $nextUrlFull = $this->endPoints->contactIdsInListNextChunk($customerId, $contactListId, $next);
                 yield $value;
             } while ($next !== null);
         } catch (Error $error) {

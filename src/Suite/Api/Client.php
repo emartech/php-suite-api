@@ -9,7 +9,6 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
-use GuzzleHttp\TransferStats;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
 use Suite\Api\Middleware\Retry;
@@ -77,7 +76,7 @@ class Client
     {
         $method = 'GET';
         $requestBody = '';
-        $fullUrl = $this->buildUrlWithParameters($url, $parameters);
+        $fullUrl = QueryStringAppender::appendParamsToUrl($url, $parameters);
         $headers = $this->getHeaders($fullUrl, $method, $requestBody);
         return $this->executeRequest($this->createRequest($method, $fullUrl, $headers, $requestBody));
     }
@@ -156,22 +155,5 @@ class Client
     private function createRequest($method, $url, $headers, $requestBody)
     {
         return $this->requestFactory->createRequest($method, $url, $headers, $requestBody);
-    }
-
-    /**
-     * @param string $url
-     * @param array $data
-     * @return string
-     */
-    private function buildUrlWithParameters(string $url, array $data): string
-    {
-        if (!empty($data))
-        {
-            return $url . '?' . http_build_query($data);
-        }
-        else
-        {
-            return $url;
-        }
     }
 }

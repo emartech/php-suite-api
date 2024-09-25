@@ -262,7 +262,7 @@ class ContactListTest extends TestCase
         $response = ['value' => [1, 2, 3], 'next' => null];
         $this->apiClient
             ->method('get')
-            ->with("api_base_url/$this->customerId/contactlist/$this->contactListId/contactIds?\$top=1&\$skiptoken=1")
+            ->with("api_base_url/$this->customerId/contactlist/$this->contactListId/contactIds?%24top=1&%24skiptoken=1")
             ->willReturn($this->apiSuccess($response));
 
         $result = $this->listService->getContactIdsInList($this->customerId, $this->contactListId, 1, 1);
@@ -333,11 +333,26 @@ class ContactListTest extends TestCase
     {
         $chunkSize = 3;
         $this->apiClient->expects($this->once())->method('get')
-            ->with("api_base_url/$this->customerId/contactlist/654321/contactIds?\$top=3&\$skiptoken=first batch")
+            ->with("api_base_url/$this->customerId/contactlist/$this->contactListId/contactIds?%24top=3")
             ->willReturn(
                 $this->apiSuccess(['value' => [1, 2, 3], 'next' => null])
             );
         $iterator = $this->listService->getListChunkIterator($this->customerId, $this->contactListId, $chunkSize);
+        $this->assertEquals([[1, 2, 3]], iterator_to_array($iterator));
+    }
+
+    /**
+     * @test
+     */
+    public function getContactListChunkIterator_ChunkSizeNotPassed_TopNotSentInRequest(): void
+    {
+        $chunkSize = 3;
+        $this->apiClient->expects($this->once())->method('get')
+            ->with("api_base_url/$this->customerId/contactlist/$this->contactListId/contactIds")
+            ->willReturn(
+                $this->apiSuccess(['value' => [1, 2, 3], 'next' => null])
+            );
+        $iterator = $this->listService->getListChunkIterator($this->customerId, $this->contactListId);
         $this->assertEquals([[1, 2, 3]], iterator_to_array($iterator));
     }
 
