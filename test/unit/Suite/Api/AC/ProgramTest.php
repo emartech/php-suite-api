@@ -8,15 +8,12 @@ use Suite\Api\Test\Helper\TestCase;
 
 class ProgramTest extends TestCase
 {
-    const TRIGGER_ID = 'trigger_id';
-    const USER_ID = 1;
-    const LIST_ID = 2;
+    private const TRIGGER_ID = 'trigger_id';
+    private const USER_ID = 1;
+    private const LIST_ID = 2;
 
-    /** @var EndPoints */
-    protected $endPoints;
-
-    /** @var Program */
-    private $program;
+    private EndPoints $endPoints;
+    private Program $program;
 
     protected function setUp(): void
     {
@@ -30,7 +27,7 @@ class ProgramTest extends TestCase
     /**
      * @test
      */
-    public function programCallbackWithUserId_Perfect_Perfect()
+    public function programCallbackWithUserId_CallEndpointWithCorrectParameters(): void
     {
         $this->expectSuccessfulDoneRequest(
             [
@@ -45,7 +42,7 @@ class ProgramTest extends TestCase
     /**
      * @test
      */
-    public function programCallbackWithUserId_postThrowsError_ThrowsRequestFailException()
+    public function programCallbackWithUserId_postThrowsError_ThrowsRequestFailException(): void
     {
         $this->expectException(RequestFailed::class);
         $this->expectApiCallFailure();
@@ -56,7 +53,7 @@ class ProgramTest extends TestCase
     /**
      * @test
      */
-    public function programCallbackWithListId_Perfect_Perfect()
+    public function programCallbackWithListId_CallEndpointWithCorrectParameters(): void
     {
         $this->expectSuccessfulDoneRequest(
             [
@@ -71,7 +68,7 @@ class ProgramTest extends TestCase
     /**
      * @test
      */
-    public function programCallbackWithListId_postThrowsError_ThrowsRequestFailException()
+    public function programCallbackWithListId_postThrowsError_ThrowsRequestFailException(): void
     {
         $this->expectException(RequestFailed::class);
         $this->expectApiCallFailure();
@@ -82,7 +79,7 @@ class ProgramTest extends TestCase
     /**
      * @test
      */
-    public function programBatchCallbackDone_CalledWithCorrectParameters()
+    public function programBatchCallbackDone_CalledWithCorrectParameters(): void
     {
         $postParams = [
             'this' => 'is',
@@ -105,14 +102,14 @@ class ProgramTest extends TestCase
     /**
      * @test
      */
-    public function programCallbackCancel_Perfect_Perfect()
+    public function programCallbackCancel_Perfect_Perfect(): void
     {
         $this->expectSuccessfulCancelRequest();
 
         $this->program->programCallbackCancel($this->customerId, self::TRIGGER_ID);
     }
 
-    private function expectSuccessfulDoneRequest(array $postParams)
+    private function expectSuccessfulDoneRequest(array $postParams): void
     {
         $this->apiClient
             ->expects($this->once())
@@ -124,7 +121,7 @@ class ProgramTest extends TestCase
             ->willReturn($this->apiSuccess());
     }
 
-    private function expectSuccessfulCancelRequest()
+    private function expectSuccessfulCancelRequest(): void
     {
         $this->apiClient
             ->expects($this->once())
@@ -139,7 +136,7 @@ class ProgramTest extends TestCase
             ->willReturn($this->apiSuccess());
     }
 
-    private function expectApiCallFailure()
+    private function expectApiCallFailure(): void
     {
         $this->apiClient
             ->expects($this->any())

@@ -14,19 +14,17 @@ class TestCase extends \PHPUnit\Framework\TestCase
     const API_FAILURE_TEXT = 'FAIL';
     const API_FAILURE_CODE = 9999;
 
-    protected $customerId = 555;
-    protected $campaignId = 123;
+    protected Client|MockObject $apiClient;
 
-    /** @var EndPoints */
-    protected $endPoints;
-
-    /** @var Client|MockObject */
-    protected $apiClient;
+    protected int $customerId = 555;
+    protected int $campaignId = 123;
 
     protected function expectApiFailure(string $method = 'get')
     {
-        $this->apiClient->expects($this->once())->method($method)
-            ->will($this->throwException(new Error()));
+        $this->apiClient
+            ->expects($this->once())
+            ->method($method)
+            ->willThrowException(new Error());
     }
 
     protected function apiSuccess($data = [])

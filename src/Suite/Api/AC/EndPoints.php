@@ -4,7 +4,7 @@ namespace Suite\Api\AC;
 
 class EndPoints
 {
-    private $apiBaseUrl;
+    private string $apiBaseUrl;
 
     public function __construct(string $apiBaseUrl)
     {

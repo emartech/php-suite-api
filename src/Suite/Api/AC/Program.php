@@ -8,12 +8,8 @@ use Suite\Api\RequestFailed;
 
 class Program
 {
-    /* @var Client */
-    private $apiClient;
-
-    /* @var EndPoints */
-    private $endPoints;
-
+    private Client $apiClient;
+    private EndPoints $endPoints;
 
     public function __construct(Client $apiClient, EndPoints $endPoints)
     {
@@ -21,7 +17,7 @@ class Program
         $this->endPoints = $endPoints;
     }
 
-    public function programCallbackWithUserId(int $customerId, string $triggerId, int $userId)
+    public function programCallbackWithUserId(int $customerId, string $triggerId, int $userId): void
     {
         $this->sendRequest(
             $this->endPoints->programCallbackDoneUrl($customerId, $triggerId),
@@ -29,7 +25,7 @@ class Program
         );
     }
 
-    public function programCallbackWithListId(int $customerId, string $triggerId, int $listId)
+    public function programCallbackWithListId(int $customerId, string $triggerId, int $listId): void
     {
         $this->sendRequest(
             $this->endPoints->programCallbackDoneUrl($customerId, $triggerId),
@@ -37,7 +33,7 @@ class Program
         );
     }
 
-    public function programCallbackCancel(int $customerId, string $triggerId)
+    public function programCallbackCancel(int $customerId, string $triggerId): void
     {
         $this->sendRequest(
             $this->endPoints->programCallbackCancelUrl($customerId, $triggerId),
@@ -78,7 +74,7 @@ class Program
         );
     }
 
-    private function sendRequest(string $url, $postData)
+    private function sendRequest(string $url, $postData): void
     {
         try {
             $this->apiClient->post($url, $postData);
