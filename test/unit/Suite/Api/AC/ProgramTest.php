@@ -82,6 +82,29 @@ class ProgramTest extends TestCase
     /**
      * @test
      */
+    public function programBatchCallbackDone_CalledWithCorrectParameters()
+    {
+        $postParams = [
+            'this' => 'is',
+            'the' => 'callback',
+            'post' => 'params',
+        ];
+
+        $this->apiClient
+            ->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->endPoints->programBatchCallbackDoneUrl($this->customerId),
+                $postParams
+            )
+            ->willReturn($this->apiSuccess());
+
+        $this->program->programBatchCallbackDone($this->customerId, $postParams);
+    }
+
+    /**
+     * @test
+     */
     public function programCallbackCancel_Perfect_Perfect()
     {
         $this->expectSuccessfulCancelRequest();

@@ -23,41 +23,75 @@ class Program
 
     public function programCallbackWithUserId(int $customerId, string $triggerId, int $userId)
     {
-        $this->programCallbackDone($customerId, $triggerId, $userId, null);
+        $this->sendRequest(
+            $this->endPoints->programCallbackDoneUrl($customerId, $triggerId),
+            $this->createPostData($userId, null)
+        );
     }
 
     public function programCallbackWithListId(int $customerId, string $triggerId, int $listId)
     {
-        $this->programCallbackDone($customerId, $triggerId, null, $listId);
+        $this->sendRequest(
+            $this->endPoints->programCallbackDoneUrl($customerId, $triggerId),
+            $this->createPostData(null, $listId)
+        );
     }
 
     public function programCallbackCancel(int $customerId, string $triggerId)
     {
         $this->sendRequest(
             $this->endPoints->programCallbackCancelUrl($customerId, $triggerId),
-            null,
-            null
+            $this->createPostData(null, null)
         );
     }
 
-    private function programCallbackDone(int $customerId, string $triggerId, $userId, $listId)
+    /**
+     * Example for single-user use-case:
+     *  [
+     *      ['trigger_id' => 'a', 'user_id' => 1],
+     *      ['trigger_id' => 'b', 'user_id' => 2]
+     *  ]
+     *
+     * Example for user-list use-case:
+     *  [
+     *      ['trigger_id' => 'a', 'list_id' => 1],
+     *      ['trigger_id' => 'b', 'list_id' => 2]
+     *  ]
+     *
+     * Example for mixed use-case 1 (the not used participant can be omitted):
+     *  [
+     *      ['trigger_id' => 'a', 'list_id' => 1],
+     *      ['trigger_id' => 'b', 'user_id' => 1]
+     *  ]
+     *
+     * Example for mixed use-case 2:
+     *  [
+     *      ['trigger_id' => 'a', 'user_id' => 0, 'list_id' => 1],
+     *      ['trigger_id' => 'b', 'user_id' => 1, 'list_id' => 0]
+     *  ]
+     */
+    public function programBatchCallbackDone(int $customerId, array $triggers): void
     {
         $this->sendRequest(
-            $this->endPoints->programCallbackDoneUrl($customerId, $triggerId),
-            $userId,
-            $listId
+            $this->endPoints->programBatchCallbackDoneUrl($customerId),
+            $triggers
         );
     }
 
-    private function sendRequest(string $url, $userId, $listId)
+    private function sendRequest(string $url, $postData)
     {
         try {
-            $this->apiClient->post($url, [
-                'user_id' => $userId,
-                'list_id' => $listId,
-            ]);
+            $this->apiClient->post($url, $postData);
         } catch (Error $ex) {
             throw new RequestFailed('Program callback failed: ' . $ex->getMessage(), $ex->getCode(), $ex);
         }
+    }
+
+    private function createPostData($userId, $listId): array
+    {
+        return [
+            'user_id' => $userId,
+            'list_id' => $listId,
+        ];
     }
 }
