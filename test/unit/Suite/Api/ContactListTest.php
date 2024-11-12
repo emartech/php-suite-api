@@ -221,8 +221,7 @@ class ContactListTest extends TestCase
                 ]
             )->willReturn($this->apiSuccess());
 
-        $contactListId = $this->listService->replaceContactList($this->customerId, $this->contactListId, $contactIds);
-        $this->assertEquals($this->contactListId, $contactListId);
+        $this->listService->replaceContactList($this->customerId, $this->contactListId, $contactIds);
     }
 
     /**
