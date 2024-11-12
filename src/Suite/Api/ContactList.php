@@ -69,7 +69,7 @@ class ContactList
     public function addToContactList(int $customerId, int $contactListId, array $contactIds)
     {
         try {
-            $this->apiClient->post($this->endPoints->addToContactList($customerId, $contactListId), [
+            return $this->apiClient->post($this->endPoints->addToContactList($customerId, $contactListId), [
                 'key_id'        => 'id',
                 'external_ids'  => $contactIds
             ]);
@@ -81,11 +81,10 @@ class ContactList
     public function replaceContactList(int $customerId, int $contactListId, array $contactIds)
     {
         try {
-            $this->apiClient->post($this->endPoints->replaceContactList($customerId, $contactListId), [
+            return $this->apiClient->post($this->endPoints->replaceContactList($customerId, $contactListId), [
                 'key_id'        => 'id',
                 'external_ids'  => $contactIds
             ]);
-            return $contactListId;
         } catch (Error $error) {
             throw new RequestFailed('Could not add contacts to list: ' . $error->getMessage(), $error->getCode(), $error);
         }
@@ -95,11 +94,10 @@ class ContactList
     public function deleteContactsFromList(int $customerId, int $contactListId, array $contactIds)
     {
         try {
-            $this->apiClient->post($this->endPoints->deleteContactsFromList($customerId, $contactListId), [
+            return $this->apiClient->post($this->endPoints->deleteContactsFromList($customerId, $contactListId), [
                 'key_id'        => 'id',
                 'external_ids'  => $contactIds
             ]);
-            return $contactListId;
         } catch (Error $error) {
             throw new RequestFailed('Could not delete contacts from list: ' . $error->getMessage(), $error->getCode(), $error);
         }
