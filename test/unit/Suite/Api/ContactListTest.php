@@ -282,6 +282,33 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
+    public function getContactIdsByNextUrl_CalledWithProperUrl_ApiResponseConverted(): void
+    {
+        $nextUrl = "/123/contactlist/456/contactIds";
+        $response = ['value' => [1, 2, 3], 'next' => '/next/url'];
+        $this->apiClient
+            ->method('get')
+            ->with($nextUrl)
+            ->willReturn($this->apiSuccess($response));
+
+        $result = $this->listService->getContactIdsByNextUrl($nextUrl);
+        $this->assertEquals($response, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function getContactIdsByNextUrl_ApiCallFails_ExceptionThrown(): void
+    {
+        $this->apiClient->method('get')->will($this->apiFailure());
+        $this->expectException(RequestFailed::class);
+
+        $this->listService->getContactIdsByNextUrl('/test');
+    }
+
+    /**
+     * @test
+     */
     public function getContactsOfList_Perfect_Perfect(): void
     {
         $limit = 100;

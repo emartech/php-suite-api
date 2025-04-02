@@ -127,6 +127,16 @@ class ContactList
         }
     }
 
+    public function getContactIdsByNextUrl(string $nextUrl): array
+    {
+        try {
+            $response = $this->apiClient->get($nextUrl);
+            return $response['data'] ?? [];
+        } catch (Error $error) {
+            throw new RequestFailed('Could not fetch contact ids: ' . $error->getMessage(), $error->getCode(), $error);
+        }
+    }
+
     public function getListChunkIterator(int $customerId, int $contactListId, int $chunkSize = null) : iterable
     {
         $nextUrlFull = $this->endPoints->contactIdsInList($customerId, $contactListId, $chunkSize);
