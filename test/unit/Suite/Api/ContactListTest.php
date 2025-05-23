@@ -212,6 +212,7 @@ class ContactListTest extends TestCase
     {
         $contactIds = [1, 2, 3];
         $this->apiClient
+            ->expects($this->once())
             ->method('post')
             ->with(
                 "api_base_url/$this->customerId/contactlist/654321/replace",
