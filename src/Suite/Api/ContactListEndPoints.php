@@ -20,9 +20,9 @@ class ContactListEndPoints
         . ($businessAreaId ? "?business_area_id=$businessAreaId" : '');
     }
 
-    public function createContactList(int $customerId)
+    public function createContactList(int $customerId, string $businessAreaId = null)
     {
-        return $this->baseUrl($customerId);
+        return $this->baseUrl($customerId, $businessAreaId);
     }
 
     public function contactLists(int $customerId, string $businessAreaId = null)

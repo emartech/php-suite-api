@@ -22,7 +22,11 @@ class ContactList
         $this->endPoints = $endPoints;
     }
 
-    public function createContactList(int $customerId, string $name, array $contactIds = [])
+    public function createContactList(
+        int $customerId,
+        string $name,
+        array $contactIds = [],
+        string $businessAreaId = null)
     {
         if (!strlen(trim($name))) {
             throw new \InvalidArgumentException("Empty contact list name given");
@@ -36,7 +40,8 @@ class ContactList
         }
 
         try {
-            return $this->apiClient->post($this->endPoints->createContactList($customerId), $data)['data']['id'];
+            return $this->apiClient->post(
+                $this->endPoints->createContactList($customerId, $businessAreaId), $data)['data']['id'];
         } catch (Error $error) {
             throw new RequestFailed('Could not create contact list: ' . $error->getMessage(), $error->getCode(), $error);
         }

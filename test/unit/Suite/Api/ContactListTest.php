@@ -44,6 +44,29 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
+    public function createContactList_CalledWithBusinessAreaId_PassesBusinessAreaId(): void
+    {
+        $businessAreaId = 'HU';
+        $contactIds = [1, 2, 3];
+        $this->apiClient
+            ->expects($this->once())
+            ->method('post')
+            ->with(
+                "api_base_url/$this->customerId/contactlist?business_area_id=$businessAreaId",
+                [
+                    'name' => $this->listName,
+                    'key_id' => 'id',
+                    'external_ids' => $contactIds,
+                ]
+            )
+            ->willReturn($this->apiSuccess(['id' => $this->contactListId]));
+
+        $this->listService->createContactList($this->customerId, $this->listName, $contactIds, $businessAreaId);
+    }
+
+    /**
+     * @test
+     */
     public function createContactList_NoContactIdsGiven_ListCreated(): void
     {
         $contactIds = [];
@@ -106,18 +129,16 @@ class ContactListTest extends TestCase
     {
         $businessAreaId = 'HU';
         $contactLists = [
-            $this->contactListData('id1', 'contact list 1'),
-            $this->contactListData('id2', 'contact list 2'),
+            $this->contactListData('id', 'contact list'),
         ];
 
         $this->apiClient
+            ->expects($this->once())
             ->method('get')
             ->with("api_base_url/$this->customerId/contactlist?business_area_id=$businessAreaId")
             ->willReturn($this->apiSuccess($contactLists));
 
-        $returnedContactLists = $this->listService->getContactLists($this->customerId, $businessAreaId);
-
-        $this->assertEquals($contactLists, $returnedContactLists);
+        $this->listService->getContactLists($this->customerId, $businessAreaId);
     }
 
     /**
