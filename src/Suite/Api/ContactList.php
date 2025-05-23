@@ -42,10 +42,10 @@ class ContactList
         }
     }
 
-    public function getContactLists(int $customerId)
+    public function getContactLists(int $customerId, string $businessAreaId = null)
     {
         try {
-            return $this->apiClient->get($this->endPoints->contactLists($customerId))['data'];
+            return $this->apiClient->get($this->endPoints->contactLists($customerId, $businessAreaId))['data'];
         } catch (Error $error) {
             throw new RequestFailed('Could not fetch contact lists: ' . $error->getMessage(), $error->getCode(), $error);
         }

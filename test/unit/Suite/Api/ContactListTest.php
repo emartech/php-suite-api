@@ -102,6 +102,27 @@ class ContactListTest extends TestCase
     /**
      * @test
      */
+    public function getContactLists_CalledWithBusinessAreaId_PassesBusinessAreaId(): void
+    {
+        $businessAreaId = 'HU';
+        $contactLists = [
+            $this->contactListData('id1', 'contact list 1'),
+            $this->contactListData('id2', 'contact list 2'),
+        ];
+
+        $this->apiClient
+            ->method('get')
+            ->with("api_base_url/$this->customerId/contactlist?business_area_id=$businessAreaId")
+            ->willReturn($this->apiSuccess($contactLists));
+
+        $returnedContactLists = $this->listService->getContactLists($this->customerId, $businessAreaId);
+
+        $this->assertEquals($contactLists, $returnedContactLists);
+    }
+
+    /**
+     * @test
+     */
     public function findContactListByName_Perfect_Perfect(): void
     {
         $contactLists = [
