@@ -19,16 +19,14 @@ class ContactListEndPoints
         return "{$this->apiBaseUrl}/{$customerId}/contactlist";
     }
 
-    public function createContactList(int $customerId, string $businessAreaId = null)
+    public function createContactList(int $customerId)
     {
-        return $this->baseUrl($customerId)
-            . ($businessAreaId ? "/?business_area_id=$businessAreaId" : '');
+        return $this->baseUrl($customerId);
     }
 
-    public function contactLists(int $customerId, string $businessAreaId = null)
+    public function contactLists(int $customerId)
     {
-        return $this->baseUrl($customerId)
-            . ($businessAreaId ? "/?business_area_id=$businessAreaId" : '');
+        return $this->baseUrl($customerId);
     }
 
     public function addToContactList(int $customerId, int $contactListId)

@@ -39,9 +39,13 @@ class ContactList
             $data['external_ids'] = $contactIds;
         }
 
+        if($businessAreaId) {
+            $data['business_area_id'] = $businessAreaId;
+        }
+
         try {
             return $this->apiClient->post(
-                $this->endPoints->createContactList($customerId, $businessAreaId), $data)['data']['id'];
+                $this->endPoints->createContactList($customerId), $data)['data']['id'];
         } catch (Error $error) {
             throw new RequestFailed('Could not create contact list: ' . $error->getMessage(), $error->getCode(), $error);
         }
