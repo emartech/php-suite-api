@@ -22,13 +22,13 @@ class ContactListEndPoints
     public function createContactList(int $customerId, string $businessAreaId = null)
     {
         return $this->baseUrl($customerId)
-            . ($businessAreaId ? "?business_area_id=$businessAreaId" : '');
+            . ($businessAreaId ? "/?business_area_id=$businessAreaId" : '');
     }
 
     public function contactLists(int $customerId, string $businessAreaId = null)
     {
         return $this->baseUrl($customerId)
-            . ($businessAreaId ? "?business_area_id=$businessAreaId" : '');
+            . ($businessAreaId ? "/?business_area_id=$businessAreaId" : '');
     }
 
     public function addToContactList(int $customerId, int $contactListId)
