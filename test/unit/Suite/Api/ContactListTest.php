@@ -52,7 +52,7 @@ class ContactListTest extends TestCase
             ->expects($this->once())
             ->method('post')
             ->with(
-                "api_base_url/$this->customerId/contactlist?business_area_id=$businessAreaId",
+                "api_base_url/$this->customerId/contactlist/?business_area_id=$businessAreaId",
                 [
                     'name' => $this->listName,
                     'key_id' => 'id',
@@ -135,7 +135,7 @@ class ContactListTest extends TestCase
         $this->apiClient
             ->expects($this->once())
             ->method('get')
-            ->with("api_base_url/$this->customerId/contactlist?business_area_id=$businessAreaId")
+            ->with("api_base_url/$this->customerId/contactlist/?business_area_id=$businessAreaId")
             ->willReturn($this->apiSuccess($contactLists));
 
         $this->listService->getContactLists($this->customerId, $businessAreaId);
