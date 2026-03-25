@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ALL & ~E_DEPRECATED);
+
 call_user_func(function () {
     // start serving suite API stub
     exec('php -S localhost:7984 '.__DIR__.'/helper/api-stub.php >/tmp/php-suite-api.log 2>&1 & echo $!', $output);
