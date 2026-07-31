@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "054cce8d32406f8bcac9839b4af78ff5",
+    "content-hash": "7d1bc81ed4d6e1bc22d566779ecb32b4",
     "packages": [
         {
             "name": "emartech/escher",
@@ -4220,7 +4220,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "8.5.8"
+        "php": ">=8.1"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"
