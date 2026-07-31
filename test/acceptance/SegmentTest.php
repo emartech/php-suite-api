@@ -3,12 +3,12 @@
 namespace Suite\Api\Acceptance;
 
 use Suite\Api\Test\Helper\AcceptanceBaseTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
+#[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class SegmentTest extends AcceptanceBaseTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function getListEndPoint()
     {
         $list = $this->factory->createSegment()->getList(123456);

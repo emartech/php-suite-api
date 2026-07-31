@@ -5,9 +5,11 @@ namespace Suite\Api;
 use Suite\Api\Contact\Contact;
 use Suite\Api\Contact\EndPoints;
 use Suite\Api\Test\Helper\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ContactTest extends TestCase
 {
+    private $endPoints;
 
     private $contact;
 
@@ -20,9 +22,7 @@ class ContactTest extends TestCase
         $this->contact = new Contact($this->apiClient, $this->endPoints);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getData_Perfect_Perfect()
     {
         $contacts = [
@@ -44,9 +44,7 @@ class ContactTest extends TestCase
         $this->assertEquals($contacts, $responseData);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getData_ContactNotFound_EmptyArrayReturned()
     {
         $this->apiClient->expects($this->once())->method('post')
@@ -56,9 +54,7 @@ class ContactTest extends TestCase
         $this->assertEquals([], $responseData);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function get_ApiFailure_ExceptionThrown()
     {
         $this->expectApiFailure('post');

@@ -5,9 +5,11 @@ namespace Suite\Api;
 use Suite\Api\Email\EndPoints;
 use Suite\Api\Email\Preview;
 use Suite\Api\Test\Helper\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class PreviewTest extends TestCase
 {
+    private $endPoints;
     /** @var Preview */
     private $emailPreview;
 
@@ -21,9 +23,7 @@ class PreviewTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getText_Perfect_Perfect()
     {
         $this->expectApiCallForVersion('text');
@@ -32,9 +32,7 @@ class PreviewTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getHtml_Perfect_Perfect()
     {
         $this->expectApiCallForVersion('html');
@@ -43,9 +41,7 @@ class PreviewTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getMobile_Perfect_Perfect()
     {
         $this->expectApiCallForVersion('mobile');
@@ -54,9 +50,7 @@ class PreviewTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getText_ApiFailure_ExceptionThrown()
     {
         $this->expectApiFailure('post');
@@ -71,9 +65,7 @@ class PreviewTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getHtml_ApiFailure_ExceptionThrown()
     {
         $this->expectApiFailure('post');
@@ -88,9 +80,7 @@ class PreviewTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getMobile_ApiFailure_ExceptionThrown()
     {
         $this->expectApiFailure('post');

@@ -6,7 +6,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Suite\Api\Middleware\Retry;
+use PHPUnit\Framework\Attributes\Test;
 
+#[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class RetryTest extends TestCase
 {
     const DEFAULT_RETRY_COUNT      = 3;
@@ -30,17 +32,13 @@ class RetryTest extends TestCase
         $this->request = $this->createMock(Request::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function createHandler_returnsFunction()
     {
         $this->assertTrue(is_callable(($this->handler)));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function createHandler_returnsFalseWhenNoRetriesLeft()
     {
         $this->assertFalse(
@@ -51,9 +49,7 @@ class RetryTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function createHandler_returnsTrueWhenRetriesLeft()
     {
         $this->assertTrue(
@@ -65,9 +61,7 @@ class RetryTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function createHandler_returnsFalseFor200()
     {
         $this->assertFalse(
@@ -79,9 +73,7 @@ class RetryTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function createHandler_returnsTrueWhenServerErrorOccurred()
     {
         $this->assertTrue(

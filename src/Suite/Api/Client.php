@@ -103,7 +103,7 @@ class Client
         return $this->executeRequest($this->createRequest($method, $url, $headers, $requestBody));
     }
 
-    private function executeRequest(RequestInterface $request = null)
+    private function executeRequest(?RequestInterface $request = null)
     {
         try {
             $response = $this->client->send($request);

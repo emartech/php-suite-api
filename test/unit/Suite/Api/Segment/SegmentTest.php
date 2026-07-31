@@ -6,14 +6,13 @@ use Suite\Api\Segment\EndPoints;
 use Suite\Api\Segment\Segment;
 use Suite\Api\RequestFailed;
 use Suite\Api\Test\Helper\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SegmentTest extends TestCase
 {
     const ERROR_CODE = 1234;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function onApiErrorExceptionIsThrown()
     {
         $clientMock = $this->createMock(Client::class);

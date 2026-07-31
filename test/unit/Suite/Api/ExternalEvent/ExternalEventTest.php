@@ -6,14 +6,13 @@ use Suite\Api\Error;
 use Suite\Api\ExternalEvent\EndPoints;
 use Suite\Api\ExternalEvent\ExternalEvent;
 use Suite\Api\RequestFailed;
+use PHPUnit\Framework\Attributes\Test;
 
 class ExternalEventTest extends TestCase
 {
     const ERROR_CODE = 1234;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function onApiErrorExceptionIsThrown()
     {
         $clientMock = $this->createMock(Client::class);

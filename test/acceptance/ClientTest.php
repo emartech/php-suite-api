@@ -10,7 +10,10 @@ use Suite\Api\Client;
 use Suite\Api\Error;
 use Suite\Api\SuiteResponseProcessor;
 use Suite\Api\Test\Helper\AcceptanceBaseTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
+
+#[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class ClientTest extends AcceptanceBaseTestCase
 {
     public function setUp(): void
@@ -25,9 +28,7 @@ class ClientTest extends AcceptanceBaseTestCase
         $this->cleanupLogFile();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function sendingRequestWorks()
     {
         $client = $this->createClient($this->escherProvider);
@@ -40,9 +41,7 @@ class ClientTest extends AcceptanceBaseTestCase
         ];
         $this->assertEquals($successfulApiResponse, $client->get("{$this->apiBaseUrl}/"));
     }
-    /**
-     * @test
-     */
+    #[Test]
     public function authenticationWorks()
     {
         $client = $this->createClient($this->badEscherProvider());
@@ -55,9 +54,7 @@ class ClientTest extends AcceptanceBaseTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function retryWorks()
     {
         $client = $this->createRetryClient();

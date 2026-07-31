@@ -5,9 +5,11 @@ namespace Suite\Api;
 use Suite\Api\Email\EndPoints;
 use Suite\Api\Email\Campaign;
 use Suite\Api\Test\Helper\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class CampaignTest extends TestCase
 {
+    private $endPoints;
     /** @var Campaign */
     private $emailCampaign;
 
@@ -21,9 +23,7 @@ class CampaignTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getById_Perfect_Perfect()
     {
         $this->expectApiCallForCampaign($this->campaignId);
@@ -32,9 +32,7 @@ class CampaignTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getById_ApiFailure_ExceptionThrown()
     {
         $this->expectApiFailure();
@@ -49,9 +47,7 @@ class CampaignTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getList_Filter_Perfect()
     {
         $expectedResponseData = [0 => ['id' => $this->campaignId]];
@@ -61,9 +57,7 @@ class CampaignTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getList_NoFilter_Perfect()
     {
         $expectedResponseData = [0 => ['id' => $this->campaignId]];
@@ -73,9 +67,7 @@ class CampaignTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getList_ApiFailure_ExceptionThrown()
     {
         $this->expectApiFailure();
@@ -89,9 +81,7 @@ class CampaignTest extends TestCase
         $this->fail('No exception was thrown.');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function deleteById_CampaignFound_CampaignDeleted()
     {
         $this->expectApiCallForCampaignDelete($this->campaignId);
@@ -99,9 +89,7 @@ class CampaignTest extends TestCase
         $this->assertSame(null, $responseData);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function deleteById_ApiFailure_ExceptionThrown()
     {
         $this->expectApiFailure('post');

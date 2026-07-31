@@ -44,7 +44,7 @@ class ContactListEndPoints
         return $this->baseUrl($customerId) . "/{$contactListId}/contacts/?limit={$limit}&offset={$offset}";
     }
 
-    public function contactIdsInList(int $customerId, int $contactListId, int $top = null, int $skiptoken = null): string
+    public function contactIdsInList(int $customerId, int $contactListId, ?int $top = null, ?int $skiptoken = null): string
     {
         return QueryStringAppender::appendParamsToUrl(
             $this->baseUrl($customerId) . "/{$contactListId}/contactIds",
@@ -55,7 +55,7 @@ class ContactListEndPoints
         );
     }
 
-    public function contactIdsInListNextChunk(int $customerId, int $contactListId, string $next = null): ?string
+    public function contactIdsInListNextChunk(int $customerId, int $contactListId, ?string $next = null): ?string
     {
         if (null === $next) {
             return null;

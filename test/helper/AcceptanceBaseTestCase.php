@@ -3,9 +3,11 @@
 namespace Suite\Api\Test\Helper;
 
 use Escher\Provider as EscherProvider;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Psr\Log\LoggerInterface;
 use Suite\Api\Factory;
 
+#[AllowMockObjectsWithoutExpectations]
 class AcceptanceBaseTestCase extends \PHPUnit\Framework\TestCase
 {
     /**

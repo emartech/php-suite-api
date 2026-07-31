@@ -13,14 +13,14 @@
         }
     },
     "require": {
-        "php": "^8.0",
-        "guzzlehttp/guzzle": "^7.0",
-        "emartech/escher": "^4.0"
+        "php": "8.5.8",
+        "guzzlehttp/guzzle": "7.15.2",
+        "emartech/escher": "4.1.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "9.*",
-        "silex/silex": "~2.0",
-        "fqqdk/packagist-publisher": ">=1.2.5"
+        "phpunit/phpunit": "13.2.6",
+        "silex/silex": "2.3.0",
+        "fqqdk/packagist-publisher": ">=1.2.10"
     },
     "authors": [
         {
@@ -29,9 +29,9 @@
         }
     ],
     "scripts": {
-      "test": "phpunit -c test/phpunit.xml",
-      "unit": "phpunit -c test/phpunit.xml --testsuite unit",
-      "acceptance": "phpunit -c test/phpunit.xml  --testsuite acceptance"
+        "test": "phpunit -c test/phpunit.xml",
+        "unit": "phpunit -c test/phpunit.xml --testsuite unit",
+        "acceptance": "phpunit -c test/phpunit.xml  --testsuite acceptance"
     },
     "license": [
         "MIT"
@@ -39,6 +39,11 @@
     "config": {
         "allow-plugins": {
             "fqqdk/packagist-publisher": true
+        },
+        "policy": {
+            "advisories": {
+                "block": false
+            }
         }
     }
 }

@@ -3,12 +3,12 @@
 namespace Suite\Api\Acceptance;
 
 use Suite\Api\Test\Helper\AcceptanceBaseTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
+#[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class ExternalEventTest extends AcceptanceBaseTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function getListEndPoint()
     {
         $list = $this->factory->createExternalEvent()->getList(123456);

@@ -27,7 +27,7 @@ class Retry
 
     public function createHandler()
     {
-        return function (int $retries, Request $request, Response $response = null, TransferException $exception = null) {
+        return function (int $retries, Request $request, ?Response $response = null, ?TransferException $exception = null) {
             if ($this->stillHasRetryAttempts($retries) && $this->isRetriableError($response, $exception)) {
                 $this->log($retries, $request, $response, $exception);
                 return true;
@@ -46,17 +46,17 @@ class Retry
         return $retries < $this->maxRetryCount;
     }
 
-    private function isServerError(Response $response = null)
+    private function isServerError(?Response $response = null)
     {
         return $response && $response->getStatusCode() >= 500;
     }
 
-    private function isConnectError(TransferException $exception = null)
+    private function isConnectError(?TransferException $exception = null)
     {
         return $exception instanceof ConnectException;
     }
 
-    private function log(int $retries, Request $request, Response $response = null, TransferException $exception = null)
+    private function log(int $retries, Request $request, ?Response $response = null, ?TransferException $exception = null)
     {
         $this->logger->warning(
             'Retrying API call',

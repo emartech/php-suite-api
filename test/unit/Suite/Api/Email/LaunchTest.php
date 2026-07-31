@@ -5,9 +5,11 @@ namespace Suite\Api;
 use Suite\Api\Email\EndPoints;
 use Suite\Api\Email\Launch;
 use Suite\Api\Test\Helper\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class LaunchTest extends TestCase
 {
+    private $endPoints;
     /** @var Launch */
     private $emailLaunch;
 
@@ -21,9 +23,7 @@ class LaunchTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testLaunch_Perfect_Perfect()
     {
         $this->apiClient->expects($this->once())->method('post')
@@ -40,9 +40,7 @@ class LaunchTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function launch_ApiFailure_ExceptionThrown()
     {
         $this->expectApiFailure('post');

@@ -3,12 +3,12 @@
 namespace Suite\Api\Acceptance;
 
 use Suite\Api\Test\Helper\AcceptanceBaseTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
+#[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class AdministratorTest extends AcceptanceBaseTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function emailCampaignEndPoint()
     {
         $list = $this->factory->createAdministrator()->getList(1);

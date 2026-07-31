@@ -5,9 +5,11 @@ namespace Suite\Api;
 use Suite\Api\Administrator\Administrator;
 use Suite\Api\Administrator\EndPoints;
 use Suite\Api\Test\Helper\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class AdministratorTest extends TestCase
 {
+    private $endPoints;
     /** @var Administrator */
     private $administrator;
 
@@ -21,9 +23,7 @@ class AdministratorTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getList_Perfect_Perfect()
     {
         $admins = array(
@@ -40,9 +40,7 @@ class AdministratorTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function get_ApiFailure_ExceptionThrown()
     {
         $this->expectApiFailure();

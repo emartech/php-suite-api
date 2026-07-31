@@ -5,31 +5,27 @@ namespace Suite\Api\Acceptance;
 use Suite\Api\RequestFailed;
 use Suite\Api\Test\Helper\AcceptanceBaseTestCase;
 use Suite\Api\Test\Helper\ApiStub;
+use PHPUnit\Framework\Attributes\Test;
 
+#[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class ContactListChunkIteratorTest extends AcceptanceBaseTestCase
 {
     protected int $customerId = 123456;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getListChunkIterator_EmptyContactList_ReturnsSingleEmptyChunk(): void
     {
         $this->assertEquals([[]], $this->getChunksOfContactList(ApiStub::LIST_ID_FOR_EMPTY_LIST));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getListChunkIterator_ContactListContainsSingleChunk_ReturnsContactIds(): void
     {
         $this->assertEquals([[1, 2, 3]], $this->getChunksOfContactList(ApiStub::LIST_ID_FOR_LIST_WITH_SINGLE_CHUNK));
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getListChunkIterator_SeveralChunks_ReturnsContactIdsInChunks(): void
     {
         $this->assertEquals([
@@ -41,9 +37,7 @@ class ContactListChunkIteratorTest extends AcceptanceBaseTestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getListChunkIterator_ApiRequestFailed_ThrowsException(): void
     {
         $this->expectException(RequestFailed::class);

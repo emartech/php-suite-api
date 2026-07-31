@@ -13,14 +13,16 @@ use GuzzleHttp\Psr7\BufferStream;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\Constraint\IsEqual;
-use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
+use PHPUnit\Framework\Constraint\LogicalAnd;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub\ReturnStub;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\NullLogger;
 use Suite\Api\Test\Helper\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
+#[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class ClientTest extends TestCase
 {
     const ESCHER_KEY = 'escher_key';
@@ -90,9 +92,7 @@ class ClientTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getBaseUrl_Perfect_ApiProxyUrlReturned()
     {
         putenv('SUITE_API_HOST=api_proxy_host');
@@ -103,9 +103,7 @@ class ClientTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function responseOfSuccessfulGetRequestShouldIndicateSuccess()
     {
         $this->expectSuccessfulGet(self::URL)->willReturn($this->apiSuccess());
@@ -113,9 +111,7 @@ class ClientTest extends TestCase
         $this->assertTrue($response['success']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function assembleParametersAsGetQueryParameters()
     {
         $parameters = [
@@ -128,9 +124,7 @@ class ClientTest extends TestCase
         $this->assertSuccessful($response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function responseOfSuccessfulGetRequestShouldContainApiResponseCodeAndText()
     {
         $this->expectSuccessfulGet(self::URL)->willReturn($this->apiSuccess());
@@ -138,9 +132,7 @@ class ClientTest extends TestCase
         $this->assertResponseContains($response, self::API_SUCCESS_CODE, self::API_SUCCESS_TEXT);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function responseOfSuccessfulRequestShouldContainAdditionalDataReceivedFromApi()
     {
         $this->expectSuccessfulGet(self::URL)->willReturn($this->apiSuccess(['data' => 'DATA']));
@@ -148,9 +140,7 @@ class ClientTest extends TestCase
         $this->assertThat($response, $this->structure(['data' => 'DATA']));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function responseOfSuccessfulPostRequestShouldIndicateSuccessAndContainApiResponseCodeAndText()
     {
         $this->expectSuccessfulPost(self::URL, [])->willReturn($this->apiSuccess());
@@ -159,9 +149,7 @@ class ClientTest extends TestCase
         $this->assertResponseContains($response, self::API_SUCCESS_CODE, self::API_SUCCESS_TEXT);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function responseOfSuccessfulPutRequestShouldIndicateSuccessAndContainApiResponseCodeAndText()
     {
         $this->expectSuccessfulPut(self::URL, [])->willReturn($this->apiSuccess());
@@ -170,9 +158,7 @@ class ClientTest extends TestCase
         $this->assertResponseContains($response, self::API_SUCCESS_CODE, self::API_SUCCESS_TEXT);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function responseOfSuccessfulDeleteRequestShouldIndicateSuccessAndContainApiResponseCodeAndText()
     {
         $this->expectSuccessfulDelete(self::URL, [])->willReturn($this->apiSuccess());
@@ -181,9 +167,7 @@ class ClientTest extends TestCase
         $this->assertResponseContains($response, self::API_SUCCESS_CODE, self::API_SUCCESS_TEXT);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function responseOfBadApiRequestShouldIndicateFailureAndContainErrorMessage()
     {
         $this->expectGetYieldingBadResponse()->willReturn($this->apiFailure());
@@ -192,9 +176,7 @@ class ClientTest extends TestCase
         $this->apiClient->get(self::URL);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function responseOfUnsuccessfulApiRequestShouldIndicateFailureAndContainErrorMessage()
     {
         $this->expectGetYieldingRequestException();
@@ -203,9 +185,7 @@ class ClientTest extends TestCase
         $this->apiClient->get(self::URL);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function responseContainingInvalidFormatShouldIndicateFailureAndContainErrorMessage()
     {
         $this->expectSuccessfulGet(self::URL)->willReturn($this->createStream('NOT A JSON STRING'));
@@ -214,18 +194,14 @@ class ClientTest extends TestCase
         $this->apiClient->get(self::URL);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function requestShouldContainAuthorizationHeaders()
     {
         $this->expectSuccessfulGet(self::URL, $this->expectedHeaders())->willReturn($this->apiSuccess());
         $this->apiClient->get(self::URL);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function httpsIsUsedInRequestUrl()
     {
         $apiWrapper = new Client(
@@ -278,10 +254,8 @@ class ClientTest extends TestCase
 
     protected function structure(array $array): Constraint
     {
-        $result = $this->logicalAnd();
-        $result->setConstraints(
-            array_map(function ($key, $constraint) {
-                return new class($key, $constraint) extends Constraint {
+        $constraints = array_map(function ($key, $constraint) {
+            return new class($key, $constraint) extends Constraint {
                     private $key;
                     private $constraint;
 
@@ -306,42 +280,41 @@ class ClientTest extends TestCase
                             );
                     }
                 };
-            }, array_keys($array), array_values($array))
-        );
-        return $result;
+            }, array_keys($array), array_values($array));
+        return LogicalAnd::fromConstraints(...$constraints);
     }
 
-    protected function expectSuccessfulPost($apiUrl, $expectedParams): InvocationMocker
+    protected function expectSuccessfulPost($apiUrl, $expectedParams)
     {
         $this->expectSuccessfulRequest('POST', $apiUrl, $this->apiHeaders(), json_encode($expectedParams));
-        return $this->response->expects($this->any())->method('getBody');
+        return $this->response->method('getBody');
     }
 
-    protected function expectSuccessfulPut($apiUrl, $expectedParams): InvocationMocker
+    protected function expectSuccessfulPut($apiUrl, $expectedParams)
     {
         $this->expectSuccessfulRequest('PUT', $apiUrl, $this->apiHeaders(), json_encode($expectedParams));
-        return $this->response->expects($this->any())->method('getBody');
+        return $this->response->method('getBody');
     }
 
 
-    protected function expectSuccessfulDelete($apiUrl, $expectedParams): InvocationMocker
+    protected function expectSuccessfulDelete($apiUrl, $expectedParams)
     {
         $this->expectSuccessfulRequest('DELETE', $apiUrl, $this->apiHeaders(), json_encode($expectedParams));
-        return $this->response->expects($this->any())->method('getBody');
+        return $this->response->method('getBody');
     }
 
-    private function expectSuccessfulGet($apiUrl, $expectedHeaders = null): InvocationMocker
+    private function expectSuccessfulGet($apiUrl, $expectedHeaders = null)
     {
         $this->expectSuccessfulRequest('GET', $apiUrl, $expectedHeaders ?: $this->apiHeaders());
-        return $this->response->expects($this->any())->method('getBody');
+        return $this->response->method('getBody');
     }
 
-    private function expectGetYieldingBadResponse(): InvocationMocker
+    private function expectGetYieldingBadResponse()
     {
         $this->expectRequest('GET', self::URL, $this->apiHeaders())
             ->willThrowException(new BadResponseException('Bad response', $this->request, $this->response));
 
-        return $this->response->expects($this->any())->method('getBody');
+        return $this->response->method('getBody');
     }
 
     private function expectGetYieldingRequestException()
@@ -355,11 +328,11 @@ class ClientTest extends TestCase
         $this->expectRequest($method, $uri, $headers, $body)->willReturn($this->response);
     }
 
-    private function expectRequest(string $method, $uri, $headers, $body = null): InvocationMocker
+    private function expectRequest(string $method, $uri, $headers, $body = null)
     {
         $this->expectEscherSigning($method);
-        $this->request->expects($this->any())->method('getMethod')->willReturn($method);
-        $this->request->expects($this->any())->method('getUri')->willReturn(new Uri($uri));
+        $this->request->method('getMethod')->willReturn($method);
+        $this->request->method('getUri')->willReturn(new Uri($uri));
         $this->requestFactory->expects($this->once())->method('createRequest')
             ->with(
                 $method,
@@ -415,13 +388,13 @@ class ClientTest extends TestCase
     private function expectEscherSigning($method)
     {
         $this->escherProvider->expects($this->once())->method('createEscher')->willReturn(
-            $this->returnValue($this->escher)
+            $this->escher
         );
-        $this->escherProvider->expects($this->any())->method('getEscherKey')->willReturn(
-            $this->returnValue(self::ESCHER_KEY)
+        $this->escherProvider->method('getEscherKey')->willReturn(
+            self::ESCHER_KEY
         );
-        $this->escherProvider->expects($this->any())->method('getEscherSecret')->willReturn(
-            $this->returnValue(self::ESCHER_SECRET)
+        $this->escherProvider->method('getEscherSecret')->willReturn(
+            self::ESCHER_SECRET
         );
 
         $this->escher->expects($this->once())->method('signRequest')
@@ -430,10 +403,10 @@ class ClientTest extends TestCase
                 self::ESCHER_SECRET,
                 $this->equalTo($method),
                 $this->stringContains('://'),
-                $this->isType('string'),
+                $this->isString(),
                 $this->contentTypeHeader()
             )
-            ->willReturn($this->returnValue($this->allHeaders()));
+            ->willReturn($this->allHeaders());
     }
 
     private function createStream(string $contents): BufferStream

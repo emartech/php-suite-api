@@ -26,7 +26,7 @@ class ContactList
         int $customerId,
         string $name,
         array $contactIds = [],
-        string $businessAreaId = null)
+        ?string $businessAreaId = null)
     {
         if (!strlen(trim($name))) {
             throw new \InvalidArgumentException("Empty contact list name given");
@@ -126,7 +126,7 @@ class ContactList
         }
     }
 
-    public function getContactIdsInList(int $customerId, int $contactListId, int $top = null, int $skiptoken = null): array
+    public function getContactIdsInList(int $customerId, int $contactListId, ?int $top = null, ?int $skiptoken = null): array
     {
         try {
             $response = $this->apiClient->get($this->endPoints->contactIdsInList($customerId, $contactListId, $top, $skiptoken));
@@ -146,7 +146,7 @@ class ContactList
         }
     }
 
-    public function getListChunkIterator(int $customerId, int $contactListId, int $chunkSize = null) : iterable
+    public function getListChunkIterator(int $customerId, int $contactListId, ?int $chunkSize = null) : iterable
     {
         $nextUrlFull = $this->endPoints->contactIdsInList($customerId, $contactListId, $chunkSize);
         try {

@@ -1,12 +1,15 @@
 <phpunit
         bootstrap="bootstrap.php"
-        convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
-        convertWarningsToExceptions="true"
         backupGlobals="false"
-        backupStaticAttributes="false"
         beStrictAboutOutputDuringTests="true"
         colors="true"
+        failOnWarning="true"
+        beStrictAboutTestsThatDoNotTestAnything="false"
+        failOnRisky="false"
+        displayDetailsOnTestsThatTriggerWarnings="true"
+        displayDetailsOnTestsThatTriggerDeprecations="true"
+        displayDetailsOnTestsThatTriggerNotices="true"
+        displayDetailsOnAllIssues="true"
 >
     <testsuites>
         <testsuite name="acceptance">

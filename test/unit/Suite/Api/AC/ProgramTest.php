@@ -5,7 +5,9 @@ namespace Suite\Api;
 use Suite\Api\AC\Program;
 use Suite\Api\AC\EndPoints;
 use Suite\Api\Test\Helper\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
+#[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class ProgramTest extends TestCase
 {
     private const TRIGGER_ID = 'trigger_id';
@@ -24,9 +26,7 @@ class ProgramTest extends TestCase
         $this->program = new Program($this->apiClient, $this->endPoints);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function programCallbackWithUserId_CallEndpointWithCorrectParameters(): void
     {
         $this->expectSuccessfulDoneRequest(
@@ -39,9 +39,7 @@ class ProgramTest extends TestCase
         $this->program->programCallbackWithUserId($this->customerId, self::TRIGGER_ID, self::USER_ID);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function programCallbackWithUserId_postThrowsError_ThrowsRequestFailException(): void
     {
         $this->expectException(RequestFailed::class);
@@ -50,9 +48,7 @@ class ProgramTest extends TestCase
         $this->program->programCallbackWithUserId($this->customerId, self::TRIGGER_ID, self::USER_ID);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function programCallbackWithListId_CallEndpointWithCorrectParameters(): void
     {
         $this->expectSuccessfulDoneRequest(
@@ -65,9 +61,7 @@ class ProgramTest extends TestCase
         $this->program->programCallbackWithListId($this->customerId, self::TRIGGER_ID, self::LIST_ID);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function programCallbackWithListId_postThrowsError_ThrowsRequestFailException(): void
     {
         $this->expectException(RequestFailed::class);
@@ -76,9 +70,7 @@ class ProgramTest extends TestCase
         $this->program->programCallbackWithListId($this->customerId, self::TRIGGER_ID, self::LIST_ID);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function programBatchCallbackDone_CalledWithCorrectParameters(): void
     {
         $postParams = [
@@ -99,9 +91,7 @@ class ProgramTest extends TestCase
         $this->program->programBatchCallbackDone($this->customerId, $postParams);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function programCallbackCancel_Perfect_Perfect(): void
     {
         $this->expectSuccessfulCancelRequest();
@@ -139,7 +129,6 @@ class ProgramTest extends TestCase
     private function expectApiCallFailure(): void
     {
         $this->apiClient
-            ->expects($this->any())
             ->method('post')
             ->willThrowException(new Error());
     }
